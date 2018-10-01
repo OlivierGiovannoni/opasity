@@ -1,0 +1,8 @@
+to select all columns from a table : SELECT * FROM tableName;
+to select a specific column from a table : SELECT colName FROM tableName;
+to select a specific value from a column from a table : SELECT colName FROM tableName WHERE rowName = 'rowValue';
+
+to delete :
+-delete - removes the rows from the table - where clause can be used to delete specific rows. - If where is not specified, then all the rows in the table will be removed - rollback can be done.
+-truncate - removes all the rows from the table. - rollback cannot be done.
+-drop - removes a table from the database. - rows, indexes and privileges will also be removed. - rollback cannot be done.
