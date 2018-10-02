@@ -11,3 +11,5 @@ use Date() object to check if due date is today or not in the database
 search for a specific day using <input type="date" name="dueDate">
 push to X days with <input type="date" name="newDueDate">
 add "Reason" textbox to add WHY the bill stayed unpaid <textarea rows="6" cols="66" name="raisonImpaye" type="text" id="input-message">Raison de l'impaye:</textarea>
+
+Do everything client-side with HTML then PHP then SQL or server-side with NodeJS then Express and MySQL ?
