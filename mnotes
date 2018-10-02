@@ -8,7 +8,6 @@ to delete :
 -drop - removes a table from the database. - rows, indexes and privileges will also be removed. - rollback cannot be done.
 
 use Date() object to check if due date is today or not in the database
-search for a specific day using <input type="date" name="dueDate" placeholder="TODAY">
-push to X days with <input type="date" name="newDueDate" placeholder="IN 7 DAYS">
-add "Reason" textbox to add WHY the bill stayed unpaid <textarea name="raisonImpayé" type="text" id="input-message" placeholder="Message"></textarea>
-"TODAY" and "IN 7 DAYS" are Date() objects that must be generated for the placeholders
+search for a specific day using <input type="date" name="dueDate">
+push to X days with <input type="date" name="newDueDate">
+add "Reason" textbox to add WHY the bill stayed unpaid <textarea rows="6" cols="66" name="raisonImpaye" type="text" id="input-message">Raison de l'impaye:</textarea>
