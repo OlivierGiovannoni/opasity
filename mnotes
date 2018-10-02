@@ -15,3 +15,4 @@ add "Reason" textbox to add WHY the bill stayed unpaid <textarea rows="6" cols="
 Do everything client-side with HTML then PHP then SQL or server-side with NodeJS then Express and MySQL ?
 
 Form then shows the .pdf contract and all details (phone email name address etcz)
+Create the goddamn PHP file that communicates with mysql db

@@ -6,33 +6,33 @@
     <title>Recherche de factures impayées</title>
   </head>
   <body>
-    <form action="/action_page.php">
+    <form action="/rechercherInfos.php"><!-- Create this crap -->
 
       Date de relance (obligatoire):
-      <input type="date" name="dateRelance" required><br><br>
+      <br><input type="date" name="dateRelance" required><br><br>
 
       Numéro de commande:
-      <input type="text" name="numCommande"><br><br>
+      <br><input type="text" name="numCommande"><br><br>
 
       Code société:
-      <input type="text" name="codeSociete"><br><br>
+      <br><input type="text" name="codeSociete"><br><br>
 
       Support:
-      <input type="text" name="support"><br><br>
+      <br><input type="text" name="support"><br><br>
 
       Numéro de parution:
-      <input type="text" name="numParution"><br><br>
+      <br><input type="text" name="numParution"><br><br>
 
       Numéro de contrat:
-      <input type="text" name="numContrat"><br><br>
+      <br><input type="text" name="numContrat"><br><br>
 
       Raison de l'impayé:
-      <textarea rows="6" cols="66" id="message" name="message"></textarea><br><br>
+      <br><textarea rows="6" cols="66" id="message" name="message"></textarea><br><br>
 
-      <input type="checkbox" name="paid" value="regle"> Facture reglée ?<br><br>
+      <input type="checkbox" name="paid" value="regleBool"> Facture reglée ?<br><br>
 
       <input type="submit" value="Chercher">
-      <input type="reset" value="Reset data">
+      <input type="reset" value="Réinitialiser">
 
     </form>
   </body>
