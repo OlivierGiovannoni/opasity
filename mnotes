@@ -16,3 +16,6 @@ Do everything client-side with HTML then PHP then SQL or server-side with NodeJS
 
 Form then shows the .pdf contract and all details (phone email name address etcz)
 Create the goddamn PHP file that communicates with mysql db
+
+0: Open local PHP dev serv using `php -S localhost:port` (usually 8000)
+2: Open local MySQL testing using `mysql -u root -p`
