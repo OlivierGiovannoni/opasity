@@ -12,9 +12,9 @@ foreach ($_POST as $name => $value) {
 echo "ALL NAMES UNFILTERED " . implode(", ", $namesArr) . "<br>";
 echo "ALL VALUES UNFILTERED " . implode(",", $valuesArr) . "<br>";
 
-//$username = filter_input(INPUT_POST, 'username');
-//$password = filter_input(INPUT_POST, 'password');
-/*
+$username = filter_input(INPUT_POST, 'username');
+$password = filter_input(INPUT_POST, 'password');
+
 if (!empty($username) && !empty($password)) {
 
     $host = "localhost";
@@ -41,5 +41,5 @@ if (!empty($username) && !empty($password)) {
     echo "Username or password should not be empty";
     die();
 }
-*/
+
 ?>
