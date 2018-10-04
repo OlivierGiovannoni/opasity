@@ -1,8 +1,20 @@
 <?php
 
-$username = filter_input(INPUT_POST, 'username');
-$password = filter_input(INPUT_POST, 'password');
+$namesArr = array();
+$valuesArr = array();
 
+foreach ($_POST as $name => $value) {
+    array_push($namesArr, $name);
+    array_push($valuesArr, $value);
+
+}
+
+echo "ALL NAMES UNFILTERED " . implode(", ", $namesArr) . "<br>";
+echo "ALL VALUES UNFILTERED " . implode(",", $valuesArr) . "<br>";
+
+//$username = filter_input(INPUT_POST, 'username');
+//$password = filter_input(INPUT_POST, 'password');
+/*
 if (!empty($username) && !empty($password)) {
 
     $host = "localhost";
@@ -16,9 +28,10 @@ if (!empty($username) && !empty($password)) {
     if (mysqli_connect_error()){
         die('Connect Error ('. mysqli_connect_errno() .') ' . mysqli_connect_error());
     } else {
-        $sql = "INSERT INTO users (username, password) values ('$username','$password')";
+        $sql = "INSERT INTO generic (username, password) values ('$username','$password')";
         if ($conn->query($sql)) {
             echo "New record is inserted sucessfully";
+            echo ;
         } else {
             echo "Error: ". $sql ." // ". $conn->error;
         }
@@ -28,5 +41,5 @@ if (!empty($username) && !empty($password)) {
     echo "Username or password should not be empty";
     die();
 }
-
+*/
 ?>
