@@ -1,0 +1,27 @@
+body {
+
+    color: #e1e1e1;
+    background-color: #131313;
+}
+
+input[type=text] {
+
+    background-color: #e1e1e1;
+}
+
+textarea {
+
+    background-color: #e1e1e1;
+}
+
+input[type=submit] {
+
+    background-color: #e1e1e1;
+    border-radius: 8px;
+}
+
+input[type=reset] {
+
+    background-color: #e1e1e1;
+    border-radius: 8px;
+}

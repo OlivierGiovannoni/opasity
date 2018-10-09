@@ -4,31 +4,36 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Factures impayées</title>
+    <link rel="stylesheet" href="index.css">
   </head>
   <body>
-    <form action="rechercherInfos.php"><!-- Create this crap -->
+    <form action="search.php" method="post">
 
+      <!--
       Date de relance (obligatoire):
       <br><input type="date" name="dateRelance" required><br><br>
+      -->
 
-      <b>Pour affiner la recherche (facultatif):</b><br><br>
+      <!-- <label for="codeSociete">Code societé:</label> -->
+      <!-- <br><input type="text" name="codeSociete" id="codeSociete"><br><br> -->
 
-      Code société:
-      <br><input type="text" name="codeSociete"><br><br>
+      <label for="support">Support:</label>
+      <br><input type="text" name="support" id="support"><br><br>
 
-      Support:
-      <br><input type="text" name="support"><br><br>
+      <label for="numParution">Numéro de parution:</label>
+      <br><input type="text" name="numParution" id="numParution"><br><br>
 
-      Numéro de parution:
-      <br><input type="text" name="numParution"><br><br>
+      <label for="numContrat">Numéro de contrat:</label>
+      <br><input type="text" name="numContrat" id="numContrat"><br><br>
 
-      Numéro de contrat:
-      <br><input type="text" name="numContrat"><br><br>
+      <label for="contrat">Contrat:</label>
+      <br><input type="text" name="contrat" id="contrat"><br><br>
 
-      Raison de l'impayé:
-      <br><textarea rows="6" cols="66" id="message" name="raisonImpaye"></textarea><br><br>
+      <!-- <label for="raisonImpaye">Raison de l'impayé:</label> -->
+      <!-- <br><textarea rows="6" cols="66" name="raisonImpaye" id="raisonImpaye"></textarea><br><br> -->
 
-      <input type="checkbox" name="paid" value="regleBool"> Facture reglée ?<br><br>
+      <!-- <label for="regleBool">Facture reglée ?</label> -->
+      <!-- <input type="checkbox" name="regleBool" id="regleBool"><br><br> -->
 
       <input type="submit" value="Chercher">
       <input type="reset" value="Réinitialiser">

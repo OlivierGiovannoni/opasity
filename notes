@@ -19,3 +19,7 @@ Create the goddamn PHP file that communicates with mysql db
 
 0: Open local PHP dev serv using `php -S localhost:port` (usually 8000)
 2: Open local MySQL testing using `mysql -u root -p`
+
+Faire un select poru pouvoir changer de type de recher avec un select group
+Rechercher par revue/par commande ou contrat
+Chercher listing PARU => NON REGLÉ
