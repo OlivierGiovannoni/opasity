@@ -21,10 +21,6 @@ th, td {
     padding: 13px;
 }
 
-a {
-    color: #dd7007;
-}
-
 input[type=text],[type=date] {
     width: 20%;
     background-color: #e1e1e1;
@@ -44,9 +40,4 @@ input[type=submit],[type=reset] {
     border: none;
     border-radius: 8px;
     cursor: pointer;
-}
-
-input[type=reset] {
-    background-color: #e1e1e1;
-    border-radius: 8px;
 }
