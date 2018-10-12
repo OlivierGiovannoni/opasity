@@ -68,6 +68,7 @@ function findContract()
 $style = file_get_contents("style.html");
 echo $style;
 //    <td><a href="#"></a></td>
+echo "<i><h1>Contrats trouvés:</h1></i>";
 echo "<table style=\"width:100%\">";
 echo "<tr>";
 echo "<th>Contrat</th>";

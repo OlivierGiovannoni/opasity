@@ -1,5 +1,4 @@
 body {
-
     color: #e1e1e1;
     background-color: #131313;
     text-align:center;
@@ -10,12 +9,11 @@ body {
 }
 
 h1,h2 {
-
     text-align:center
 }
 
 table, th, td {
-    border: 1px solid #e1e1e1;
+    border: 3px solid #e1e1e1;
     border-collapse: collapse;
 }
 
@@ -24,7 +22,6 @@ th, td {
 }
 
 a {
-
     color: #dd7007;
 }
 
@@ -50,7 +47,6 @@ input[type=submit],[type=reset] {
 }
 
 input[type=reset] {
-
     background-color: #e1e1e1;
     border-radius: 8px;
 }
