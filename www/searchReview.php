@@ -30,7 +30,7 @@ function findReview()
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
                 $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $currReviewName . "\">";
                 $closeForm = "</form>";
-                echo "<tr><td>" . $orderForm . $reviewInput . $closeForm . "</td></tr>";
+                echo "<tr><td>" . $reviewForm . $reviewInput . $closeForm . "</td></tr>";
             }
         }
     } else {
