@@ -8,7 +8,7 @@ function testInput($data) {
 }
 
 $contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
-$getPaid = filter_input(INPUT_POST, "paidBool");
+$getPaid = filter_input(INPUT_POST, "paidBoolContract");
 $contractId = testInput($contractId);
 $supportPart = substr($contractId, 0, 2); // PARTIE SUPPORT ex: GI
 $contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
