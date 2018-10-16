@@ -7,25 +7,14 @@
     <link rel="stylesheet" href="index.css">
   </head>
   <body>
+    <script src="dark.js"></script>
     <i><h1>Système de recherche de factures impayées</h1></i>
 
-    <i><h2>Recherche par contrat:</h2></i>
-    <form name="searchContract" action="searchContract.php" method="post">
-
-      <label for="contractId">Contrat:</label>
-      <br><input type="text" name="contractId" id="contractId" value="GI4468" required><br><br>
-
-      <label for="paidBoolContract">Inclure les contrats reglés</label>
-      <input type="checkbox" name="paidBool" id="paidBoolContract"><br>
-
-      <input type="submit" value="Chercher">
-      <input type="reset" value="Réinitialiser">
-    </form>
-
-    <br><br>
+    <label for="darkBool">Mode sombre</label>
+    <input type="checkbox" id="darkBool" onclick="changeTheme()">
 
     <i><h2>Recherche par revue:</h2></i>
-    <form name="searchReview" action="searchReview.php" method="post">
+    <form name="searchReview" id="formReview" action="searchReview.php" method="post">
 
       <label for="reviewName">Nom de revue:</label>
       <br><input type="text" name="reviewName" id="reviewName" value="Ann Mines" required><br><br>
@@ -33,14 +22,30 @@
       <label for="paidBoolReview">Inclure les contrats reglés</label>
       <input type="checkbox" name="paidBool" id="paidBoolReview"><br>
 
-      <input type="submit" value="Chercher">
-      <input type="reset" value="Réinitialiser">
+      <input type="submit" id="submitReview" value="Chercher">
+      <input type="reset" id="resetReview" value="Réinitialiser">
     </form>
 
     <br><br>
 
-    <i><h2>Recherche par date:</h2></i>
-    <form name="searchDate" action="searchDate.php" method="post">
+
+    <i><h2>Recherche par contrat:</h2></i>
+    <form name="searchContract" id="formOrder" action="searchOrder.php" method="post">
+
+      <label for="contractId">Contrat:</label>
+      <br><input type="text" name="contractId" id="contractId" value="GI4468" required><br><br>
+
+      <label for="paidBoolContract">Inclure les contrats reglés</label>
+      <input type="checkbox" name="paidBool" id="paidBoolContract"><br>
+
+      <input type="submit" id="submitOrder" value="Chercher">
+      <input type="reset" id="resetOrder" value="Réinitialiser">
+    </form>
+
+    <br><br>
+
+    <i><h2>Recherche par date de relance: [INACTIF]</h2></i>
+    <form name="searchDate" id="formDate" action="searchDate.php" method="post">
 
       <label for="reviewName">Date de relance:</label>
       <br><input type="date" name="dueDate" id="dueDate" disabled><br><br>
@@ -48,8 +53,8 @@
       <label for="paidBoolDate">Inclure les contrats reglés</label>
       <input type="checkbox" name="paidBool" id="paidBoolDate" disabled><br>
 
-      <input type="submit" value="Chercher" disabled>
-      <input type="reset" value="Réinitialiser" disabled>
+      <input type="submit" id="submitDate" value="Chercher" disabled>
+      <input type="reset" id="resetDate" value="Réinitialiser" disabled>
     </form>
   </body>
 

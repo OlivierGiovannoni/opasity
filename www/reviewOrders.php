@@ -7,11 +7,10 @@ function testInput($data) {
     return $data;
 }
 
-$contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
-$getPaid = filter_input(INPUT_POST, "paidBool");
-$contractId = testInput($contractId);
-$supportPart = substr($contractId, 0, 2); // PARTIE SUPPORT ex: GI
-$contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
+$reviewName = filter_input(INPUT_POST, "reviewName");
+$hiddenId = filter_input(INPUT_POST, "hiddenId");
+$reviewName = testInput($reviewName);
+$hiddenId = testInput($hiddenId);
 
 $host = "localhost";
 $dbusername = "root";
@@ -20,49 +19,20 @@ $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
 
-function findReview($infoId)
+function findOrders()
 {
-
-    $sql = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
-    if ($result = $GLOBALS['connection']->query($sql)) {
-
-        $row = mysqli_fetch_array($result);
-        $finalId = $row['Revue_id'];
-        $sql = "SELECT Nom FROM webcontrat_revue WHERE id='$finalId';";
-        if ($result = $GLOBALS['connection']->query($sql)) {
-
-            $row = mysqli_fetch_array($result);
-            $finalName = $row['Nom'];
-            return ($finalName);
-        } else {
-            echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
-        }
-    } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
-    }
-}
-
-function findContract()
-{
-
-    $sql = "SELECT Commande FROM webcontrat_contrat;";
+    $hiddenId = $GLOBALS['hiddenId'];
+    $sql = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$hiddenId';";
     if ($result = $GLOBALS['connection']->query($sql)) {
 
         while ($row = mysqli_fetch_array($result)) {
 
-            $supportRet = substr_compare($row['Commande'], $GLOBALS['supportPart'], 2, 2, TRUE);
-            $contractRet = substr_compare($row['Commande'], $GLOBALS['contractPart'], 10, 4, TRUE);
+            $orderId = $row['Info_id'];
+            $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
+            $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
+            $closeForm = "</form>";
 
-            if (!$supportRet && !$contractRet) {
-                $orderId = $row['Commande'];
-                $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
-                $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . $orderId . "\">";
-                $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
-                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . findReview($orderId) . "\">";
-                $closeForm = "</form>";
-                echo "<tr><td>" . $orderForm . $orderInput . $closeForm . "</td>";//From contrat and client db
-                echo "<td>" . $reviewForm . $reviewInput . $closeForm . "</td></tr>";//From revue db
-            }
+            echo "<tr><td>" . $orderForm . $orderInput . $closeForm . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
@@ -72,20 +42,19 @@ function findContract()
 
 $style = file_get_contents("search.html");
 echo $style;
-//    <td><a href="#"></a></td>
-echo "<i><h1>Contrats trouvés:</h1></i>";
+echo "<i><h1>Contrats dans la revue $reviewName:</h1></i>";
 echo "<table style=\"width:100%\">";
 echo "<tr>";
 echo "<th>Contrat</th>";
-echo "<th>Revue</th>";
 echo "</tr>";
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    findContract();
+    findOrders();
 }
 
 echo "</table>";
+echo "</html>";
 
 ?>

@@ -28,3 +28,33 @@ Commande: commande => clic => details
 	  revue => clic => toutes commandes => clic => details
 
 REVUE: revue => clic => toutes commandes => clic => details
+
+AFFICHER
+-1 Numéro contrat
+-1 Payé
+-1 Prix HT
+-1 Prix TTC
+
+-2 Nom de l'entreprise
+-2 Nom contact
+-2 Adresse
+
+Nouvel ONGLET ou POPUP dans DB
+checkbox dark/light mode
+
+CONTRAT(GI4468) NOMCLIENT MONTANTHT REGLEBOOL CHECKBOX_tous_ou_payés SURFACE
+LISTE COMMENTAIRES, DERNIER COMMENTAIRE AFFICHÉ, SI CLICK, POPUP/ONGLET AVEC INFOS + TOUS LES COMMENTAIRES
+textbox NOUVEAU COMMENTAIRE
+VALEURS CHANGEABLES dans la DB dIrectement
+AJOUTER CASE "AUTRE CONTACT" (UN OU PLUSIEURS) (DANS wc_ contrat pas client)
+AJOUTER COLONNE NomContact dans wc_contrat
+DANS CONTACT (client et contrat) lien mailto: et numero de telephone
+AFFICHER Chiffre d'affaires total + Manque a payer
+PDF + EML
+AJOUTER/SUPPRIMER PLUSIEURS TYPES D'ELEMENTS
+
+
+
+-----------------------------------------------------------
+
+Copier systeme creation de contact pour les commerciaux qui doivent appeler des nouveaux clients

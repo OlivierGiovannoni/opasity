@@ -20,17 +20,21 @@ $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION
 
 function findReview()
 {
-    $sql = "SELECT Nom FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%';";
+    $reviewName = $GLOBALS['reviewName'];
+    $sql = "SELECT id,Nom FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%';";
     if ($result = $GLOBALS['connection']->query($sql)) {
 
         while ($row = mysqli_fetch_array($result)) {
 
             $currReviewName = $row['Nom'];
+            $currReviewId = $row['id'];
+            $curr = array('Name' => $currReviewName, 'Id' => $currReviewId);
             if (strpos($currReviewName, $GLOBALS['reviewName']) !== FALSE) {
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
-                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $currReviewName . "\">";
+                $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
+                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $curr['Name'] . "\">";
                 $closeForm = "</form>";
-                echo "<tr><td>" . $reviewForm . $reviewInput . $closeForm . "</td></tr>";
+                echo "<tr><td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
             }
         }
     } else {
@@ -54,5 +58,6 @@ if (mysqli_connect_error()) {
 }
 
 echo "</table>";
+echo "</html>";
 
 ?>

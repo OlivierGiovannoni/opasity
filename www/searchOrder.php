@@ -28,12 +28,14 @@ function findReview($infoId)
 
         $row = mysqli_fetch_array($result);
         $finalId = $row['Revue_id'];
-        $sql = "SELECT Nom FROM webcontrat_revue WHERE id='$finalId';";
+        $sql = "SELECT id,Nom FROM webcontrat_revue WHERE id='$finalId';";
         if ($result = $GLOBALS['connection']->query($sql)) {
 
             $row = mysqli_fetch_array($result);
             $finalName = $row['Nom'];
-            return ($finalName);
+            $finalId = $row['id'];
+            $final = array('Name' => $finalName, 'Id' => $finalId);
+            return ($final);
         } else {
             echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
         }
@@ -42,7 +44,7 @@ function findReview($infoId)
     }
 }
 
-function findContract()
+function findOrder()
 {
 
     $sql = "SELECT Commande FROM webcontrat_contrat;";
@@ -54,14 +56,18 @@ function findContract()
             $contractRet = substr_compare($row['Commande'], $GLOBALS['contractPart'], 10, 4, TRUE);
 
             if (!$supportRet && !$contractRet) {
+
                 $orderId = $row['Commande'];
                 $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
-                $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . $orderId . "\">";
+                $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
+                $final = findReview($orderId);
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
-                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . findReview($orderId) . "\">";
+                $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
+                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
                 $closeForm = "</form>";
-                echo "<tr><td>" . $orderForm . $orderInput . $closeForm . "</td>";//From contrat and client db
-                echo "<td>" . $reviewForm . $reviewInput . $closeForm . "</td></tr>";//From revue db
+
+                echo "<tr><td>" . $orderForm . $orderInput . $closeForm . "</td>";
+                echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
             }
         }
     } else {
@@ -72,7 +78,6 @@ function findContract()
 
 $style = file_get_contents("search.html");
 echo $style;
-//    <td><a href="#"></a></td>
 echo "<i><h1>Contrats trouvés:</h1></i>";
 echo "<table style=\"width:100%\">";
 echo "<tr>";
@@ -83,9 +88,10 @@ echo "</tr>";
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    findContract();
+    findOrder();
 }
 
 echo "</table>";
+echo "</html>";
 
 ?>
