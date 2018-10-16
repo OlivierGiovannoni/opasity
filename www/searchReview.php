@@ -9,6 +9,8 @@ function testInput($data) {
 
 $reviewName = filter_input(INPUT_POST, "reviewName"); // NOM REVUE ex: Ann Mines
 $getPaid = filter_input(INPUT_POST, "paidBoolReview");
+$darkBool = filter_input(INPUT_POST, "darkBool");
+
 $reviewName = testInput($reviewName);
 
 $host = "localhost";
@@ -44,6 +46,10 @@ function findReview()
 }
 
 $style = file_get_contents("search.html");
+
+if ($darkBool)
+    $style = str_replace("search.css", "dark.css", $style);
+
 echo $style;
 echo "<i><h1>Revues trouvées:</h1></i>";
 echo "<table style=\"width:100%\">";

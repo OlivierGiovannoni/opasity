@@ -9,7 +9,10 @@ function testInput($data) {
 
 $contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
 $getPaid = filter_input(INPUT_POST, "paidBoolContract");
+$darkBool = filter_input(INPUT_POST, "darkBool");
+
 $contractId = testInput($contractId);
+
 $supportPart = substr($contractId, 0, 2); // PARTIE SUPPORT ex: GI
 $contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
 
@@ -77,6 +80,10 @@ function findOrder()
 }
 
 $style = file_get_contents("search.html");
+
+if ($darkBool)
+    $style = str_replace("search.css", "dark.css", $style);
+
 echo $style;
 echo "<i><h1>Contrats trouvés:</h1></i>";
 echo "<table style=\"width:100%\">";

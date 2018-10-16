@@ -22,12 +22,13 @@
       <label for="paidBoolReview">Inclure les contrats reglés</label>
       <input type="checkbox" name="paidBool" id="paidBoolReview"><br>
 
+      <input type="hidden" name="darkBool" id="darkBoolReview">
+
       <input type="submit" id="submitReview" value="Chercher">
       <input type="reset" id="resetReview" value="Réinitialiser">
     </form>
 
     <br><br>
-
 
     <i><h2>Recherche par contrat:</h2></i>
     <form name="searchContract" id="formOrder" action="searchOrder.php" method="post">
@@ -36,7 +37,9 @@
       <br><input type="text" name="contractId" id="contractId" value="GI4468" required><br><br>
 
       <label for="paidBoolContract">Inclure les contrats reglés</label>
-      <input type="checkbox" name="paidBool" id="paidBoolContract"><br>
+      <input type="checkbox" name="paidBool" id="paidBoolOrder"><br>
+
+      <input type="hidden" name="darkBool" id="darkBoolOrder">
 
       <input type="submit" id="submitOrder" value="Chercher">
       <input type="reset" id="resetOrder" value="Réinitialiser">
@@ -50,8 +53,7 @@
       <label for="reviewName">Date de relance:</label>
       <br><input type="date" name="dueDate" id="dueDate" disabled><br><br>
 
-      <label for="paidBoolDate">Inclure les contrats reglés</label>
-      <input type="checkbox" name="paidBool" id="paidBoolDate" disabled><br>
+      <input type="hidden" name="darkBool" id="darkBoolDate">
 
       <input type="submit" id="submitDate" value="Chercher" disabled>
       <input type="reset" id="resetDate" value="Réinitialiser" disabled>

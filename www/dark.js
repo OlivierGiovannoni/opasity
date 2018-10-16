@@ -1,6 +1,9 @@
-function changeTheme() {
+function changeTheme(forced) {
 
     let darkBool = document.getElementById('darkBool');
+    let darkBoolReview = document.getElementById('darkBoolReview');
+    let darkBoolOrder = document.getElementById('darkBoolOrder');
+    let darkBoolDate = document.getElementById('darkBoolDate');
 
     let textReview = document.getElementById('reviewName');
     let submitReview = document.getElementById('submitReview');
@@ -14,9 +17,13 @@ function changeTheme() {
     let submitDate = document.getElementById('submitDate');
     let resetDate = document.getElementById('resetDate');
 
-    if (darkBool.checked) {
+    if (darkBool.checked || forced) {
 	document.body.style.backgroundColor = '#131313';
 	document.body.style.color = '#e1e1e1';
+
+	darkBoolReview.value = true;
+	darkBoolOrder.value = true;
+	darkBoolDate.value = true;
 
 	textReview.style.color = '#131313';
 	submitReview.style.color = '#131313';
@@ -46,6 +53,10 @@ function changeTheme() {
     else {
 	document.body.style.backgroundColor = '#e1e1e1';
 	document.body.style.color = '#131313';
+
+	darkBoolReview.value = false;
+	darkBoolOrder.value = false;
+	darkBoolDate.value = false;
 
 	textReview.style.color = '#e1e1e1';
 	submitReview.style.color = '#e1e1e1';
