@@ -42,6 +42,14 @@ AFFICHER
 Nouvel ONGLET ou POPUP dans DB
 checkbox dark/light mode
 
+POUR CHANGER NON-PAYÉ EN PAYÉ:
+UPDATE webcontrat_contrat SET Reglement='R' WHERE Commande='OPGI00004A4468';
+
+IF REGLEMENT == 'R'
+   	NE PAS AFFICHER TEXTBOX + CHECKBOX
+ELSE
+	AFFICHE TOUT
+
 CONTRAT(GI4468) NOMCLIENT MONTANTHT REGLEBOOL CHECKBOX_tous_ou_payés SURFACE
 LISTE COMMENTAIRES, DERNIER COMMENTAIRE AFFICHÉ, SI CLICK, POPUP/ONGLET AVEC INFOS + TOUS LES COMMENTAIRES
 textbox NOUVEAU COMMENTAIRE
@@ -55,6 +63,7 @@ AJOUTER/SUPPRIMER PLUSIEURS TYPES D'ELEMENTS
 
 
 
+Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------
 
 Copier systeme creation de contact pour les commerciaux qui doivent appeler des nouveaux clients

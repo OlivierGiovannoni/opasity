@@ -8,6 +8,8 @@ function testInput($data) {
 }
 
 $orderId = filter_input(INPUT_POST, "orderId");
+$getPaid = filter_input(INPUT_POST, "hiddenPaid");
+$darkBool = filter_input(INPUT_POST, "darkBool");
 
 $host = "localhost";
 $dbusername = "root";
@@ -19,7 +21,10 @@ $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION
 function getOrderDetails()
 {
     $orderId = $GLOBALS['orderId'];
-    $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat;";
+    if ($GLOBALS['getPaid'] == "on")
+        $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat;";
+    else
+        $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat WHERE Reglement='';";
     if ($resultOrder = $GLOBALS['connection']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
@@ -59,6 +64,10 @@ function getOrderDetails()
 }
 
 $style = file_get_contents("search.html");
+
+if ($darkBool)
+    $style = str_replace("search.css", "dark.css", $style);
+
 echo $style;
 echo "<i><h1>Contrats trouvés:</h1></i>";
 echo "<table style=\"width:100%\">";

@@ -8,7 +8,10 @@ function testInput($data) {
 }
 
 $reviewName = filter_input(INPUT_POST, "reviewName");
+$darkBool = filter_input(INPUT_POST, "darkBool");
 $hiddenId = filter_input(INPUT_POST, "hiddenId");
+$getPaid = filter_input(INPUT_POST, "hiddenPaid");
+
 $reviewName = testInput($reviewName);
 $hiddenId = testInput($hiddenId);
 
@@ -29,10 +32,12 @@ function findOrders()
 
             $orderId = $row['Info_id'];
             $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
+            $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
             $closeForm = "</form>";
 
-            echo "<tr><td>" . $orderForm . $orderInput . $closeForm . "</td></tr>";
+            echo "<tr><td>" . $orderForm . $darkBool . $paidHidden . $orderInput . $closeForm . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
@@ -41,6 +46,10 @@ function findOrders()
 }
 
 $style = file_get_contents("search.html");
+
+if ($darkBool)
+    $style = str_replace("search.css", "dark.css", $style);
+
 echo $style;
 echo "<i><h1>Contrats dans la revue $reviewName:</h1></i>";
 echo "<table style=\"width:100%\">";

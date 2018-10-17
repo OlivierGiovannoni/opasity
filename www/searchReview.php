@@ -8,7 +8,7 @@ function testInput($data) {
 }
 
 $reviewName = filter_input(INPUT_POST, "reviewName"); // NOM REVUE ex: Ann Mines
-$getPaid = filter_input(INPUT_POST, "paidBoolReview");
+$getPaid = filter_input(INPUT_POST, "paidBool");
 $darkBool = filter_input(INPUT_POST, "darkBool");
 
 $reviewName = testInput($reviewName);
@@ -33,10 +33,11 @@ function findReview()
             $curr = array('Name' => $currReviewName, 'Id' => $currReviewId);
             if (strpos($currReviewName, $GLOBALS['reviewName']) !== FALSE) {
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
+                $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
                 $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $curr['Name'] . "\">";
                 $closeForm = "</form>";
-                echo "<tr><td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
+                echo "<tr><td>" . $reviewForm . $darkBool . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
             }
         }
     } else {

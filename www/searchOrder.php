@@ -8,7 +8,7 @@ function testInput($data) {
 }
 
 $contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
-$getPaid = filter_input(INPUT_POST, "paidBoolContract");
+$getPaid = filter_input(INPUT_POST, "paidBool");
 $darkBool = filter_input(INPUT_POST, "darkBool");
 
 $contractId = testInput($contractId);
@@ -25,7 +25,6 @@ $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION
 
 function findReview($infoId)
 {
-
     $sql = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
     if ($result = $GLOBALS['connection']->query($sql)) {
 
@@ -44,13 +43,17 @@ function findReview($infoId)
         }
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+
     }
 }
 
 function findOrder()
 {
 
-    $sql = "SELECT Commande FROM webcontrat_contrat;";
+    if ($GLOBALS['getPaid'] == "on")
+        $sql = "SELECT Commande FROM webcontrat_contrat;";
+    else
+        $sql = "SELECT Commande FROM webcontrat_contrat WHERE Reglement='';";
     if ($result = $GLOBALS['connection']->query($sql)) {
 
         while ($row = mysqli_fetch_array($result)) {
@@ -61,16 +64,18 @@ function findOrder()
             if (!$supportRet && !$contractRet) {
 
                 $orderId = $row['Commande'];
+                $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
                 $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
                 $final = findReview($orderId);
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
+                $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
                 $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
                 $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
                 $closeForm = "</form>";
 
-                echo "<tr><td>" . $orderForm . $orderInput . $closeForm . "</td>";
-                echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
+                echo "<tr><td>" . $orderForm . $darkBool . $orderInput . $closeForm . "</td>";
+                echo "<td>" . $reviewForm . $darkBool . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
             }
         }
     } else {
