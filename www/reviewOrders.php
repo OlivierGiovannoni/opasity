@@ -34,7 +34,7 @@ function findOrders()
             $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
             $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
-            $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
+            $orderInput = "<input type=\"submit\" id=\"tableSub\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
             $closeForm = "</form>";
 
             echo "<tr><td>" . $orderForm . $darkBool . $paidHidden . $orderInput . $closeForm . "</td></tr>";

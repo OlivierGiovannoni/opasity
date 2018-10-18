@@ -61,9 +61,12 @@ AFFICHER Chiffre d'affaires total + Manque a payer
 PDF + EML
 AJOUTER/SUPPRIMER PLUSIEURS TYPES D'ELEMENTS
 
-
+Commentaire + mail + telephone + nom + date recherchable
+(systeme de login + groupes)[laisser une trace]
+rappels GENERALS + PERSONNELS (avec login) (dropdown)
 
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------
 
 Copier systeme creation de contact pour les commerciaux qui doivent appeler des nouveaux clients
+accepté/refusé

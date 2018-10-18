@@ -66,12 +66,12 @@ function findOrder()
                 $orderId = $row['Commande'];
                 $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
-                $orderInput = "<input type=\"submit\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
+                $orderInput = "<input type=\"submit\" id=\"tableSub\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
                 $final = findReview($orderId);
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
                 $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
                 $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
+                $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
                 $closeForm = "</form>";
 
                 echo "<tr><td>" . $orderForm . $darkBool . $orderInput . $closeForm . "</td>";

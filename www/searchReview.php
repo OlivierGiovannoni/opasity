@@ -35,7 +35,7 @@ function findReview()
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
                 $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
-                $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $curr['Name'] . "\">";
+                $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . "\">";
                 $closeForm = "</form>";
                 echo "<tr><td>" . $reviewForm . $darkBool . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
             }

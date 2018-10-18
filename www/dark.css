@@ -21,7 +21,7 @@ th, td {
     padding: 13px;
 }
 
-input[type=submit] {
+#tableSub {
     background-color: #131313;
     color: orange;
     text-decoration: underline;
