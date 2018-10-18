@@ -47,6 +47,44 @@ function findReview($infoId)
     }
 }
 
+function getOrderDetails($orderId)
+{
+    if ($GLOBALS['getPaid'] == "on")
+        $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat;";
+    else
+        $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat WHERE Reglement='';";
+    if ($resultOrder = $GLOBALS['connection']->query($sqlOrder)) {
+
+        while ($rowOrder = mysqli_fetch_array($resultOrder)) {
+
+            $orderFull = $rowOrder['Commande'];
+            $orderSupport = substr($orderId, 0, 2);
+            $orderNumber = substr($orderId, 2, 4);
+            $orderSupport = substr_compare($orderFull, $orderSupport, 2, 2);
+            $orderNumber = substr_compare($orderFull, $orderNumber, 10, 4);
+
+            if (!$orderSupport && !$orderNumber) {
+
+                $clientId = $rowOrder['Client_id'];
+                $priceRaw = $rowOrder['PrixHT'];
+                echo "<td>" . $priceRaw . "</td>";
+
+                $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
+                if ($resultClient = $GLOBALS['connection']->query($sqlClient)) {
+
+                    $rowClient = mysqli_fetch_array($resultClient);
+                    $companyName = $rowClient['NomSociete'];
+                    $contactName = $rowClient['NomContact1'];
+                    echo "<td>" . $companyName . "</td>";
+                    echo "<td>" . $contactName . "</td></tr>";
+                }
+            }
+        }
+    } else {
+        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+    }
+}
+
 function findOrder()
 {
 
@@ -64,9 +102,8 @@ function findOrder()
             if (!$supportRet && !$contractRet) {
 
                 $orderId = $row['Commande'];
+                $orderIdSmall = $GLOBALS['supportPart'] . $GLOBALS['contractPart'];
                 $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-                $orderForm = "<form action=\"orderDetails.php\" method=\"post\">";
-                $orderInput = "<input type=\"submit\" id=\"tableSub\" name=\"orderId\" value=\"" . substr($orderId, 2, 2) . substr($orderId, 10, 4) . "\">";
                 $final = findReview($orderId);
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
                 $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
@@ -74,8 +111,9 @@ function findOrder()
                 $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
                 $closeForm = "</form>";
 
-                echo "<tr><td>" . $orderForm . $darkBool . $orderInput . $closeForm . "</td>";
-                echo "<td>" . $reviewForm . $darkBool . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
+                echo "<tr><td>" . $orderIdSmall . "</td>";
+                echo "<td>" . $reviewForm . $darkBool . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+                getOrderDetails($orderIdSmall);
             }
         }
     } else {
@@ -95,6 +133,10 @@ echo "<table style=\"width:100%\">";
 echo "<tr>";
 echo "<th>Contrat</th>";
 echo "<th>Revue</th>";
+echo "<th>Prix HT</th>";
+//echo "<th>Payé</th>";
+echo "<th>Nom de l'entreprise</th>";
+echo "<th>Nom du contact</th>";
 echo "</tr>";
 
 if (mysqli_connect_error()) {
