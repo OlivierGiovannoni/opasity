@@ -48,8 +48,8 @@ function findReview()
 
 $style = file_get_contents("search.html");
 
-if ($darkBool)
-    $style = str_replace("search.css", "dark.css", $style);
+if ($darkBool == "true")
+    $style = str_replace("searchLight.css", "searchDark.css", $style);
 
 echo $style;
 echo "<i><h1>Revues trouvées:</h1></i>";

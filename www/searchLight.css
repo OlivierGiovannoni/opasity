@@ -18,7 +18,8 @@ table, th, td {
 }
 
 th, td {
-    padding: 13px;
+    padding: 7px;
+    font-style: italic;
 }
 
 #tableSub {
@@ -27,4 +28,12 @@ th, td {
     text-decoration: underline;
     border: none;
     cursor: pointer;
+}
+
+#isPaid {
+    background-color: #008800;
+}
+
+#isNotPaid {
+    background-color: #880000;
 }

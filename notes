@@ -65,6 +65,66 @@ Commentaire + mail + telephone + nom + date recherchable
 (systeme de login + groupes)[laisser une trace]
 rappels GENERALS + PERSONNELS (avec login) (dropdown)
 
+mysql> CREATE TABLE webcontrat_commentaire ( Commentaire_id INT NOT NULL AUTO_INCREMENT,
+       	      	    			     Commentaire VARCHAR(512) NOT NULL,
+					     Auteur VARCHAR(32) NOT NULL,
+					     Date DATE NOT NULL,
+					     Commentaire_precedent INT,
+					     Dernier_commentaire TINYINT NOT NULL,
+					     Commande VARCHAR(14) NOT NULL,
+					     Commande_courte VARCHAR(6) NOT NULL,
+					     Payee TINYINT NOT NULL,
+					     Prochaine_relance DATE,
+					     PRIMARY KEY (Commentaire_id) );
+
+mysql> DESCRIBE webcontrat_commentaire;
++-----------------------+--------------+------+-----+---------+----------------+
+| Field                 | Type         | Null | Key | Default | Extra          |
++-----------------------+--------------+------+-----+---------+----------------+
+| Commentaire_id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| Commentaire           | varchar(512) | NO   |     | NULL    |                |
+| Auteur                | varchar(32)  | NO   |     | NULL    |                |
+| Date                  | date         | NO   |     | NULL    |                |
+| Commentaire_precedent | int(11)      | YES  |     | NULL    |                |
+| Dernier_commentaire   | tinyint(4)   | NO   |     | NULL    |                |
+| Commande              | varchar(14)  | NO   |     | NULL    |                |
+| Commande_courte       | varchar(6)   | NO   |     | NULL    |                |
+| Payee                 | tinyint(4)   | NO   |     | NULL    |                |
+| Prochaine_relance     | date         | YES  |     | NULL    |                |
++-----------------------+--------------+------+-----+---------+----------------+
+
+mysql> INSERT INTO webcontrat_commentaire (Commentaire,
+					   Auteur,
+					   Date,
+					   Commentaire_precedent,
+					   Dernier_commentaire,
+					   Commande,
+					   Commande_courte,
+					   Payee,
+					   Prochaine_relance)
+					   
+					VALUES
+					
+					  ('Test commentaire',
+					   'dev',
+					   '2018-10-19',
+					   NULL,
+					   0,
+					   'OPGI00004A4468',
+					   'GI4468',
+					   0,
+					   '2018-10-22');
+					   
+					  ('Test paiement',
+					   'dev',
+					   '2018-10-22',
+					   1,
+					   1,
+					   'OPGI00004A4468',
+					   'GI4468',
+					   1,
+					   NULL);
+
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------
 

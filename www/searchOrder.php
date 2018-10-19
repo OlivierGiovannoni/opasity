@@ -47,12 +47,33 @@ function findReview($infoId)
     }
 }
 
+function selectLastComment($orderIdShort, $orderId)
+{
+    // last comment clicked displays all comments, target="_blank"
+    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
+    if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
+
+        $rowComment = mysqli_fetch_array($resultComment);
+
+        $reviewForm = "<form action=\"allComments.php\" method=\"post\">";
+        $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
+        $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
+        $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $rowComment['Commentaire'] . "\">";
+        $closeForm = "</form>";
+
+        echo "<td>" . $reviewForm . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $rowComment['Date'] . "</td></tr>";
+    } else {
+        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+    }
+}
+
 function getOrderDetails($orderId)
 {
     if ($GLOBALS['getPaid'] == "on")
-        $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat;";
+        $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat;";
     else
-        $sqlOrder = "SELECT Commande,Client_id,PrixHT,PrixTTC FROM webcontrat_contrat WHERE Reglement='';";
+        $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Reglement='';";
     if ($resultOrder = $GLOBALS['connection']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
@@ -68,6 +89,10 @@ function getOrderDetails($orderId)
                 $clientId = $rowOrder['Client_id'];
                 $priceRaw = $rowOrder['PrixHT'];
                 echo "<td>" . $priceRaw . "</td>";
+                if ($rowOrder['Reglement'] == "R")
+                    echo "<td id=\"isPaid\">Oui</td>";
+                else
+                    echo "<td id=\"isNotPaid\">Non</td>";
 
                 $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
                 if ($resultClient = $GLOBALS['connection']->query($sqlClient)) {
@@ -76,7 +101,8 @@ function getOrderDetails($orderId)
                     $companyName = $rowClient['NomSociete'];
                     $contactName = $rowClient['NomContact1'];
                     echo "<td>" . $companyName . "</td>";
-                    echo "<td>" . $contactName . "</td></tr>";
+                    echo "<td>" . $contactName . "</td>";
+                    selectLastComment($orderId, $rowOrder['Commande']);
                 }
             }
         }
@@ -102,7 +128,7 @@ function findOrder()
             if (!$supportRet && !$contractRet) {
 
                 $orderId = $row['Commande'];
-                $orderIdSmall = $GLOBALS['supportPart'] . $GLOBALS['contractPart'];
+                $orderIdShort = $GLOBALS['supportPart'] . $GLOBALS['contractPart'];
                 $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $final = findReview($orderId);
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
@@ -111,9 +137,9 @@ function findOrder()
                 $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
                 $closeForm = "</form>";
 
-                echo "<tr><td>" . $orderIdSmall . "</td>";
+                echo "<tr><td>" . $orderIdShort . "</td>";
                 echo "<td>" . $reviewForm . $darkBool . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
-                getOrderDetails($orderIdSmall);
+                getOrderDetails($orderIdShort);
             }
         }
     } else {
@@ -124,8 +150,8 @@ function findOrder()
 
 $style = file_get_contents("search.html");
 
-if ($darkBool)
-    $style = str_replace("search.css", "dark.css", $style);
+if ($darkBool == "true")
+    $style = str_replace("searchLight.css", "searchDark.css", $style);
 
 echo $style;
 echo "<i><h1>Contrats trouvés:</h1></i>";
@@ -134,9 +160,11 @@ echo "<tr>";
 echo "<th>Contrat</th>";
 echo "<th>Revue</th>";
 echo "<th>Prix HT</th>";
-//echo "<th>Payé</th>";
+echo "<th>Payé</th>";
 echo "<th>Nom de l'entreprise</th>";
 echo "<th>Nom du contact</th>";
+echo "<th>Commentaire</th>";
+echo "<th>Date commentaire</th>";
 echo "</tr>";
 
 if (mysqli_connect_error()) {
