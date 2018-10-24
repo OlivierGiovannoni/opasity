@@ -34,10 +34,11 @@ function findReview()
             if (strpos($currReviewName, $GLOBALS['reviewName']) !== FALSE) {
                 $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
                 $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
+                $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
                 $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
                 $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . "\">";
                 $closeForm = "</form>";
-                echo "<tr><td>" . $reviewForm . $darkBool . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
+                echo "<tr><td>" . $reviewForm . $darkBool . $getPaidOrders . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
             }
         }
     } else {

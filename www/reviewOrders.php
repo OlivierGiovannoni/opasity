@@ -43,42 +43,39 @@ function selectLastComment($orderIdShort, $orderId)
     }
 }
 
-function getOrderDetails($orderId)
+function getOrderDetails($orderId, $orderIdShort)
 {
     if ($GLOBALS['getPaid'] == "on")
-        $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat;";
+        $sqlOrder = "SELECT Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
     else
-        $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Reglement='';";
+        $sqlOrder = "SELECT Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId' AND Reglement='';";
     if ($resultOrder = $GLOBALS['connection']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
 
-            $orderFull = $rowOrder['Commande'];
-            $orderSupport = substr($orderId, 0, 2);
-            $orderNumber = substr($orderId, 2, 4);
-            $orderSupport = substr_compare($orderFull, $orderSupport, 2, 2);
-            $orderNumber = substr_compare($orderFull, $orderNumber, 10, 4);
+            $orderSupport = substr($orderIdShort, 0, 2);
+            $orderNumber = substr($orderIdShort, 2, 4);
+            $orderSupport = substr_compare($orderId, $orderSupport, 2, 2);
+            $orderNumber = substr_compare($orderId, $orderNumber, 10, 4);
 
-            if (!$orderSupport && !$orderNumber) {
+            $clientId = $rowOrder['Client_id'];
+            $priceRaw = $rowOrder['PrixHT'];
+            echo "<tr><td>" . $orderId . "</td>";
+            echo "<td>" . $priceRaw . "</td>";
+            if ($rowOrder['Reglement'] == "R")
+                echo "<td id=\"isPaid\">Oui</td>";
+            else
+                echo "<td id=\"isNotPaid\">Non</td>";
 
-                $clientId = $rowOrder['Client_id'];
-                $priceRaw = $rowOrder['PrixHT'];
-                echo "<td>" . $priceRaw . "</td>";
-                if ($rowOrder['Reglement'] == "R")
-                    echo "<td id=\"isPaid\">Oui</td>";
-                else
-                    echo "<td id=\"isNotPaid\">Non</td>";
+            $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
+            if ($resultClient = $GLOBALS['connection']->query($sqlClient)) {
 
-                $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
-                if ($resultClient = $GLOBALS['connection']->query($sqlClient)) {
-
-                    $rowClient = mysqli_fetch_array($resultClient);
-                    $companyName = $rowClient['NomSociete'];
-                    $contactName = $rowClient['NomContact1'];
-                    echo "<td>" . $companyName . "</td>";
-                    echo "<td>" . $contactName . "</td>";
-                    selectLastComment($orderId, $rowOrder['Commande']);
-                }
+                $rowClient = mysqli_fetch_array($resultClient);
+                $companyName = $rowClient['NomSociete'];
+                $contactName = $rowClient['NomContact1'];
+                echo "<td>" . $companyName . "</td>";
+                echo "<td>" . $contactName . "</td>";
+                selectLastComment($orderId, $orderId);
             }
         }
     } else {
@@ -97,10 +94,7 @@ function findOrders()
             $orderId = $row['Info_id'];
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
 
-            //$darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-
-            echo "<tr><td>" . $orderIdShort . "</td>";
-            getOrderDetails($orderIdShort);
+            getOrderDetails($orderId, $orderIdShort);
         }
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
