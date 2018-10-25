@@ -53,11 +53,6 @@ function getOrderDetails($orderId, $orderIdShort)
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
 
-            $orderSupport = substr($orderIdShort, 0, 2);
-            $orderNumber = substr($orderIdShort, 2, 4);
-            $orderSupport = substr_compare($orderId, $orderSupport, 2, 2);
-            $orderNumber = substr_compare($orderId, $orderNumber, 10, 4);
-
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
             echo "<tr><td>" . $orderId . "</td>";
@@ -75,7 +70,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 $contactName = $rowClient['NomContact1'];
                 echo "<td>" . $companyName . "</td>";
                 echo "<td>" . $contactName . "</td>";
-                selectLastComment($orderId, $orderId);
+                selectLastComment($orderIdShort, $orderId);
             }
         }
     } else {
