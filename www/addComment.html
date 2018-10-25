@@ -1,24 +1,20 @@
-<!DOCTYPE html>
-<head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="commentLight.css">
-</head>
 <form method="post" action="addComment.php">
-  <label for="numPhone">Numéro de téléphone</label>
-  <input type="text">
+<!-- <link rel="stylesheet" href="searchLight.css"> -->
+  <label for="numPhone">Numéro de téléphone</label><br>
+  <input type="text" name="PHONEY">
 
   <br><br>
     
-  <label for="numPhone">Adresse e-mail</label>
-  <input type="email">
+  <label for="numPhone">Adresse e-mail</label><br>
+  <input type="email" name="MAILEY">
 
   <br><br>
     
   <label for="unpaidReason">Raison impayé</label><br>
   <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason"></textarea>
   <br>
-  <label for="paidConfirm">Payé:</label>
+  <label for="paidConfirm">Payé:</label><br>
   <input name="paidConfirm" id="paidConfirm" type="checkbox"><br>
   <input value="Envoyer" type="submit">
-  <input value="Reset" type="submit">
+  <input value="Reset" type="submit"><br><br>
 </form>
