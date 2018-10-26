@@ -46,7 +46,9 @@ function listComments()
 $style = file_get_contents("allComments.html");
 
 if ($darkBool == "true")
-    $style = str_replace("searchLight.css", "searchDark.css", $style);
+    $style = str_replace("commentLight.css", "commentDark.css", $style);
+
+$style = str_replace("{order}", $orderIdShort, $style);
 
 echo $style;
 echo "<i><h1>Commentaires de " . $orderIdShort . "</h1></i>";

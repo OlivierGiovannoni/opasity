@@ -52,6 +52,9 @@ $style = file_get_contents("search.html");
 if ($darkBool == "true")
     $style = str_replace("searchLight.css", "searchDark.css", $style);
 
+$style = str_replace("{type}", "revue", $style);
+$style = str_replace("{query}", $reviewName, $style);
+
 echo $style;
 echo "<i><h1>Revues trouvées:</h1></i>";
 echo "<table style=\"width:100%\">";

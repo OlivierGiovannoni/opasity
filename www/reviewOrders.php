@@ -1,3 +1,4 @@
+
 <?php
 
 function testInput($data) {
@@ -30,17 +31,23 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         $rowComment = mysqli_fetch_array($resultComment);
 
         $reviewForm = "<form action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
         $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
-        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $darkBool . "\">";
         $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
         $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-        if (!$rowComment['Commentaire'])
+
+        $comment = $rowComment['Commentaire'];
+        if (!$comment && $paidStr != "R") {
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
-        else
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $rowComment['Commentaire'] . "\">";
+        } else {
+            if (strlen($comment) > 32)
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . substr($comment, 0, 32) . "...\">";
+            else
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";    
+        }
         $closeForm = "</form>";
 
-        echo "<td>" . $reviewForm . $paidHidden . $darkHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td>";
         /* echo "<td>" .  . "</td>"; */
         /* echo "<td><a id=\"tableSub\" href=\"mailto:" . . "\">" . . "</a></td></tr>"; */
@@ -108,6 +115,9 @@ $style = file_get_contents("search.html");
 if ($darkBool == "true")
     $style = str_replace("searchLight.css", "searchDark.css", $style);
 
+$style = str_replace("{type}", "revue", $style);
+$style = str_replace("{query}", $reviewName, $style);
+
 echo $style;
 echo "<i><h1>Contrats dans la revue " . $reviewName . "</h1></i>";
 echo "<table style=\"width:100%\">";
@@ -119,8 +129,8 @@ echo "<th>Nom de l'entreprise</th>";
 echo "<th>Nom du contact</th>";
 echo "<th>Commentaire</th>";
 echo "<th>Date commentaire</th>";
-echo "<th>Téléphone</th>";
-echo "<th>E-mail</th>";
+/* echo "<th>Téléphone</th>"; */
+/* echo "<th>E-mail</th>"; */
 echo "</tr>";
 
 if (mysqli_connect_error()) {

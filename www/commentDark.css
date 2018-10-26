@@ -1,0 +1,62 @@
+body {
+    color: #e1e1e1;
+    background-color: #131313;
+    text-align:center;
+    position: absolute;
+    top: 5%;
+    right: 0;
+    left: 0;
+}
+
+h1 {
+    text-align:center
+}
+
+table, th, td {
+    border: 3px solid #e1e1e1;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 7px;
+    font-style: italic;
+}
+
+input[type=text],[type=email],[type=date] {
+    width: 20%;
+    background-color: #e1e1e1;
+    color: #131313;
+    padding: 13px 13px;
+    display: inline-block;
+    border: none;
+    border-radius: 8px;
+}
+
+input[type=submit],[type=reset] {
+    width: 10%;
+    background-color: #e1e1e1;
+    color: #131313;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+textarea {
+    width: 40%;
+    background-color: #e1e1e1;
+    color: #131313;
+    padding: 13px 13px;
+    display: inline-block;
+    border: none;
+    border-radius: 8px;
+}
+
+#tableSub {
+    background-color: #131313;
+    color: orange;
+    text-decoration: underline;
+    border: none;
+    cursor: pointer;
+}

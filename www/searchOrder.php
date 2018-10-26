@@ -31,15 +31,23 @@ function selectLastComment($orderIdShort, $orderId, $paidStr)
         $rowComment = mysqli_fetch_array($resultComment);
 
         $reviewForm = "<form action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
         $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
         $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
         $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-        if (!$rowComment['Commentaire'])
+
+        $comment = $rowComment['Commentaire'];
+        if (!$comment && $paidStr != "R") {
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
-        else
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $rowComment['Commentaire'] . "\">";
+        } else {
+            if (strlen($comment) > 32)
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . substr($comment, 0, 32) . "...\">";
+            else
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";    
+        }
         $closeForm = "</form>";
-        echo "<td>" . $reviewForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+
+        echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
@@ -146,6 +154,9 @@ $style = file_get_contents("search.html");
 
 if ($darkBool == "true")
     $style = str_replace("searchLight.css", "searchDark.css", $style);
+
+$style = str_replace("{type}", "contrat", $style);
+$style = str_replace("{query}", $contractId, $style);
 
 echo $style;
 echo "<i><h1>Contrats trouvés:</h1></i>";
