@@ -47,28 +47,28 @@ function findReview()
     $GLOBALS['connection']->close();
 }
 
-$style = file_get_contents("search.html");
-
-if ($darkBool == "true")
-    $style = str_replace("searchLight.css", "searchDark.css", $style);
-
-$style = str_replace("{type}", "revue", $style);
-$style = str_replace("{query}", $reviewName, $style);
-
-echo $style;
-echo "<i><h1>Revues trouvées:</h1></i>";
-echo "<table style=\"width:100%\">";
-echo "<tr>";
-echo "<th>Revue</th>";
-echo "</tr>";
-
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    findReview();
-}
+    $style = file_get_contents("search.html");
 
-echo "</table>";
-echo "</html>";
+    if ($darkBool == "true")
+        $style = str_replace("searchLight.css", "searchDark.css", $style);
+
+    $style = str_replace("{type}", "revue", $style);
+    $style = str_replace("{query}", $reviewName, $style);
+
+    echo $style;
+    echo "<i><h1>Revues trouvées:</h1></i>";
+    echo "<table style=\"width:100%\">";
+    echo "<tr>";
+    echo "<th>Revue</th>";
+    echo "</tr>";
+
+    findReview();
+
+    echo "</table>";
+    echo "</html>";
+}
 
 ?>

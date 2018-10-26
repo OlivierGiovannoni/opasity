@@ -49,8 +49,6 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
         echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td>";
-        /* echo "<td>" .  . "</td>"; */
-        /* echo "<td><a id=\"tableSub\" href=\"mailto:" . . "\">" . . "</a></td></tr>"; */
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connection']->error;
     }
@@ -110,36 +108,34 @@ function findOrders()
     $GLOBALS['connection']->close();
 }
 
-$style = file_get_contents("search.html");
-
-if ($darkBool == "true")
-    $style = str_replace("searchLight.css", "searchDark.css", $style);
-
-$style = str_replace("{type}", "revue", $style);
-$style = str_replace("{query}", $reviewName, $style);
-
-echo $style;
-echo "<i><h1>Contrats dans la revue " . $reviewName . "</h1></i>";
-echo "<table style=\"width:100%\">";
-echo "<tr>";
-echo "<th>Contrat</th>";
-echo "<th>Prix HT</th>";
-echo "<th>Payé</th>";
-echo "<th>Nom de l'entreprise</th>";
-echo "<th>Nom du contact</th>";
-echo "<th>Commentaire</th>";
-echo "<th>Date commentaire</th>";
-/* echo "<th>Téléphone</th>"; */
-/* echo "<th>E-mail</th>"; */
-echo "</tr>";
-
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    findOrders();
-}
+    $style = file_get_contents("search.html");
 
-echo "</table>";
-echo "</html>";
+    if ($darkBool == "true")
+        $style = str_replace("searchLight.css", "searchDark.css", $style);
+
+    $style = str_replace("{type}", "revue", $style);
+    $style = str_replace("{query}", $reviewName, $style);
+
+    echo $style;
+    echo "<i><h1>Contrats dans la revue " . $reviewName . "</h1></i>";
+    echo "<table style=\"width:100%\">";
+    echo "<tr>";
+    echo "<th>Contrat</th>";
+    echo "<th>Prix HT</th>";
+    echo "<th>Payé</th>";
+    echo "<th>Nom de l'entreprise</th>";
+    echo "<th>Nom du contact</th>";
+    echo "<th>Commentaire</th>";
+    echo "<th>Date commentaire</th>";
+    echo "</tr>";
+
+    findOrders();
+
+    echo "</table>";
+    echo "</html>";
+}
 
 ?>
