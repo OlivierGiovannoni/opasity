@@ -37,7 +37,8 @@ input[type=text],[type=date] {
     border-radius: 8px;
 }
 
-input[type=submit],[type=reset] {
+#submitReview,#submitOrder,#submitDate,
+#resetReview, #resetOrder, #resetDate {
     width: 75%;
     background-color: #131313;
     color: #e1e1e1;

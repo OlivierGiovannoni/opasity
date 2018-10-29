@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Lun 01 Octobre 2018 à 12:19
+-- Généré le : Lun 29 Octobre 2018 à 17:32
 -- Version du serveur: 5.1.69
 -- Version de PHP: 5.3.2-1ubuntu4.19
 

@@ -23,9 +23,33 @@ $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
 
-function selectLastComment($orderIdShort, $orderId, $paidStr)
+function splitEvery($str, $every)
 {
-    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
+    $mul = 1;
+    for ($pos = 0; $pos < strlen($str); $pos++){
+        if ($pos == ($every * $mul)) {
+            $pos = strpos($str, " ", $pos);
+            $str = substr_replace($str, "\n", $pos, 0);
+            $mul++;
+        }
+    }
+    return ($str);
+}
+
+function getPhoneNumber($orderId)
+{
+    $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
+    if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
+        $rowComment = mysqli_fetch_array($resultComment);
+        return ($rowComment['NumTelephone']);
+    } else {
+        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+    }
+}
+
+function selectLastComment($orderId, $orderIdShort, $paidStr)
+{
+    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1 ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
@@ -41,7 +65,7 @@ function selectLastComment($orderIdShort, $orderId, $paidStr)
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
         } else {
             if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . substr($comment, 0, 32) . "...\">";
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "...\">";
             else
                 $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";    
         }
@@ -50,7 +74,7 @@ function selectLastComment($orderIdShort, $orderId, $paidStr)
         echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connection']->error;
     }
 }
 
@@ -77,13 +101,15 @@ function getOrderDetails($orderId, $orderIdShort)
                 $rowClient = mysqli_fetch_array($resultClient);
                 $companyName = $rowClient['NomSociete'];
                 $contactName = $rowClient['NomContact1'];
+                $phoneNb = getPhoneNumber($orderId);
                 echo "<td>" . $companyName . "</td>";
                 echo "<td>" . $contactName . "</td>";
-                selectLastComment($orderIdShort, $orderId, $rowOrder['Reglement']);
+                echo "<td>" . $phoneNb . "</td>";
+                selectLastComment($orderId, $orderIdShort, $rowOrder['Reglement']);
             }
         }
     } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+        echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connection']->error;
     }
 }
 
@@ -131,9 +157,17 @@ function findOrder()
                 $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
                 $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
                 $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
+
+                $commentForm = "<form action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+                $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
+                $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+                $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
+                $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
+
                 $closeForm = "</form>";
 
-                echo "<tr><td>" . $orderIdShort . "</td>";
+                echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
                 echo "<td>" . $reviewForm . $darkBool . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
                 getOrderDetails($orderId, $orderIdShort);
             }
@@ -165,6 +199,7 @@ if (mysqli_connect_error()) {
     echo "<th>Payé</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
+    echo "<th>Numéro de télephone</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "</tr>";

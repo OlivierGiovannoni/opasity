@@ -14,23 +14,48 @@ $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
 
-function generateInput($htmlFileName)
+function generateInput($htmlFileName, $orderId, $orderIdShort)
 {
     $htmlFileData = file_get_contents($htmlFileName);
+    $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
+    $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
     echo $htmlFileData;
 }
+
+function getContactName($orderId)
+{
+    $sqlContactId = "SELECT Client_id FROM webcontrat_contrat WHERE Commande='$orderId';";
+    if ($resultContactId = $GLOBALS['connection']->query($sqlContactId)) {
+
+        $rowContactId = mysqli_fetch_array($resultContactId);
+        $contactId = $rowContactId['Client_id'];
+        $sqlContactName = "SELECT NomContact1 FROM webcontrat_client WHERE id='$contactId';";
+        if ($resultContactName = $GLOBALS['connection']->query($sqlContactName)) {
+
+            $rowContactName = mysqli_fetch_array($resultContactName);
+            return ($rowContactName['NomContact1']);
+        } else {
+            echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connection']->error;
+        }
+    } else {
+        echo "Query error: ". $sqlContactId ." // ". $GLOBALS['connection']->error;
+    }
+}
+
 
 function listComments()
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
     $sqlComment = "SELECT Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Payee FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
-    if ($result = $GLOBALS['connection']->query($sqlComment)) {
+    if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
 
-        while ($rowComment = mysqli_fetch_array($result)) {
+        while ($rowComment = mysqli_fetch_array($resultComment)) {
 
+            $contactName = getContactName($GLOBALS['orderId']);
             echo "<tr><td>" . $rowComment['Commentaire'] . "</td>";
             echo "<td>" . $rowComment['Auteur'] . "</td>";
             echo "<td>" . $rowComment['Date'] . "</td>";
+            echo "<td>" . $contactName . "</td>";
             $mailHref = "<a id=\"tableSub\" href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
@@ -60,6 +85,7 @@ if (mysqli_connect_error()) {
     echo "<th>Commentaire</th>";
     echo "<th>Auteur</th>";
     echo "<th>Date commentaire</th>";
+    echo "<th>Nom du contact</th>";
     echo "<th>E-mail</th>";
     echo "<th>Téléphone</th>";
     echo "<th>Prochaine relance</th>";
@@ -68,7 +94,7 @@ if (mysqli_connect_error()) {
 
     listComments();
     if ($paidStr == "")
-        generateInput("addComment.html");
+        generateInput("addComment.html", $orderId, $orderIdShort);
 
     echo "</table>";
     echo "</html>";

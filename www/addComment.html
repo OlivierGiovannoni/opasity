@@ -1,19 +1,28 @@
 <form method="post" action="addComment.php">
   <label for="numPhone">Numéro de téléphone</label><br>
-  <input type="text" name="PHONEY">
+  <input type="text" name="numPhone" id="numPhone">
 
   <br><br>
     
-  <label for="numPhone">Adresse e-mail</label><br>
-  <input type="email" name="MAILEY">
+  <label for="emailAddr">Adresse e-mail</label><br>
+  <input type="email" name="emailAddr" id="emailAddr">
 
   <br><br>
-    
+
+  <label for="nextDueDate">Prochaine relance</label><br>
+  <input type="date" name="nextDueDate" id="nextDueDate">
+
+  <br><br>
+
   <label for="unpaidReason">Raison impayé</label><br>
   <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason"></textarea>
   <br>
   <label for="paidConfirm">Payé:</label>
-  <input name="paidConfirm" id="paidConfirm" type="checkbox"><br>
+  <input type="checkbox" name="paidConfirm" id="paidConfirm"><br>
+
+  <input type="hidden" name="hiddenId" value="{orderId}">
+  <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
+
   <input value="Envoyer" type="submit">
   <input value="Reset" type="submit"><br><br>
 </form>

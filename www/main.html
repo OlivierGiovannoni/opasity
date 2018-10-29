@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
   <head>
     <meta charset="utf-8">
     <title>Factures impayées</title>
@@ -8,7 +7,7 @@
   </head>
   <body>
     <script src="dark.js"></script>
-    <div>
+    <div id="darkDiv">
       <i><h1>Système de recherche de factures impayées</h1></i>
 
       <label for="darkBool">Mode sombre</label>
@@ -34,20 +33,34 @@
 
     <br><br>
 
+    <!-- <div id="orderDiv"> -->
+    <!--   <i><h2>Recherche par client:</h2></i> -->
+    <!--   <form name="searchClient" id="formClient" action="searchClient.php" method="post"> -->
+
+    <!-- 	<label for="clientName">Nom du contact:</label> -->
+    <!-- 	<br><input type="text" name="clientName" id="clientName" value="ELIOR" required><br><br> -->
+
+    <!-- 	<input type="hidden" name="darkBool" id="darkBoolClient"> -->
+
+    <!-- 	<input type="submit" id="submitOrder" value="Chercher"> -->
+    <!-- 	<input type="reset" id="resetOrder" value="Réinitialiser"> -->
+    <!-- </form> -->
+    <!-- </div> -->
+
     <div id="orderDiv">
       <i><h2>Recherche par contrat:</h2></i>
       <form name="searchContract" id="formOrder" action="searchOrder.php" method="post">
 
-	<label for="contractId">Contrat:</label>
-	<br><input type="text" name="contractId" id="contractId" value="GI4468" required><br><br>
+    	<label for="contractId">Contrat:</label>
+    	<br><input type="text" name="contractId" id="contractId" value="GI4468" required><br><br>
 
-	<label for="paidBoolOrder">Inclure les contrats reglés (dans la revue)</label>
-	<input type="checkbox" name="paidBool" id="paidBoolOrder"><br>
+    	<label for="paidBoolOrder">Inclure les contrats reglés (dans la revue)</label>
+    	<input type="checkbox" name="paidBool" id="paidBoolOrder"><br>
 
-	<input type="hidden" name="darkBool" id="darkBoolOrder">
+    	<input type="hidden" name="darkBool" id="darkBoolOrder">
 
-	<input type="submit" id="submitOrder" value="Chercher">
-	<input type="reset" id="resetOrder" value="Réinitialiser">
+    	<input type="submit" id="submitOrder" value="Chercher">
+    	<input type="reset" id="resetOrder" value="Réinitialiser">
     </form>
     </div>
 
@@ -67,5 +80,4 @@
       </form>
     </div>
   </body>
-
 </html>

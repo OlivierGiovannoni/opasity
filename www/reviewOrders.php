@@ -23,6 +23,19 @@ $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
 
+function splitEvery($str, $every)
+{
+    $mul = 1;
+    for ($pos = 0; $pos < strlen($str); $pos++){
+        if ($pos == ($every * $mul)) {
+            $pos = strpos($str, " ", $pos);
+            $str = substr_replace($str, "\n", $pos, 0);
+            $mul++;
+        }
+    }
+    return ($str);
+}
+
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
     $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
@@ -41,7 +54,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
         } else {
             if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . substr($comment, 0, 32) . "...\">";
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "...\">";
             else
                 $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";    
         }
@@ -51,6 +64,17 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         echo "<td>" . $rowComment['Date'] . "</td>";
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connection']->error;
+    }
+}
+
+function getPhoneNumber($orderId)
+{
+    $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
+    if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
+        $rowComment = mysqli_fetch_array($resultComment);
+        return ($rowComment['NumTelephone']);
+    } else {
+        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
     }
 }
 
@@ -66,7 +90,17 @@ function getOrderDetails($orderId, $orderIdShort)
 
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
-            echo "<tr><td>" . $orderIdShort . "</td>";
+
+            $commentForm = "<form action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+            $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+            $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
+            $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
+            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
+            $closeForm = "</form>";
+
+            echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+
             echo "<td>" . $priceRaw . "</td>";
             if ($rowOrder['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
@@ -79,13 +113,17 @@ function getOrderDetails($orderId, $orderIdShort)
                 $rowClient = mysqli_fetch_array($resultClient);
                 $companyName = $rowClient['NomSociete'];
                 $contactName = $rowClient['NomContact1'];
+                $phoneNb =  getPhoneNumber($orderId);
                 echo "<td>" . $companyName . "</td>";
                 echo "<td>" . $contactName . "</td>";
+                echo "<td>" . $phoneNb . "</td>";
                 selectLastComment($orderId, $orderIdShort, $rowOrder['Reglement']);
+            } else {
+                echo "Query error: ". $sqlClient ." // ". $GLOBALS['connection']->error;
             }
         }
     } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+            echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connection']->error;
     }
 }
 
@@ -128,6 +166,7 @@ if (mysqli_connect_error()) {
     echo "<th>Payé</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
+    echo "<th>Numéro de télephone</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "</tr>";

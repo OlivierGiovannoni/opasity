@@ -4,12 +4,27 @@ $mainHTML = file_get_contents("main.html");
 echo $mainHTML;
 $today = date("Y-m-d");
 
+$darkCheck = "<script> document.getElementById('darkBool').value; </script>";
+
 $host = "localhost";
 $dbusername = "root";
 $dbpassword = "stage972";
 $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
+
+function splitEvery($str, $every)
+{
+    $mul = 1;
+    for ($pos = 0; $pos < strlen($str); $pos++){
+        if ($pos == ($every * $mul)) {
+            $pos = strpos($str, " ", $pos);
+            $str = substr_replace($str, "\n", $pos, 0);
+            $mul++;
+        }
+    }
+    return ($str);
+}
 
 function selectLastComment($orderIdShort, $orderId, $paidStr)
 {
@@ -18,9 +33,11 @@ function selectLastComment($orderIdShort, $orderId, $paidStr)
 
         $rowComment = mysqli_fetch_array($resultComment);
 
+        $darkValue = print_r($GLOBALS['darkCheck']);
+        $darkBool = ($darkValue == "on" ? TRUE : FALSE);
+
         $commentForm = "<form action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-        $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
+        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $darkBool . "\">";
         $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
         $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
 
@@ -29,13 +46,13 @@ function selectLastComment($orderIdShort, $orderId, $paidStr)
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
         } else {
             if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . substr($comment, 0, 32) . "...\">";
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "...\">";
             else
                 $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";
         }
         $closeForm = "</form>";
 
-        echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $commentForm . $darkHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
@@ -55,7 +72,6 @@ function getOrderDetails($orderId, $orderIdShort, $final)
             $priceRaw = $rowOrder['PrixHT'];
 
             $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
-            //$paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
             $closeForm = "</form>";
@@ -104,14 +120,29 @@ function findReview($infoId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire,Commande,Commande_courte FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
+    $sqlDate = "SELECT Commentaire,Commande,Commande_courte,Payee FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
     if ($resultDate = $GLOBALS['connection']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
 
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
-            echo "<tr><td>" . $orderIdShort . "</td>";
+
+            $darkValue = print_r($GLOBALS['darkCheck']);
+
+            $paidStr =  ($rowDate['Payee'] == 1 ? "R" : "");
+            $darkBool = ($darkValue == "on" ? TRUE : FALSE);
+
+            $commentForm = "<form action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+            $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $darkBool . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
+            $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
+            $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
+            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
+            $closeForm = "</form>";
+
+            echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+           
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
         }
