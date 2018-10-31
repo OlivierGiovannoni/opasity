@@ -75,6 +75,8 @@ mysql> CREATE TABLE webcontrat_commentaire ( Commentaire_id INT NOT NULL AUTO_IN
 					     Commande_courte VARCHAR(6) NOT NULL,
 					     Payee TINYINT NOT NULL,
 					     Prochaine_relance DATE,
+					     NumTelephone VARCHAR(16) NOT NULL,
+					     AdresseMail VARCHAR(256),
 					     PRIMARY KEY (Commentaire_id) );
 
 mysql> DESCRIBE webcontrat_commentaire;
@@ -91,6 +93,8 @@ mysql> DESCRIBE webcontrat_commentaire;
 | Commande_courte       | varchar(6)   | NO   |     | NULL    |                |
 | Payee                 | tinyint(4)   | NO   |     | NULL    |                |
 | Prochaine_relance     | date         | YES  |     | NULL    |                |
+| NumTelephone          | varchar(16)  | NO   |     | NULL    |                |
+| AdresseMail           | varchar(256) | YES  |     | NULL    |                |
 +-----------------------+--------------+------+-----+---------+----------------+
 
 mysql> INSERT INTO webcontrat_commentaire (Commentaire,
@@ -101,29 +105,23 @@ mysql> INSERT INTO webcontrat_commentaire (Commentaire,
 					   Commande,
 					   Commande_courte,
 					   Payee,
-					   Prochaine_relance)
+					   Prochaine_relance,
+					   NumTelephone,
+					   AdresseEmail)
 					   
-					VALUES
+					   VALUES
 					
-					  ('Test commentaire',
+					  ("$comment",
 					   'dev',
-					   '2018-10-19',
-					   NULL,
-					   0,
-					   'OPGI00004A4468',
-					   'GI4468',
-					   0,
-					   '2018-10-22');
-					   
-					  ('Test paiement',
-					   'dev',
-					   '2018-10-22',
-					   1,
-					   1,
-					   'OPGI00004A4468',
-					   'GI4468',
-					   1,
-					   NULL);
+					   '$today',
+					   NULL OR $previousId,
+					   0 OR 1,
+					   '$orderId',
+					   '$orderIdShort',
+					   0 OR 1,
+					   '$nextDueDate' or NULL,
+					   '$phone' OR '$oldPhone'
+					   '$email' OR NULL);
 
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------

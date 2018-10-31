@@ -5,7 +5,8 @@ $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
 $paidStr = filter_input(INPUT_POST, "hiddenPaid");
 $comment = filter_input(INPUT_POST, "comment");
 $darkBool = filter_input(INPUT_POST, "darkBool");
-$noComments = ($comment == "Nouveau commentaire" ? TRUE : FALSE);
+$lastId = filter_input(INPUT_POST, "commentId");
+$clientId = NULL;
 
 $host = "localhost";
 $dbusername = "root";
@@ -14,26 +15,29 @@ $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
 
-function generateInput($htmlFileName, $orderId, $orderIdShort)
+function generateInput($htmlFileName, $orderId, $orderIdShort, $lastId, $clientId)
 {
     $htmlFileData = file_get_contents($htmlFileName);
     $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
     $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
+    $htmlFileData = str_replace("{lastId}", $lastId, $htmlFileData);
+    $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
     echo $htmlFileData;
 }
 
 function getContactName($orderId)
 {
-    $sqlContactId = "SELECT Client_id FROM webcontrat_contrat WHERE Commande='$orderId';";
+    $sqlContactId = "SELECT Client_id FROM webcontrat_contrat WHERE Commande='$orderId' ORDER BY DateEmission DESC;";
     if ($resultContactId = $GLOBALS['connection']->query($sqlContactId)) {
 
         $rowContactId = mysqli_fetch_array($resultContactId);
         $contactId = $rowContactId['Client_id'];
-        $sqlContactName = "SELECT NomContact1 FROM webcontrat_client WHERE id='$contactId';";
+        $sqlContactName = "SELECT NomContact1,NomSociete FROM webcontrat_client WHERE id='$contactId' ORDER BY DateCreation DESC;";
         if ($resultContactName = $GLOBALS['connection']->query($sqlContactName)) {
 
             $rowContactName = mysqli_fetch_array($resultContactName);
-            return ($rowContactName['NomContact1']);
+            $contactName = $rowContactName['NomSociete'];
+            return (array('id' => $contactId, 'name' => $contactName));
         } else {
             echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connection']->error;
         }
@@ -46,20 +50,28 @@ function getContactName($orderId)
 function listComments()
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
-    $sqlComment = "SELECT Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Payee FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Payee FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
 
         while ($rowComment = mysqli_fetch_array($resultComment)) {
 
-            $contactName = getContactName($GLOBALS['orderId']);
+            $contact = getContactName($GLOBALS['orderId']);
             echo "<tr><td>" . $rowComment['Commentaire'] . "</td>";
             echo "<td>" . $rowComment['Auteur'] . "</td>";
-            echo "<td>" . $rowComment['Date'] . "</td>";
-            echo "<td>" . $contactName . "</td>";
+            echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
+
+            $clientForm = "<form action=\"clientOrders.php\" method=\"post\">";
+            /* $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">"; */
+            /* $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">"; */
+            $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $contact['id'] . "\">";
+            $clientInput = "<input style=\"font-size=11px\" type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $contact['name'] . "\">";
+            $closeForm = "</form>";
+            echo "<td>" . $clientForm . /* $darkBool . $getPaidOrders . */$clientHidden . $clientInput . $closeForm . "</td>";
+
             $mailHref = "<a id=\"tableSub\" href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
-            echo "<td>" . $rowComment['Prochaine_relance'] . "</td>";
+            echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td>";
             echo "<td>" . $rowComment['Payee'] . "</td></tr>";
         }
     } else {
@@ -85,16 +97,21 @@ if (mysqli_connect_error()) {
     echo "<th>Commentaire</th>";
     echo "<th>Auteur</th>";
     echo "<th>Date commentaire</th>";
-    echo "<th>Nom du contact</th>";
+    echo "<th>Nom de l'entreprise</th>";
     echo "<th>E-mail</th>";
     echo "<th>Téléphone</th>";
     echo "<th>Prochaine relance</th>";
     echo "<th>Payé</th>";
     echo "</tr>";
 
-    listComments();
-    if ($paidStr == "")
-        generateInput("addComment.html", $orderId, $orderIdShort);
+    if (mysqli_set_charset($connection, "utf8") === TRUE) {
+
+        listComments();
+        if ($paidStr == "")
+            generateInput("addComment.html", $orderId, $orderIdShort, $lastId, $clientId);
+    }
+    else
+        die("MySQL SET CHARSET error: ". $connection->error);
 
     echo "</table>";
     echo "</html>";

@@ -29,22 +29,22 @@ h1,h2 {
 
 input[type=text],[type=date] {
     width: 75%;
-    background-color: #131313;
-    color: #e1e1e1;
+    background-color: #e1e1e1;
+    color: #131313;
     padding: 13px 13px;
     display: inline-block;
-    border: none;
+    border: 1px solid #131313;
     border-radius: 8px;
 }
 
 #submitReview,#submitOrder,#submitDate,
 #resetReview, #resetOrder, #resetDate {
     width: 75%;
-    background-color: #131313;
-    color: #e1e1e1;
+    background-color: #e1e1e1;
+    color: #131313;
     padding: 14px 20px;
     margin: 8px 0;
-    border: none;
+    border: 1px solid #131313;
     border-radius: 8px;
     cursor: pointer;
 }

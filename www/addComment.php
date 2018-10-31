@@ -1,5 +1,7 @@
 <?php
 
+$clientId = filter_input(INPUT_POST, "clientId");
+$previousId = filter_input(INPUT_POST, "previousId");
 $orderId = filter_input(INPUT_POST, "hiddenId");
 $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
 $phone = filter_input(INPUT_POST, "numPhone");
@@ -16,31 +18,54 @@ $dbname = "opas";
 
 $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
 
-function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm)
+function uploadFile($tmpFile, $fileName)
+{
+    $fileDirectory = "fichiers/";
+    $newFile = $fileDirectory . basename($fileName);
+
+    if (move_uploaded_file($tmpFile, $newFile)) {
+        echo basename($_FILES['fileUpload']['name']). " à été mis en ligne.";
+    } else {
+        echo "Il y a eu un problème pendant la mise en ligne du fichier...";
+    }
+}
+
+function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm, $clientId, $previousId)
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
-
     $today = date("Y-m-d");
-    $sqlNewComment = "INSERT INTO webcontrat_commentaire (Commentaire,Auteur,Payee,Date,Dernier_commentaire,Commande,Commande_courte,NumTelephone,AdresseMail) VALUES (\"$unpaidReason\",\"auteur\",0,\"$today\",1,\"OPGI00004A4468\",\"GI4468\",\"$phone\",\"$email\");";
-    if ($resultNewComment = $GLOBALS['connection']->query($sqlNewComment)) {
+    $paidBool = ($paidConfirm == "on" ? 1 : 0 );
 
-        /* while ($rowNewComment = mysqli_fetch_array($resultNewComment)) { */
+    $sqlContactInfo = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY DateCreation DESC;";
+    if ($resultContactInfo = $GLOBALS['connection']->query($sqlContactInfo)) {
 
-        /* } */
+        $rowContactInfo = mysqli_fetch_array($resultContactInfo);
+
+        if ($phone == "")
+            $phone = $rowContactInfo['Tel'];
     } else {
-        echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connection']->error; 
+        echo "Query error: ". $sqlContactInfo ." // ". $GLOBALS['connection']->error;
     }
-    if ($paidConfirm == "on") {
+
+    if ($paidBool == 1) {
         $sqlPaid = "UPDATE Reglement='R' FROM webcontrat_contrat WHERE Commande='$orderId';";
         if ($resultPaid = $GLOBALS['connection']->query($sqlPaid)) {
 
-            /* while ($rowPaid = mysqli_fetch_array($resultPaid)) { */
-
-            /* } */
+            // UPDATE output doesn't need to be fetched.
         } else {
             echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connection']->error;
-            echo "IUZHEIFUL $nextDueDate";
         }
+    }
+    $previousId = ($previousId == "" ? "NULL" : $previousId);
+
+    $rowNames = "Commentaire,Auteur,Date,Commentaire_precedent,Dernier_commentaire,Commande,Commande_courte,Payee,Prochaine_relance,NumTelephone,AdresseMail";
+    $rowValues = "\"$unpaidReason\",'dev','$today',$previousId,$paidBool,'$orderId','$orderIdShort',$paidBool,'$nextDueDate','$phone','$email'";
+    $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
+    if ($resultNewComment = $GLOBALS['connection']->query($sqlNewComment)) {
+
+        // INSERT output doesn't need to be fetched.
+    } else {
+        echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connection']->error; 
     }
     $GLOBALS['connection']->close();
 }
@@ -61,8 +86,8 @@ if (mysqli_connect_error()) {
     /* echo "<tr>"; */
     /* echo "</tr>"; */
 
-    newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm);
-
+    newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm, $clientId, $previousId);
+    uploadFile($_FILES['fileUpload']['tmp_name'], $_FILES['fileUpload']['name']);
     /* echo "</table>"; */
     /* echo "</html>"; */
 }

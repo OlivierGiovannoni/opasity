@@ -131,8 +131,10 @@ if (mysqli_connect_error()) {
     $style = str_replace("{type}", "date", $style);
     $style = str_replace("{query}", $dueDate, $style);
 
+    $newDate = date("d/m/Y", strtotime($dueDate));
+
     echo $style;
-    echo "<i><h1>Contrats à relancer le " . $dueDate . ":</h1></i>";
+    echo "<i><h1>Contrats à relancer le " . $newDate . ":</h1></i>";
     echo "<table style=\"width:100%\">";
     echo "<tr>";
     echo "<th>Contrat</th>";
@@ -144,7 +146,10 @@ if (mysqli_connect_error()) {
     echo "<th>Date commentaire</th>";
     echo "</tr>";
 
-    findDates($dueDate);
+    if (mysqli_set_charset($connection, "utf8") === TRUE)
+        findDates($dueDate);
+    else
+        die("MySQL SET CHARSET error: ". $connection->error);
 
     echo "</table>";
     echo "</html>";

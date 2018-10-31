@@ -156,8 +156,9 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $today = "2018-10-22";
-
-    echo "<i><h1>Contrats à relancer le " . $today . ":</h1></i>";
+    $newDate = date("d/m/Y", strtotime($today));
+    
+    echo "<i><h1>Contrats à relancer le " . $newDate . ":</h1></i>";
     echo "<table style=\"width:100%\">";
     echo "<tr>";
     echo "<th>Contrat</th>";

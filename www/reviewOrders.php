@@ -1,4 +1,3 @@
-
 <?php
 
 function testInput($data) {
@@ -38,7 +37,7 @@ function splitEvery($str, $every)
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
+    $sqlComment = "SELECT Commentaire_id,Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1 ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
@@ -48,20 +47,21 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
         $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
         $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
+        $idLastHidden = "<input type=\"hidden\" name=\"commentId\" value=\"" . $rowComment['Commentaire_id'] . "\">";
 
         $comment = $rowComment['Commentaire'];
         if (!$comment && $paidStr != "R") {
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
+            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"". ($paidStr == "R" ? "Liste" : "Nouveau") ." commentaire(s)\">";
         } else {
             if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "...\">";
+                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "\">";
             else
                 $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";    
         }
         $closeForm = "</form>";
 
-        echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
-        echo "<td>" . $rowComment['Date'] . "</td>";
+        echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $idLastHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connection']->error;
     }
@@ -69,7 +69,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
 function getPhoneNumber($orderId)
 {
-    $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1;";
+    $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' AND Dernier_commentaire=1 ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
         $rowComment = mysqli_fetch_array($resultComment);
         return ($rowComment['NumTelephone']);
@@ -81,9 +81,9 @@ function getPhoneNumber($orderId)
 function getOrderDetails($orderId, $orderIdShort)
 {
     if ($GLOBALS['getPaid'] == "on")
-        $sqlOrder = "SELECT Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+        $sqlOrder = "SELECT Client_id,PrixHT,Reglement,DateEmission FROM webcontrat_contrat WHERE Commande='$orderId';";
     else
-        $sqlOrder = "SELECT Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId' AND Reglement='';";
+        $sqlOrder = "SELECT Client_id,PrixHT,Reglement,DateEmission FROM webcontrat_contrat WHERE Commande='$orderId' AND Reglement='';";
     if ($resultOrder = $GLOBALS['connection']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
@@ -99,8 +99,10 @@ function getOrderDetails($orderId, $orderIdShort)
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
-
+            $newDate = date("d/m/Y", strtotime($rowOrder['DateEmission']));
+            
+            echo "<tr><td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<td>" . $newDate . "</td>";
             echo "<td>" . $priceRaw . "</td>";
             if ($rowOrder['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
@@ -162,6 +164,7 @@ if (mysqli_connect_error()) {
     echo "<table style=\"width:100%\">";
     echo "<tr>";
     echo "<th>Contrat</th>";
+    echo "<th>Date enregistrement</th>";
     echo "<th>Prix HT</th>";
     echo "<th>Payé</th>";
     echo "<th>Nom de l'entreprise</th>";
@@ -171,7 +174,10 @@ if (mysqli_connect_error()) {
     echo "<th>Date commentaire</th>";
     echo "</tr>";
 
-    findOrders();
+    if (mysqli_set_charset($connection, "utf8") === TRUE)
+        findOrders();
+    else
+        die("MySQL SET CHARSET error: ". $connection->error);
 
     echo "</table>";
     echo "</html>";

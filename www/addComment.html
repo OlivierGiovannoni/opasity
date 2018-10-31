@@ -1,4 +1,4 @@
-<form method="post" action="addComment.php">
+<form enctype="multipart/form-data" method="post" action="addComment.php">
   <label for="numPhone">Numéro de téléphone</label><br>
   <input type="text" name="numPhone" id="numPhone">
 
@@ -16,12 +16,21 @@
 
   <label for="unpaidReason">Raison impayé</label><br>
   <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason"></textarea>
-  <br>
+
+  <br><br>
+
+  <label for="fileUp">Mettre un fichier en ligne</label><br>
+  <input type="file" name="fileUpload" id="fileUp">
+
+  <br><br>
+
   <label for="paidConfirm">Payé:</label>
   <input type="checkbox" name="paidConfirm" id="paidConfirm"><br>
 
   <input type="hidden" name="hiddenId" value="{orderId}">
   <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
+  <input type="hidden" name="previousId" value="{lastId}">
+  <input type="hidden" name="clientId" value="{clientId}">
 
   <input value="Envoyer" type="submit">
   <input value="Reset" type="submit"><br><br>

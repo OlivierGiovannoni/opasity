@@ -23,32 +23,32 @@ $connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION
 function findReview()
 {
     $reviewName = $GLOBALS['reviewName'];
-    $sql = "SELECT id,Nom FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%';";
-    if ($result = $GLOBALS['connection']->query($sql)) {
+    $sqlReview = "SELECT id,Nom,Annee FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%';";
+    if ($resultReview = $GLOBALS['connection']->query($sqlReview)) {
 
-        while ($row = mysqli_fetch_array($result)) {
+        while ($rowReview = mysqli_fetch_array($resultReview)) {
 
-            $currReviewName = $row['Nom'];
-            $currReviewId = $row['id'];
-            $curr = array('Name' => $currReviewName, 'Id' => $currReviewId);
-            if (strpos($currReviewName, $GLOBALS['reviewName']) !== FALSE) {
-                $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
-                $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-                $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
-                $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
-                $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . "\">";
-                $closeForm = "</form>";
-                echo "<tr><td>" . $reviewForm . $darkBool . $getPaidOrders . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
-            }
+            $currReviewName = $rowReview['Nom'];
+            $currReviewId = $rowReview['id'];
+            $currReviewYear = $rowReview['Annee'];
+            $curr = array('Name' => $currReviewName, 'Id' => $currReviewId, 'Year' => $currReviewYear);
+
+            $reviewForm = "<form action=\"reviewOrders.php\" method=\"post\">";
+            $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
+            $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+            $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
+            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
+            $closeForm = "</form>";
+            echo "<tr><td>" . $reviewForm . $darkBool . $getPaidOrders . $reviewHidden . $reviewInput . $closeForm . "</td></tr>";
         }
     } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connection']->error;
+        echo "Query error: ". $sqlReview ." // ". $GLOBALS['connection']->error;
     }
     $GLOBALS['connection']->close();
 }
 
 if (mysqli_connect_error()) {
-    die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
+    die("Connection error. Code: ". mysqli_connect_errno() ." Reason: " . mysqli_connect_error());
 } else {
     $style = file_get_contents("search.html");
 
@@ -65,7 +65,10 @@ if (mysqli_connect_error()) {
     echo "<th>Revue</th>";
     echo "</tr>";
 
-    findReview();
+    if (mysqli_set_charset($connection, "utf8") === TRUE)
+        findReview();
+    else
+        die("MySQL SET CHARSET error: ". $connection->error);
 
     echo "</table>";
     echo "</html>";
