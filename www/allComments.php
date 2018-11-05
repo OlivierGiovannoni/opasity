@@ -60,14 +60,15 @@ function listComments()
             echo "<td>" . $rowComment['Auteur'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
 
-            $clientForm = "<form action=\"clientOrders.php\" method=\"post\">";
-            /* $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">"; */
-            /* $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">"; */
-            $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $contact['id'] . "\">";
-            $clientInput = "<input style=\"font-size=11px\" type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $contact['name'] . "\">";
-            $closeForm = "</form>";
-            echo "<td>" . $clientForm . /* $darkBool . $getPaidOrders . */$clientHidden . $clientInput . $closeForm . "</td>";
+            /* $clientForm = "<form action=\"clientOrders.php\" method=\"post\">"; */
+            /* /\* $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">"; *\/ */
+            /* /\* $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">"; *\/ */
+            /* $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $contact['id'] . "\">"; */
+            /* $clientInput = "<input type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $contact['name'] . "\">"; */
+            /* $closeForm = "</form>"; */
+            /* echo "<td>" . $clientForm . /\* $darkBool . $getPaidOrders . *\/$clientHidden . $clientInput . $closeForm . "</td>"; */
 
+            echo "<td>" . $contact['name'] . "</td>";
             $mailHref = "<a id=\"tableSub\" href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
