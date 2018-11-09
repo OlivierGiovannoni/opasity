@@ -13,12 +13,13 @@ h1 {
 }
 
 table, th, td {
-    border: 3px solid #e1e1e1;
+    margin: 0px auto;
+    border: 2px solid #e1e1e1;
     border-collapse: collapse;
 }
 
 th, td {
-    padding: 7px;
+    padding: 5px;
     font-style: italic;
 }
 

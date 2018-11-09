@@ -1,0 +1,41 @@
+body {
+
+    color: #efeef1;
+    background-color: #0e0c13;
+}
+
+h2 {
+
+    position: absolute;
+    width: 100%;
+    top: 5%;
+    text-align: center;
+}
+
+#login {
+
+    position: absolute;
+    width: 100%;
+    top: 10%;
+    text-align: center;
+}
+
+.text {
+
+    color: #efeef1;
+    background-color: #0e0c13;
+    width: 20%;
+    border: 1px solid #efeef1;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+.button {
+
+    color: #efeef1;
+    background-color: #6441a4;
+    width: 20%;
+    border: 0px;
+    border-radius: 8px;
+    padding: 8px;
+}

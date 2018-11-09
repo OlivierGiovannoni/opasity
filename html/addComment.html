@@ -1,4 +1,8 @@
-<form enctype="multipart/form-data" method="post" action="addComment.php">
+<script src="../js/dropzone.js"></script>
+<link rel="stylesheet" href="../css/dropzone.css">
+<form target="uploadFrame" enctype="multipart/form-data" method="post" action="addComment.php">
+  <iframe name="uploadFrame" width="100" height="10" style="border:0px"></iframe>
+  <br><br>
   <label for="numPhone">Numéro de téléphone</label><br>
   <input type="text" name="numPhone" id="numPhone">
 
@@ -19,8 +23,8 @@
 
   <br><br>
 
-  <label for="fileUp">Mettre un fichier en ligne</label><br>
-  <input type="file" name="fileUpload" id="fileUp">
+  <label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
+  <input type="file" name="fileUpload" id="fileUp" class="dropzone">
 
   <br><br>
 
@@ -29,7 +33,6 @@
 
   <input type="hidden" name="hiddenId" value="{orderId}">
   <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
-  <input type="hidden" name="previousId" value="{lastId}">
   <input type="hidden" name="clientId" value="{clientId}">
 
   <input value="Envoyer" type="submit">
