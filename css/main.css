@@ -11,20 +11,9 @@ h1,h2 {
     text-align:center
 }
 
-#reviewDiv {
-    border: 1px solid #ff0000;
-    width: 33%;
+#searchDiv {
+    width: 25%;
     float: left;
-}
-#orderDiv {
-    border: 1px solid #00ff00;
-    width: 33%;
-    float:left;
-}
-#dateDiv {
-    border: 1px solid #0000ff;
-    width: 33%;
-    float:left;
 }
 
 input[type=text],[type=date] {
@@ -37,8 +26,8 @@ input[type=text],[type=date] {
     border-radius: 8px;
 }
 
-#submitReview,#submitOrder,#submitDate,
-#resetReview, #resetOrder, #resetDate {
+#submitReview,#submitOrder,#submitDate, #submitClient,
+#resetReview, #resetOrder, #resetDate, #resetClient {
     width: 75%;
     background-color: #e1e1e1;
     color: #131313;
@@ -50,12 +39,13 @@ input[type=text],[type=date] {
 }
 
 table, th, td {
-    border: 3px solid #131313;
+    margin: 0px auto;
+    border: 2px solid #131313;
     border-collapse: collapse;
 }
 
 th, td {
-    padding: 7px;
+    padding: 5px;
     font-style: italic;
 }
 

@@ -12,12 +12,27 @@ $darkBool = filter_input(INPUT_POST, "darkBool");
 
 $clientName = testInput($clientName);
 
-$host = "localhost";
-$dbusername = "root";
-$dbpassword = "stage972";
-$dbname = "opas";
+function credsArr($credsStr)
+{
+    $credsArr = array();
+    $linesArr = explode(";", $credsStr);
+    $linesArr = explode("\n", $linesArr[0]);
+    foreach ($linesArr as $index => $line) {
 
-$connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
+        $valueSplit = explode(":", $line);
+        $credsArr[$valueSplit[0]] = $valueSplit[1];
+    }
+    return ($credsArr);
+}
+
+$credsFile = "../credentials.txt";
+$credentials = credsArr(file_get_contents($credsFile));
+
+$connection = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']); // CONNEXION A LA DB
 
 function findClient($clientName)
 {
@@ -26,7 +41,12 @@ function findClient($clientName)
 
         while ($rowClient = mysqli_fetch_array($resultClient)) {
 
-            echo "<tr><td>" . $rowClient['NomSociete'] . "</td>";
+            $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
+            $clientDark = "<input type=\"hidden\" name=\"darkBool\">";
+            $clientHidden = "<input type=\"hidden\" name=\"clientId\">";
+            $clientSubmit = "<input type=\"submit\" name=\"clientName\" id=\"tableSub\" value=\"" . $rowClient['NomSociete'] . "\">";
+            $closeForm = "</form>";
+            echo "<tr><td>" . $clientForm . $clientDark . $clientHidden . $clientSubmit . $closeForm . "</td>";
             echo "<td>" . $rowClient['NomContact1'] . "</td>";
             echo "<td>" . $rowClient['Tel'] . "</td></tr>";
         }
@@ -39,7 +59,7 @@ function findClient($clientName)
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $style = file_get_contents("search.html");
+    $style = file_get_contents("../html/search.html");
 
     if ($darkBool == "true")
         $style = str_replace("searchLight.css", "searchDark.css", $style);
@@ -49,18 +69,21 @@ if (mysqli_connect_error()) {
 
     echo $style;
     echo "<i><h1>Contrats trouvés:</h1></i>";
-    echo "<table style=\"width:100%\">";
+    echo "<table>";
     echo "<tr>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Numéro de télephone</th>";
     echo "</tr>";
 
-    findClient($clientName);
+    if (mysqli_set_charset($connection, "utf8") === TRUE)
+        findClient($clientName);
+    else
+        die("MySQL SET CHARSET error: ". $connection->error);
+
 
     echo "</table>";
     echo "</html>";
 }
-
 
 ?>

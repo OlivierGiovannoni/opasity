@@ -5,22 +5,44 @@ $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
 $paidStr = filter_input(INPUT_POST, "hiddenPaid");
 $comment = filter_input(INPUT_POST, "comment");
 $darkBool = filter_input(INPUT_POST, "darkBool");
-$lastId = filter_input(INPUT_POST, "commentId");
 $clientId = NULL;
 
-$host = "localhost";
-$dbusername = "root";
-$dbpassword = "stage972";
-$dbname = "opas";
+function credsArr($credsStr)
+{
+    $credsArr = array();
+    $linesArr = explode(";", $credsStr);
+    $linesArr = explode("\n", $linesArr[0]);
+    foreach ($linesArr as $index => $line) {
 
-$connection = new mysqli($host, $dbusername, $dbpassword, $dbname); // CONNEXION A LA DB
+        $valueSplit = explode(":", $line);
+        $credsArr[$valueSplit[0]] = $valueSplit[1];
+    }
+    return ($credsArr);
+}
 
-function generateInput($htmlFileName, $orderId, $orderIdShort, $lastId, $clientId)
+$credsFile = "../credentials.txt";
+$credentials = credsArr(file_get_contents($credsFile));
+
+$connectionR = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']); // CONNEXION A LA DB READ
+
+$credsFile = "../credentialsW.txt";
+$credentials = credsArr(file_get_contents($credsFile));
+
+$connectionW = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']); // CONNEXION A LA DB WRITE
+
+function generateInput($htmlFileName, $orderId, $orderIdShort, $clientId)
 {
     $htmlFileData = file_get_contents($htmlFileName);
     $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
     $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
-    $htmlFileData = str_replace("{lastId}", $lastId, $htmlFileData);
     $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
     echo $htmlFileData;
 }
@@ -28,21 +50,21 @@ function generateInput($htmlFileName, $orderId, $orderIdShort, $lastId, $clientI
 function getContactName($orderId)
 {
     $sqlContactId = "SELECT Client_id FROM webcontrat_contrat WHERE Commande='$orderId' ORDER BY DateEmission DESC;";
-    if ($resultContactId = $GLOBALS['connection']->query($sqlContactId)) {
+    if ($resultContactId = $GLOBALS['connectionR']->query($sqlContactId)) {
 
         $rowContactId = mysqli_fetch_array($resultContactId);
         $contactId = $rowContactId['Client_id'];
         $sqlContactName = "SELECT NomContact1,NomSociete FROM webcontrat_client WHERE id='$contactId' ORDER BY DateCreation DESC;";
-        if ($resultContactName = $GLOBALS['connection']->query($sqlContactName)) {
+        if ($resultContactName = $GLOBALS['connectionR']->query($sqlContactName)) {
 
             $rowContactName = mysqli_fetch_array($resultContactName);
             $contactName = $rowContactName['NomSociete'];
             return (array('id' => $contactId, 'name' => $contactName));
         } else {
-            echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connection']->error;
+            echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connectionR']->error;
         }
     } else {
-        echo "Query error: ". $sqlContactId ." // ". $GLOBALS['connection']->error;
+        echo "Query error: ". $sqlContactId ." // ". $GLOBALS['connectionR']->error;
     }
 }
 
@@ -50,8 +72,8 @@ function getContactName($orderId)
 function listComments()
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
-    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Payee FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
-    if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
+    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
+    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         while ($rowComment = mysqli_fetch_array($resultComment)) {
 
@@ -60,7 +82,7 @@ function listComments()
             echo "<td>" . $rowComment['Auteur'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
 
-            /* $clientForm = "<form action=\"clientOrders.php\" method=\"post\">"; */
+            /* $clientForm = "<form target=\"_blank\" action=\"clientOrders.php\" method=\"post\">"; */
             /* /\* $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">"; *\/ */
             /* /\* $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">"; *\/ */
             /* $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $contact['id'] . "\">"; */
@@ -72,19 +94,19 @@ function listComments()
             $mailHref = "<a id=\"tableSub\" href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
-            echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td>";
-            echo "<td>" . $rowComment['Payee'] . "</td></tr>";
+            echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
         }
     } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connection']->error;
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
     }
-    $GLOBALS['connection']->close();
+    $GLOBALS['connectionR']->close();
+    $GLOBALS['connectionW']->close();
 }
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $style = file_get_contents("allComments.html");
+    $style = file_get_contents("../html/allComments.html");
 
     if ($darkBool == "true")
         $style = str_replace("commentLight.css", "commentDark.css", $style);
@@ -93,7 +115,7 @@ if (mysqli_connect_error()) {
 
     echo $style;
     echo "<i><h1>Fiche: " . $orderIdShort . "</h1></i>";
-    echo "<table style=\"width:100%\">";
+    echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
     echo "<th>Auteur</th>";
@@ -102,14 +124,13 @@ if (mysqli_connect_error()) {
     echo "<th>E-mail</th>";
     echo "<th>Téléphone</th>";
     echo "<th>Prochaine relance</th>";
-    echo "<th>Payé</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connection, "utf8") === TRUE) {
+    if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
 
         listComments();
         if ($paidStr == "")
-            generateInput("addComment.html", $orderId, $orderIdShort, $lastId, $clientId);
+            generateInput("../html/addComment.html", $orderId, $orderIdShort, $clientId);
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);

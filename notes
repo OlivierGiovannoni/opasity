@@ -65,18 +65,18 @@ Commentaire + mail + telephone + nom + date recherchable
 (systeme de login + groupes)[laisser une trace]
 rappels GENERALS + PERSONNELS (avec login) (dropdown)
 
+"Fichier will be MEDIUMBLOB if storing data, else VARCHAR(128) to stor eonly filename"
+
 mysql> CREATE TABLE webcontrat_commentaire ( Commentaire_id INT NOT NULL AUTO_INCREMENT,
        	      	    			     Commentaire VARCHAR(512) NOT NULL,
 					     Auteur VARCHAR(32) NOT NULL,
 					     Date DATE NOT NULL,
-					     Commentaire_precedent INT,
-					     Dernier_commentaire TINYINT NOT NULL,
 					     Commande VARCHAR(14) NOT NULL,
 					     Commande_courte VARCHAR(6) NOT NULL,
-					     Payee TINYINT NOT NULL,
 					     Prochaine_relance DATE,
 					     NumTelephone VARCHAR(16) NOT NULL,
 					     AdresseMail VARCHAR(256),
+					     Fichier VARCHAR(128),
 					     PRIMARY KEY (Commentaire_id) );
 
 mysql> DESCRIBE webcontrat_commentaire;
@@ -87,41 +87,36 @@ mysql> DESCRIBE webcontrat_commentaire;
 | Commentaire           | varchar(512) | NO   |     | NULL    |                |
 | Auteur                | varchar(32)  | NO   |     | NULL    |                |
 | Date                  | date         | NO   |     | NULL    |                |
-| Commentaire_precedent | int(11)      | YES  |     | NULL    |                |
-| Dernier_commentaire   | tinyint(4)   | NO   |     | NULL    |                |
 | Commande              | varchar(14)  | NO   |     | NULL    |                |
 | Commande_courte       | varchar(6)   | NO   |     | NULL    |                |
-| Payee                 | tinyint(4)   | NO   |     | NULL    |                |
 | Prochaine_relance     | date         | YES  |     | NULL    |                |
 | NumTelephone          | varchar(16)  | NO   |     | NULL    |                |
 | AdresseMail           | varchar(256) | YES  |     | NULL    |                |
+| Fichier               | varchar(128) | YES  |     | NULL    |                |
 +-----------------------+--------------+------+-----+---------+----------------+
 
 mysql> INSERT INTO webcontrat_commentaire (Commentaire,
 					   Auteur,
 					   Date,
-					   Commentaire_precedent,
-					   Dernier_commentaire,
 					   Commande,
 					   Commande_courte,
 					   Payee,
 					   Prochaine_relance,
 					   NumTelephone,
-					   AdresseEmail)
+					   AdresseEmail,
+					   Fichier)
 					   
 					   VALUES
 					
 					  ("$comment",
 					   'dev',
 					   '$today',
-					   NULL OR $previousId,
-					   0 OR 1,
 					   '$orderId',
 					   '$orderIdShort',
-					   0 OR 1,
 					   '$nextDueDate' or NULL,
 					   '$phone' OR '$oldPhone'
-					   '$email' OR NULL);
+					   '$email' OR NULL,
+					   '$file' OR NULL);
 
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------
