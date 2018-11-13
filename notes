@@ -118,6 +118,8 @@ mysql> INSERT INTO webcontrat_commentaire (Commentaire,
 					   '$email' OR NULL,
 					   '$file' OR NULL);
 
+Comment is UPDATEable if clicked on, or edit css imgbutton, re-fill textboxes with previous data.
+
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------
 
