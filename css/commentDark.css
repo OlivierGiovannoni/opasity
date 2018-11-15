@@ -34,7 +34,6 @@ input[type=text],[type=email],[type=date] {
 }
 
 input[type=submit],[type=reset] {
-    width: 10%;
     background-color: #131313;
     color: #e1e1e1;
     padding: 14px 20px;

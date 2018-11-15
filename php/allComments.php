@@ -29,14 +29,14 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFile = "../credentialsW.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credsFileW = "../credentialsW.txt";
+$credentialsW = credsArr(file_get_contents($credsFileW));
 
 $connectionW = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
 
 function generateInput($htmlFileName, $orderId, $orderIdShort, $clientId)
 {
@@ -45,6 +45,31 @@ function generateInput($htmlFileName, $orderId, $orderIdShort, $clientId)
     $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
     $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
     echo $htmlFileData;
+}
+
+function findReview($infoId)
+{
+    $sqlReviewInfo = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
+    if ($resultReviewInfo = $GLOBALS['connectionR']->query($sqlReviewInfo)) {
+
+        $rowReviewInfo = mysqli_fetch_array($resultReviewInfo);
+        $finalId = $rowReviewInfo['Revue_id'];
+        $sqlReview = "SELECT id,Nom,Annee FROM webcontrat_revue WHERE id='$finalId';";
+        if ($resultReview = $GLOBALS['connectionR']->query($sqlReview)) {
+
+            $rowReview = mysqli_fetch_array($resultReview);
+            $finalName = $rowReview['Nom'];
+            $finalId = $rowReview['id'];
+            $finalYear = $rowReview['Annee'];
+            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear);
+            return ($final);
+        } else {
+            echo "Query error: ". $sqlReview ." // ". $GLOBALS['connectionR']->error;
+        }
+    } else {
+        echo "Query error: ". $sqlReviewInfo ." // ". $GLOBALS['connectionR']->error;
+
+    }
 }
 
 function getContactName($orderId)
@@ -103,6 +128,17 @@ function listComments()
     $GLOBALS['connectionW']->close();
 }
 
+function whichReview($orderId)
+{
+    $final = findReview($orderId);
+    $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+    $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
+    $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
+    $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
+    $closeForm = "</form>";
+    echo $reviewForm . $paidHidden . $reviewHidden . $reviewInput . $closeForm;
+}
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
@@ -114,7 +150,9 @@ if (mysqli_connect_error()) {
     $style = str_replace("{order}", $orderIdShort, $style);
 
     echo $style;
-    echo "<i><h1>Fiche: " . $orderIdShort . "</h1></i>";
+    echo "<i><h1>Contrat: " . $orderIdShort . "</h1></i><br>";
+    echo "<i><h2>Paru sur: </h2></i>";
+    echo whichReview($orderId);
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";

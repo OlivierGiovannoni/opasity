@@ -37,27 +37,14 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFile = "../credentialsW.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credsFileW = "../credentialsW.txt";
+$credentialsW = credsArr(file_get_contents($credsFileW));
 
 $connectionW = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB WRITE
-
-function splitEvery($str, $every)
-{
-    $mul = 1;
-    for ($pos = 0; $pos < strlen($str); $pos++){
-        if ($pos == ($every * $mul)) {
-            $pos = strpos($str, " ", $pos);
-            $str = substr_replace($str, "\n", $pos, 0);
-            $mul++;
-        }
-    }
-    return ($str);
-}
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
@@ -66,25 +53,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
         $rowComment = mysqli_fetch_array($resultComment);
 
-        $reviewForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-        $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
-        $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
-        $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-        $idLastHidden = "<input type=\"hidden\" name=\"commentId\" value=\"" . $rowComment['Commentaire_id'] . "\">";
-
-        $comment = $rowComment['Commentaire'];
-        if (!$comment && $paidStr != "R") {
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"". ($paidStr == "R" ? "Liste" : "Nouveau") ." commentaire(s)\">";
-        } else {
-            if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "\">";
-            else
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";    
-        }
-        $closeForm = "</form>";
-
-        echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $idLastHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;

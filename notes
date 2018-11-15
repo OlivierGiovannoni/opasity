@@ -107,7 +107,7 @@ mysql> INSERT INTO webcontrat_commentaire (Commentaire,
 					   Fichier)
 					   
 					   VALUES
-					
+					   
 					  ("$comment",
 					   'dev',
 					   '$today',
@@ -119,6 +119,12 @@ mysql> INSERT INTO webcontrat_commentaire (Commentaire,
 					   '$file' OR NULL);
 
 Comment is UPDATEable if clicked on, or edit css imgbutton, re-fill textboxes with previous data.
+
+addComment take previous phone+email
+add hour to "Prochaine_relance"
+add client_id next to name on client search V
+query error on index remove else
+sometimes client search doesnt find any orders V
 
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------

@@ -32,14 +32,14 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFile = "../credentialsW.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credsFileW = "../credentialsW.txt";
+$credentialsW = credsArr(file_get_contents($credsFileW));
 
 $connectionW = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
 
 function selectLastComment($orderIdShort, $orderId, $paidStr)
 {

@@ -16,6 +16,9 @@ $contractId = testInput($contractId);
 $supportPart = substr($contractId, 0, 2); // PARTIE SUPPORT ex: GI
 $contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
 
+if (strlen($contractId) === 4)
+    $contractPart = $contractId;
+
 function credsArr($credsStr)
 {
     $credsArr = array();
@@ -38,28 +41,14 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFile = "../credentialsW.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credsFileW = "../credentialsW.txt";
+$credentialsW = credsArr(file_get_contents($credsFileW));
 
 $connectionW = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB WRITE
-
-function splitEvery($str, $every)
-{
-    $mul = 1;
-    for ($pos = 0; $pos < strlen($str); $pos++){
-        if ($pos == ($every * $mul)) {
-            $pos = strpos($str, " ", $pos);
-            $str = substr_replace($str, "\n", $pos, 0);
-            $mul++;
-        }
-    }
-    return ($str);
-}
-
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
 
 function getPhoneNumber($orderId, $clientId)
 {
@@ -78,7 +67,7 @@ function getPhoneNumber($orderId, $clientId)
         }
         return ($rowComment['NumTelephone']);
     } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
     }
 }
 
@@ -89,25 +78,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
         $rowComment = mysqli_fetch_array($resultComment);
 
-        $reviewForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-        $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
-        $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
-        $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-        $idLastHidden = "<input type=\"hidden\" name=\"commentId\" value=\"" . $rowComment['Commentaire_id'] . "\">";
-
-        $comment = $rowComment['Commentaire'];
-        if (!$comment) {
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"". ($paidStr == "R" ? "Liste" : "Nouv.") ." comm(s)\">";
-        } else {
-            if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "\">";
-            else
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";
-        }
-        $closeForm = "</form>";
-
-        echo "<td>" . $reviewForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $idLastHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
@@ -139,13 +110,11 @@ function getOrderDetails($orderId, $orderIdShort)
                 $contactName = $rowClient['NomContact1'];
                 $phoneNb = getPhoneNumber($orderId, $clientId);
                 $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
-                /* $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">"; */
-                /* $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">"; */
+                $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
-                $clientInput = "<input style=\"font-size=11px\" type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $companyName . "\">";
+                $clientInput = "<input type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $companyName . "\">";
                 $closeForm = "</form>";
-                echo "<td>" . $clientForm . /* $darkBool . $getPaidOrders . */$clientHidden . $clientInput . $closeForm . "</td>";
-                //echo "<td>" . $companyName . "</td>";
+                echo "<td>" . $clientForm . $darkBool . $clientHidden . $clientInput . $closeForm . "</td>";
                 echo "<td>" . $contactName . "</td>";
                 echo "<td>" . $phoneNb . "</td>";
                 selectLastComment($orderId, $orderIdShort, $rowOrder['Reglement']);
@@ -186,7 +155,7 @@ function findOrder($supportPart, $contractPart, $contractId)
     if (strlen($contractId) === 6)
         $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "______" . $contractPart . "';";
     else if (strlen($contractId) === 4)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '%$contractId' ORDER BY DateEmission DESC LIMIT 100;";
+        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC LIMIT 100;";
     else if (strlen($contractId) === 2)
         $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC LIMIT 100;";
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {

@@ -1,0 +1,41 @@
+URGENT:
+--Request too long because of multiple functions calls and while loops and SQL queries, optimize.
+---Empty error message on index.php if table is empty, remove.
+--Liste Nouv. comments, POTENTIALLY remove.
+--Add required to addComments.html fields, or check empty.
+--Edit comment by clicking on it, or date, or CSS image button.
+--Contact name next to company name, re-display.
+--Display only last comment for "relances" per order.
+--Login system wih Groups/Profiles/Timeouts and connection logs (timeLogin/timeLogout/username/session_id) (with encrypted passwords obvv) and tasks GENERAL
+and USER_SPECIFIC.
+--Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
+--File for each ORDER not COMMENT.
+--Add an icon that redirects to index.php.
+--Do not show orders with negative prices.
+--Move the "Paid" checkbox to the order list and make it show the paid orders dynamically.
+--In addComments.php, re-arrange the iframe size, add dynamic refresh so it's easier to use.
+--In addComments.html, re-arrange all the text inputs, textarea, and move comment textarea below input date 'Prochaine relance'.
+--Checkbox "Payé" becomes a radio button with second option "Annulé"
+--New color for cancelled orders.
+--If comment is empty, show "Liste" or just change the textarea to "required" so it can't be empty.
+--Fix \" on textarea in addComments.php.
+--Add "Paru non-reglé" option.
+--Add comments on this shitcode that will be refactored.
+--Create 'refactor' branch to refactor code and style. Make a generic code generator script with generic form and input generator using Arrays.
+--Add comment "Author" when login system is done.
+--Add comment timestamp HH:MM:SS.
+--If 'Prochaine relance' input date is empty, automatically set to 2 weeks from now.
+
+TODO:
+--Clickable date to searchDate.php.
+--Use COOKIES instead of smuggling HIDDEN DATA.
+--Replace 'connectionR' and 'connectionW' with 'connection', delete 'credentialsW.txt'.
+--Add a few lines breaks below the </table> so we can clearly see the end.
+--echo "main.html" in "index.php" so I can change #tableSub color and <td><tr> style.
+--Add SURFACE column.
+--Date auto + effective date.
+--Align the divs on main.html.
+--Rename "Nom du contact" with "Nom de l'entreprise" on main page.
+--The DOTS ! (PrixHT).
+--Add 'Relances du jour' from previous days using DateAuto and DateEffective.
+--Add 'Relances du jour' Unpaid AND Date <= TODAY.

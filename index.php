@@ -24,57 +24,25 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB
+    $credentials['database']); // CONNEXION A LA DB READ
 
 $credsFileW = "./credentialsW.txt";
 $credentialsW = credsArr(file_get_contents($credsFileW));
 
 $connectionW = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB
-
-function splitEvery($str, $every)
-{
-    $mul = 1;
-    for ($pos = 0; $pos < strlen($str); $pos++){
-        if ($pos == ($every * $mul)) {
-            $pos = strpos($str, " ", $pos);
-            $str = substr_replace($str, "\n", $pos, 0);
-            $mul++;
-        }
-    }
-    return ($str);
-}
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
 
 function selectLastComment($orderIdShort, $orderId, $paidStr)
 {
-    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId';";
+    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
-        $darkValue = print_r($GLOBALS['darkCheck']);
-        $darkBool = ($darkValue == "on" ? TRUE : FALSE);
-
-        $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $darkBool . "\">";
-        $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
-        $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-
-        $comment = $rowComment['Commentaire'];
-        if (!$comment && $paidStr != "R") {
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
-        } else {
-            if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . splitEvery($comment, 32) . "...\">";
-            else
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";
-        }
-        $closeForm = "</form>";
-
-        echo "<td>" . $commentForm . $darkHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
@@ -142,7 +110,7 @@ function findReview($infoId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire,Commande,Commande_courte FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
+    $sqlDate = "SELECT Commande,Commande_courte,Commentaire FROM webcontrat_commentaire WHERE Prochaine_relance <= '$dueDate';";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
