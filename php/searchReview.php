@@ -74,8 +74,10 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/search.html");
 
-    if ($darkBool == "true")
+    if ($darkBool == "true") {
         $style = str_replace("searchLight.css", "searchDark.css", $style);
+        $style = str_replace("homeLight.css", "homeDark.css", $style);
+    }
 
     $style = str_replace("{type}", "revue", $style);
     $style = str_replace("{query}", $reviewName, $style);
@@ -94,7 +96,7 @@ if (mysqli_connect_error()) {
     else
         die("MySQL SET CHARSET error: ". $connection->error);
 
-    echo "</table>";
+    echo "</table><br><br><br>";
     echo "</html>";
 }
 

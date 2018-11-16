@@ -3,7 +3,7 @@ body {
     background-color: #131313;
     text-align:center;
     position: absolute;
-    top: 5%;
+    top: 2%;
     right: 0;
     left: 0;
 }
@@ -14,12 +14,13 @@ h1 {
 
 table, th, td {
     margin: 0px auto;
-    border: 2px solid #e1e1e1;
+    border: 1px solid #e1e1e1;
     border-collapse: collapse;
 }
 
 th, td {
-    padding: 5px;
+    padding: 3px;
+    font-size: 13px;
     font-style: italic;
 }
 

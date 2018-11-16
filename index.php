@@ -37,13 +37,16 @@ $connectionW = new mysqli(
 
 function selectLastComment($orderIdShort, $orderId, $paidStr)
 {
-    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id;";
+    $sqlComment = "SELECT Date,Commentaire,Prochaine_relance,AdresseMail FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
+        $mail = $rowComment['AdresseMail'];
+        echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
-        echo "<td>" . $rowComment['Date'] . "</td></tr>";
+        echo "<td>" . $rowComment['Date'] . "</td>";
+        echo "<td>" . $rowComment['Prochaine_relance'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
     }
@@ -76,7 +79,6 @@ function getOrderDetails($orderId, $orderIdShort, $final)
                 $companyName = $rowClient['NomSociete'];
                 $contactName = $rowClient['NomContact1'];
                 echo "<td>" . $companyName . "</td>";
-                echo "<td>" . $contactName . "</td>";
                 selectLastComment($orderIdShort, $orderId, $rowOrder['Reglement']);
             }
         }
@@ -110,7 +112,7 @@ function findReview($infoId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commande,Commande_courte,Commentaire FROM webcontrat_commentaire WHERE Prochaine_relance <= '$dueDate';";
+    $sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' ORDER BY Date DESC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -118,18 +120,13 @@ function findDates($dueDate)
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
 
-            $darkValue = print_r($GLOBALS['darkCheck']);
-
-            $darkBool = ($darkValue == "on" ? TRUE : FALSE);
-
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-            $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $darkBool . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<td>" . $commentForm . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
            
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
@@ -152,9 +149,10 @@ if (mysqli_connect_error()) {
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
     echo "<th>Nom de l'entreprise</th>";
-    echo "<th>Nom du contact</th>";
+    echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
+    echo "<th>Prochaine relance</th>";
     echo "</tr>";
 
     if (mysqli_set_charset($connectionR, "utf8") === TRUE)

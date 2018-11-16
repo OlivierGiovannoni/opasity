@@ -48,11 +48,13 @@ $connectionW = new mysqli(
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Date,Commentaire,AdresseMail FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
+        $mail = $rowComment['AdresseMail'];
+        echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
@@ -91,7 +93,7 @@ function getOrderDetails($orderId, $orderIdShort)
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
 
-            /* if ($rowOrder['PrixHT'] > 0) { */
+            if ($rowOrder['PrixHT'] > 0) {
                 $clientId = $rowOrder['Client_id'];
                 $priceRaw = $rowOrder['PrixHT'];
 
@@ -128,7 +130,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 } else {
                     echo "Query error: ". $sqlClient ." // ". $GLOBALS['connectionR']->error;
                 }
-            /* } */
+            }
         }
     } else {
         echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connectionR']->error;
@@ -159,8 +161,10 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/search.html");
 
-    if ($darkBool == "true")
+    if ($darkBool == "true") {
         $style = str_replace("searchLight.css", "searchDark.css", $style);
+        $style = str_replace("homeLight.css", "homeDark.css", $style);
+    }
 
     $style = str_replace("{type}", "revue", $style);
     $style = str_replace("{query}", $reviewName, $style);
@@ -176,6 +180,7 @@ if (mysqli_connect_error()) {
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Numéro de télephone</th>";
+    echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "</tr>";
@@ -185,7 +190,7 @@ if (mysqli_connect_error()) {
     else
         die("MySQL SET CHARSET error: ". $connection->error);
 
-    echo "</table>";
+    echo "</table><br><br><br>";
     echo "</html>";
 }
 

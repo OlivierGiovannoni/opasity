@@ -158,6 +158,8 @@ function findOrder($supportPart, $contractPart, $contractId)
         $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC LIMIT 100;";
     else if (strlen($contractId) === 2)
         $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC LIMIT 100;";
+    else
+        return ;
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
@@ -199,8 +201,10 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/search.html");
 
-    if ($darkBool == "true")
+    if ($darkBool == "true") {
         $style = str_replace("searchLight.css", "searchDark.css", $style);
+        $style = str_replace("homeLight.css", "homeDark.css", $style);
+    }
 
     $style = str_replace("{type}", "contrat", $style);
     $style = str_replace("{query}", $contractId, $style);
@@ -226,7 +230,8 @@ if (mysqli_connect_error()) {
     else
         die("MySQL SET CHARSET error: ". $connection->error);
 
-    echo "</table>";
+    echo "</table><br><br><br>";
+    echo "</body>";
     echo "</html>";
 }
 

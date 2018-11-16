@@ -169,9 +169,11 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/search.html");
-
-    if ($darkBool == "true")
+    
+    if ($darkBool == "true") {
         $style = str_replace("searchLight.css", "searchDark.css", $style);
+        $style = str_replace("homeLight.css", "homeDark.css", $style);
+    }
 
     $style = str_replace("{type}", "client", $style);
     $style = str_replace("{query}", $clientName, $style);
@@ -197,7 +199,7 @@ if (mysqli_connect_error()) {
         die("MySQL SET CHARSET error: ". $connection->error);
 
 
-    echo "</table>";
+    echo "</table><br><br><br>";
     echo "</html>";
 }
 

@@ -48,18 +48,23 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-// (Array, Bool, Bool, Array) { return (Array); }
-function generateTable($lines, $trOpen, $trClose, $types)
+// (String, String, Bool) { return (Array); }
+function sqlQuery($sql, $connection, $hasResults)
 {
-}
-
-// (String, String) { return (Array); }
-function sqlQuery($sql, $connection)
-{
+    // If there is no MySQL query error
     if ($result = $GLOBALS[$connection]->query($sql)) {
 
-        $rows = mysqli_fetch_all($result);
-        return ($rows);
+        // If the query returns results...
+        if ($hasResults === true) {
+
+            // ...fetch ALL rows into an array...
+            $rows = mysqli_fetch_all($result);
+            // ...and return it, to be processed by the parents function.
+            return ($rows);
+        } else {
+            // Else just return NULL because it's empty anyway.
+            return (NULL);
+        }
     }
     echo "MySQL query error: " . $sql . ": " . $GLOBALS[$connection]->error;
     return (NULL);
@@ -68,17 +73,55 @@ function sqlQuery($sql, $connection)
 // (String, String, String, String) { return (String); }
 function generateInput($type, $name, $id, $value)
 {
+    // Partially hardcoded input generator.
+    $input = "<input type=\"" . $type . "\" name=\"" . $name . "\" id=\"" . $id "\" value=\"" . $value . "\">";
+    // This returned data must be pushed into an array in the parent function.
+    return ($input);
 }
 
-// (String, String, String, Array, Array, Array, Array) { return (Array); }
-function generateForm($target, $action, $method, $types, $names, $ids, $values)
+// (String, String, String, Array) { return (Array); }
+function generateForm($target, $action, $method, $inputs)
 {
+    $form = array();
+    $formOpen = "<form target=\"" . $target . "\"action=\"" . $action . "\"method=\"" . $method . "\">";
+    $form = array_push($form, $formOpen);
+    // Take every input.
+    foreach ($inputs as $input) {
+
+        // Push every <input> into the form array.
+        $form = array_push($form, $input);
+    }
+    $formClose = "</form>";
+    $form = array_push($form, $formClose);
+    // Finished creating the form, send it back.
+    return ($form);
+}
+
+// (Array, String) { return (Array); }
+function generateTable($rows, $type)
+{
+    $table = array();
+    // New row.
+    $table = array_push($table, "<tr>");
+
+    $typeOpen = "<{$type}>";
+    $typeClose = "</{$type}>";
+    foreach ($rows as $row) {
+
+        // Add <??> and </??> to the row.
+        $final = $typeOpen . $row . $typeClose;
+        // Push the complete row in the array.
+        $table = array_push($table, $final);
+    }
+    // End row.
+    $table = array_push($table, "</tr>");
+    return ($table);
 }
 
 function getPhoneNumber($orderId, $clientId)
 {
     $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
-    $rowComment = sqlQuery($sqlComment, "connectionW");
+    $rowComment = sqlQuery($sqlComment, "connectionW", true);
 
     if ($rowComment['NumTelephone'] == "") {
         $sqlPhone = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY id DESC;";
@@ -92,7 +135,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
     $sqlComment = "SELECT Commentaire_id,Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
 
-    $rowComment = sqlQuery($sqlComment, "connectionW");
+    $rowComment = sqlQuery($sqlComment, "connectionW", true);
 
     echo "<td>" . $rowComment['Commentaire'] . "</td>";
     echo "<td>" . $rowComment['Date'] . "</td></tr>";
@@ -102,7 +145,7 @@ function getOrderDetails($orderId, $orderIdShort)
 {
     $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
 
-    $rowOrder = sqlQuery($sqlOrder, "connectionR");
+    $rowOrder = sqlQuery($sqlOrder, "connectionR", true);
     while ($rowOrder) {
 
         $orderFull = $rowOrder['Commande'];
@@ -117,7 +160,7 @@ function getOrderDetails($orderId, $orderIdShort)
 
         $sqlClient = "SELECT id,NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
 
-        $rowClient = sqlQuery($sqlClient, "connectionR");
+        $rowClient = sqlQuery($sqlClient, "connectionR", true);
         $companyName = $rowClient['NomSociete'];
         $contactName = $rowClient['NomContact1'];
         $phoneNb = getPhoneNumber($orderId, $clientId);
@@ -136,11 +179,11 @@ function findReview($infoId)
 {
     $sqlReviewInfo = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
 
-    $rowReviewInfo = sqlQuery($sqlReviewInfo, "connectionR");
+    $rowReviewInfo = sqlQuery($sqlReviewInfo, "connectionR", true);
     $finalId = $rowReviewInfo['Revue_id'];
     $sqlReview = "SELECT id,Nom,Annee FROM webcontrat_revue WHERE id='$finalId';";
  
-    $rowReview = sqlQuery($sqlReview, "connectionR");
+    $rowReview = sqlQuery($sqlReview, "connectionR", true);
     $finalName = $rowReview['Nom'];
     $finalId = $rowReview['id'];
     $finalYear = $rowReview['Annee'];
@@ -152,7 +195,7 @@ function findOrder($supportPart, $contractPart, $contractId)
 {
     $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '%$contractPart' ORDER BY DateEmission DESC LIMIT 100;";
 
-    $rowOrder = sqlQuery($sqlOrder, "connectionR");
+    $rowOrder = sqlQuery($sqlOrder, "connectionR", true);
     while ($rowOrder) {
 
         $orderId = $rowOrder['Commande'];

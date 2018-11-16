@@ -1,7 +1,29 @@
+DONE:
+--Empty error message on index.php if table is empty, removed.
+--Liste Nouv. comments, removed.
+--Request too long because of splitEvery() function, deleted.
+--Added an icon that redirects to index.php.
+--Added a few lines breaks below the </table> so we can clearly see the end.
+--Added "Prochaine relance" column next to "Date commentaire"
+--Changed text size smaller in td.
+--Remove "Nom du contact" and "numéro de telephone" in index.php and searchClient.php (each).
+--Mail Column with MAILTO: reviewOrders.php and index.php
+
+WAITING:
+--Fix DATE <= Today bug.
+--Create 'refactor' branch to refactor code and style. Make a generic code generator script with generic form and input generator using Arrays.
+--Now showing client orders before phone on searchClient.php.
+--Use COOKIES instead of smuggling HIDDEN DATA.
+--Move "Paru sur" button to the right, and change it to a <a> if data is in cookies.
+--Remove #tableSub and disguised Submit buttons once COOKIES system is done.
+
+MORE:
+--Paid checkbox becomes a button, with validation to avoid mistakes.
+URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT 
+--FIXDATE URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT
+URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT URGENT 
+
 URGENT:
---Request too long because of multiple functions calls and while loops and SQL queries, optimize.
----Empty error message on index.php if table is empty, remove.
---Liste Nouv. comments, POTENTIALLY remove.
 --Add required to addComments.html fields, or check empty.
 --Edit comment by clicking on it, or date, or CSS image button.
 --Contact name next to company name, re-display.
@@ -10,7 +32,6 @@ URGENT:
 and USER_SPECIFIC.
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
 --File for each ORDER not COMMENT.
---Add an icon that redirects to index.php.
 --Do not show orders with negative prices.
 --Move the "Paid" checkbox to the order list and make it show the paid orders dynamically.
 --In addComments.php, re-arrange the iframe size, add dynamic refresh so it's easier to use.
@@ -21,16 +42,13 @@ and USER_SPECIFIC.
 --Fix \" on textarea in addComments.php.
 --Add "Paru non-reglé" option.
 --Add comments on this shitcode that will be refactored.
---Create 'refactor' branch to refactor code and style. Make a generic code generator script with generic form and input generator using Arrays.
 --Add comment "Author" when login system is done.
 --Add comment timestamp HH:MM:SS.
---If 'Prochaine relance' input date is empty, automatically set to 2 weeks from now.
+--If 'Prochaine relance' input date is empty and contract is not paid yet, automatically set to 2 weeks from now.
 
 TODO:
 --Clickable date to searchDate.php.
---Use COOKIES instead of smuggling HIDDEN DATA.
 --Replace 'connectionR' and 'connectionW' with 'connection', delete 'credentialsW.txt'.
---Add a few lines breaks below the </table> so we can clearly see the end.
 --echo "main.html" in "index.php" so I can change #tableSub color and <td><tr> style.
 --Add SURFACE column.
 --Date auto + effective date.

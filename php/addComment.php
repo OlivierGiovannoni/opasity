@@ -99,7 +99,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
 
     $newFile = uploadFile($tmpFile, $file, $orderId);
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier";
-    $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort',$nextDueDate,'$phone','$email','$newFile'";
+    $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile'";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
     if ($resultNewComment = $GLOBALS['connectionW']->query($sqlNewComment)) {
 
@@ -119,6 +119,7 @@ if (mysqli_connect_error()) {
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm, $clientId, $tmpFile, $file);
+        echo "<script>document.getElementById('commentForm').reset();";
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);

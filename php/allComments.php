@@ -38,12 +38,20 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function generateInput($htmlFileName, $orderId, $orderIdShort, $clientId)
+function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $paidStr)
 {
+    // Get file data.
     $htmlFileData = file_get_contents($htmlFileName);
-    $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
-    $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
-    $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
+    // Check if order is paid, to choose whether to display the <form> or not.
+    if ($paidStr == "") {
+        // Uncomment <form> region.
+        $htmlFileData = str_replace("<!-- UNPAID", "", $htmlFileData);
+        $htmlFileData = str_replace("-->", "", $htmlFileData);
+        // Replace fake variables with real values.
+        $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
+        $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
+        $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
+    }
     echo $htmlFileData;
 }
 
@@ -128,11 +136,11 @@ function listComments()
     $GLOBALS['connectionW']->close();
 }
 
-function whichReview($orderId)
+function whichReview($orderId, $paidStr)
 {
     $final = findReview($orderId);
     $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
-    $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
+    $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
     $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
     $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
     $closeForm = "</form>";
@@ -144,15 +152,17 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/allComments.html");
 
-    if ($darkBool == "true")
+    if ($darkBool == "true") {
         $style = str_replace("commentLight.css", "commentDark.css", $style);
+        $style = str_replace("homeLight.css", "homeDark.css", $style);
+    }
 
     $style = str_replace("{order}", $orderIdShort, $style);
 
     echo $style;
     echo "<i><h1>Contrat: " . $orderIdShort . "</h1></i><br>";
     echo "<i><h2>Paru sur: </h2></i>";
-    echo whichReview($orderId);
+    echo whichReview($orderId, $paidStr);
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
@@ -167,13 +177,12 @@ if (mysqli_connect_error()) {
     if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
 
         listComments();
-        if ($paidStr == "")
-            generateInput("../html/addComment.html", $orderId, $orderIdShort, $clientId);
+        addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);
 
-    echo "</table>";
+    echo "</table><br><br><br>";
     echo "</html>";
 }
 
