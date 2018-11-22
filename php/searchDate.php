@@ -116,7 +116,7 @@ function findReview($infoId)
 function isItPaid($orderId)
 {
     $sqlPaid = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS['connectionW']->query($sqlPaid)) {
+    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
         return ($rowPaid['Reglement']);
@@ -152,7 +152,7 @@ function findDates($dueDate)
             $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
             $closeForm = "</form>";
 
-            echo "<tr><td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
 
             getOrderDetails($orderId, $orderIdShort);
         }
