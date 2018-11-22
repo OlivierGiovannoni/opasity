@@ -136,9 +136,9 @@ function findDates($dueDate)
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
-            $newDate = date("d/m/Y", $rowDate['Date']);
+            $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             echo "<td>" . $newDate . "</td>";
-            $newDate = date("d/m/Y", $rowDate['Prochaine_relance']);
+            $newDate = date("d/m/Y", strtotime($rowDate['Prochaine_relance']));
             echo "<td>" . $newDate . "</td></tr>";
         }
     } else {
