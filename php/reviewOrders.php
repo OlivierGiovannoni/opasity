@@ -47,7 +47,7 @@ $connectionW = new mysqli(
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Date,Commentaire,AdresseMail FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Date,Commentaire,AdresseMail,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
@@ -55,7 +55,8 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         $mail = $rowComment['AdresseMail'];
         echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
-        echo "<td>" . $rowComment['Date'] . "</td></tr>";
+        echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
+        echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
     }

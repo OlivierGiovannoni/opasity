@@ -57,13 +57,14 @@ function getPhoneNumber($orderId, $clientId)
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Date,Commentaire,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
-        echo "<td>" . $rowComment['Date'] . "</td></tr>";
+        echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
+        echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
     }
