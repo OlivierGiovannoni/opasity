@@ -136,8 +136,10 @@ function findDates($dueDate)
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
-            echo "<td>" . $rowDate['Date'] . "</td>";
-            echo "<td>" . $rowDate['Prochaine_relance'] . "</td></tr>";
+            $newDate = date("d/m/Y", $rowDate['Date']);
+            echo "<td>" . $newDate . "</td>";
+            $newDate = date("d/m/Y", $rowDate['Prochaine_relance']);
+            echo "<td>" . $newDate . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;

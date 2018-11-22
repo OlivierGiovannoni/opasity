@@ -48,7 +48,6 @@ function selectLastComment($orderIdShort, $orderId)
         $rowComment = mysqli_fetch_array($resultComment);
 
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
-        echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
     }
@@ -155,6 +154,8 @@ function findDates($dueDate)
             echo "<td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
 
             getOrderDetails($orderId, $orderIdShort);
+            $newDate = date("d/m/Y", $rowDate['Date']);
+            echo "<td>" . $newDate . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;
