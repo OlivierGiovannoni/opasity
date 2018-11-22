@@ -137,7 +137,6 @@ if (mysqli_connect_error()) {
     echo $style;
     echo "<i><h1>Contrat: " . $orderIdShort . "</h1></i><br>";
     $revue = findReview($orderId);
-    echo "PAIDSTR DEBUG $paidStr VALUE";
     echo "<i><h1 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#880000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</i></h2>";
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
     $client = getContactName($orderId);
