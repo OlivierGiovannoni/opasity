@@ -8,7 +8,6 @@ function testInput($data) {
 }
 
 $clientName = filter_input(INPUT_POST, "clientName");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 
 $clientName = testInput($clientName);
 
@@ -42,11 +41,10 @@ function findClient($clientName)
         while ($rowClient = mysqli_fetch_array($resultClient)) {
 
             $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
-            $clientDark = "<input type=\"hidden\" name=\"darkBool\">";
             $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
             $clientSubmit = "<input type=\"submit\" name=\"clientName\" id=\"tableSub\" value=\"" . $rowClient['NomSociete'] . "\">";
             $closeForm = "</form>";
-            echo "<tr><td>" . $clientForm . $clientDark . $clientHidden . $clientSubmit . $closeForm . "</td>";
+            echo "<tr><td>" . $clientForm . $clientHidden . $clientSubmit . $closeForm . "</td>";
             echo "<td>" . $rowClient['NomContact1'] . "</td>";
             echo "<td>" . $rowClient['Tel'] . "</td></tr>";
         }
@@ -60,11 +58,6 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/search.html");
-
-    if ($darkBool == "true") {
-        $style = str_replace("searchLight.css", "searchDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
 
     $style = str_replace("{type}", "client", $style);
     $style = str_replace("{query}", $clientName, $style);

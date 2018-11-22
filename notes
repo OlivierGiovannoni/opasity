@@ -39,9 +39,6 @@ AFFICHER
 -2 Nom contact
 -2 Adresse
 
-Nouvel ONGLET ou POPUP dans DB
-checkbox dark/light mode
-
 POUR CHANGER NON-PAYÉ EN PAYÉ:
 UPDATE webcontrat_contrat SET Reglement='R' WHERE Commande='OPGI00004A4468';
 

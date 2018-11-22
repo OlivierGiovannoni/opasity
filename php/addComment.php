@@ -1,5 +1,12 @@
 <?php
 
+function testInput($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
 $clientId = filter_input(INPUT_POST, "clientId");
 $orderId = filter_input(INPUT_POST, "hiddenId");
 $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
@@ -7,8 +14,8 @@ $phone = filter_input(INPUT_POST, "numPhone");
 $email = filter_input(INPUT_POST, "emailAddr");
 $nextDueDate = filter_input(INPUT_POST, "nextDueDate");
 $unpaidReason = filter_input(INPUT_POST, "unpaidReason");
-$paidConfirm = filter_input(INPUT_POST, "paidConfirm");
-//$darkBool = filter_input(INPUT_POST, "darkBool");
+
+$unpaidReason = testInput($unpaidReason);
 
 function credsArr($credsStr)
 {
@@ -46,6 +53,8 @@ function uploadFile($tmpFile, $fileName, $orderIdWhole)
     $fileDirectory = "files/" . $orderIdWhole . "/";
     $newFile = $fileDirectory . basename($fileName);
 
+    if ($tmpFile === NULL || $fileName === NULL)
+        return ("NULL");
     if (is_dir($fileDirectory) === FALSE)
         mkdir($fileDirectory, 0755, TRUE);
     if (move_uploaded_file($tmpFile, $newFile)) {
@@ -78,28 +87,22 @@ function getPhoneNumber($orderId, $clientId)
     }
 }
 
-function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm, $clientId, $tmpFile, $file)
+function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file)
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
     $today = date("Y-m-d");
 
-    if ($nextDueDate == "")
-        $nextDueDate = "null";
+    if ($nextDueDate == "") {
+        $nextDueDate = strtotime("+2 weeks");
+        $nextDueDate = date("Y-m-d", $nextDueDate);
+    }
     if ($phone === "")
         $phone = getPhoneNumber($orderId, $clientId);
-    if ($paidConfirm === "on") {
-        $sqlPaid = "UPDATE webcontrat_contrat SET Reglement='R' WHERE Commande='$orderId';";
-        if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
 
-            // UPDATE output doesn't need to be fetched.
-        } else {
-            echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
-        }
-    }
-
+    //fetch comment id and set dernier to 0
     $newFile = uploadFile($tmpFile, $file, $orderId);
-    $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier";
-    $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile'";
+    $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
+    $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
     if ($resultNewComment = $GLOBALS['connectionW']->query($sqlNewComment)) {
 
@@ -118,8 +121,8 @@ if (mysqli_connect_error()) {
     if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
-        newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $paidConfirm, $clientId, $tmpFile, $file);
-        echo "<script>document.getElementById('commentForm').reset();";
+        newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
+        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page.";
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);

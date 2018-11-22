@@ -35,9 +35,9 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function selectLastComment($orderIdShort, $orderId, $paidStr)
+function selectLastComment($orderIdShort, $orderId)
 {
-    $sqlComment = "SELECT Date,Commentaire,Prochaine_relance,AdresseMail FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id;";
+    $sqlComment = "SELECT Commentaire,AdresseMail FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
@@ -45,8 +45,6 @@ function selectLastComment($orderIdShort, $orderId, $paidStr)
         $mail = $rowComment['AdresseMail'];
         echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
-        echo "<td>" . $rowComment['Date'] . "</td>";
-        echo "<td>" . $rowComment['Prochaine_relance'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
     }
@@ -66,11 +64,16 @@ function getOrderDetails($orderId, $orderIdShort, $final)
 
             $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . "\">";
+            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
+            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
             $closeForm = "</form>";
 
             echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td>";
             echo "<td>" . $priceRaw . "</td>";
+            if ($rowOrder['Reglement'] == "R")
+                echo "<td id=\"isPaid\">Oui</td>";
+            else
+                echo "<td id=\"isNotPaid\">Non</td>";
 
             $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
@@ -79,7 +82,7 @@ function getOrderDetails($orderId, $orderIdShort, $final)
                 $companyName = $rowClient['NomSociete'];
                 $contactName = $rowClient['NomContact1'];
                 echo "<td>" . $companyName . "</td>";
-                selectLastComment($orderIdShort, $orderId, $rowOrder['Reglement']);
+                selectLastComment($orderIdShort, $orderId);
             }
         }
     } else {
@@ -94,13 +97,15 @@ function findReview($infoId)
 
         $row = mysqli_fetch_array($result);
         $finalId = $row['Revue_id'];
-        $sql = "SELECT id,Nom FROM webcontrat_revue WHERE id='$finalId';";
+        $sql = "SELECT id,Nom,Annee,Paru FROM webcontrat_revue WHERE id='$finalId';";
         if ($result = $GLOBALS['connectionR']->query($sql)) {
 
             $row = mysqli_fetch_array($result);
             $finalName = $row['Nom'];
             $finalId = $row['id'];
-            $final = array('Name' => $finalName, 'Id' => $finalId);
+            $finalYear = $row['Annee'];
+            $finalPub = $row['Parue'];
+            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear, 'Pub' => $finalPub);
             return ($final);
         } else {
             echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
@@ -112,7 +117,8 @@ function findReview($infoId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' ORDER BY Date DESC;";
+    //$sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
+    $sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire ORDER BY Prochaine_relance DESC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -127,14 +133,17 @@ function findDates($dueDate)
             $closeForm = "</form>";
 
             echo "<td>" . $commentForm . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
-           
+
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
+            echo "<td>" . $rowComment['Date'] . "</td>";
+            echo "<td>" . $rowComment['Prochaine_relance'] . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;
     }
     $GLOBALS['connectionR']->close();
+    $GLOBALS['connectionW']->close();
 }
 
 if (mysqli_connect_error()) {
@@ -148,6 +157,7 @@ if (mysqli_connect_error()) {
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
+    echo "<th>Payé</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";

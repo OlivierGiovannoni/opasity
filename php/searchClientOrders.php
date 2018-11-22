@@ -2,7 +2,6 @@
 
 $clientName = filter_input(INPUT_POST, "clientName");
 $clientId = filter_input(INPUT_POST, "clientId");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 
 function credsArr($credsStr)
 {
@@ -137,11 +136,9 @@ function findClientOrders($clientId)
 
             $orderId = $rowOrders['Commande'];
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
-            $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
             $final = findReview($orderId);
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-            $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
@@ -154,9 +151,9 @@ function findClientOrders($clientId)
 
             $newDate = date("d/m/Y", strtotime($rowOrders['DateEmission']));
 
-            echo "<tr><td>" . $commentForm . $darkHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<tr><td>" . $commentForm . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
             echo "<td>" . $newDate . "</td>";
-            echo "<td>" . $reviewForm . $darkBool . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td>";
             getOrderDetails($orderId, $orderIdShort);
         }
     } else {
@@ -169,17 +166,12 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/search.html");
-    
-    if ($darkBool == "true") {
-        $style = str_replace("searchLight.css", "searchDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
 
     $style = str_replace("{type}", "client", $style);
     $style = str_replace("{query}", $clientName, $style);
 
     echo $style;
-    echo "<i><h1>Contrats trouvés:</h1></i>";
+    echo "<i><h1>Contrats de l'entreprise: $clientName</h1></i>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";

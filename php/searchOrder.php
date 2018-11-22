@@ -9,7 +9,6 @@ function testInput($data) {
 
 $contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
 $getPaid = filter_input(INPUT_POST, "paidBool");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 
 $contractId = testInput($contractId);
 
@@ -110,11 +109,10 @@ function getOrderDetails($orderId, $orderIdShort)
                 $contactName = $rowClient['NomContact1'];
                 $phoneNb = getPhoneNumber($orderId, $clientId);
                 $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
-                $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
                 $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
                 $clientInput = "<input type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $companyName . "\">";
                 $closeForm = "</form>";
-                echo "<td>" . $clientForm . $darkBool . $clientHidden . $clientInput . $closeForm . "</td>";
+                echo "<td>" . $clientForm . $clientHidden . $clientInput . $closeForm . "</td>";
                 echo "<td>" . $contactName . "</td>";
                 echo "<td>" . $phoneNb . "</td>";
                 selectLastComment($orderId, $orderIdShort, $rowOrder['Reglement']);
@@ -166,11 +164,9 @@ function findOrder($supportPart, $contractPart, $contractId)
 
             $orderId = $rowOrder['Commande'];
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
-            $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
             $final = findReview($orderId);
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-            $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
@@ -185,9 +181,9 @@ function findOrder($supportPart, $contractPart, $contractId)
 
             $newDate = date("d/m/Y", strtotime($rowOrder['DateEmission']));
 
-            echo "<tr><td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
             echo "<td>" . $newDate . "</td>";
-            echo "<td>" . $reviewForm . $darkBool . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $reviewForm . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
             getOrderDetails($orderId, $orderIdShort);
         }
     } else {
@@ -200,11 +196,6 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/search.html");
-
-    if ($darkBool == "true") {
-        $style = str_replace("searchLight.css", "searchDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
 
     $style = str_replace("{type}", "contrat", $style);
     $style = str_replace("{query}", $contractId, $style);

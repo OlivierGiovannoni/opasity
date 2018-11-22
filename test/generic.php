@@ -74,7 +74,7 @@ function sqlQuery($sql, $connection, $hasResults)
 function generateInput($type, $name, $id, $value)
 {
     // Partially hardcoded input generator.
-    $input = "<input type=\"" . $type . "\" name=\"" . $name . "\" id=\"" . $id "\" value=\"" . $value . "\">";
+    $input = "<input type=\"" . $type . "\" name=\"" . $name . "\" id=\"" . $id . "\" value=\"" . $value . "\">";
     // This returned data must be pushed into an array in the parent function.
     return ($input);
 }
@@ -125,7 +125,7 @@ function getPhoneNumber($orderId, $clientId)
 
     if ($rowComment['NumTelephone'] == "") {
         $sqlPhone = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY id DESC;";
-        $rowPhone = sqlQuery($sqlPhone, "connectionR");
+        $rowPhone = sqlQuery($sqlPhone, "connectionR", true);
         return ($rowPhone['Tel']);
     }
     return ($rowComment['NumTelephone']);
@@ -155,6 +155,8 @@ function getOrderDetails($orderId, $orderIdShort)
         echo "<td>" . $priceRaw . "</td>";
         if ($rowOrder['Reglement'] == "R")
             echo "<td id=\"isPaid\">Oui</td>";
+        else if ($rowOrder['Reglement'] == "A")
+            echo "<td id=\"isCancelled\">Annulé</td>";
         else
             echo "<td id=\"isNotPaid\">Non</td>";
 
@@ -233,7 +235,6 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("searchLight.css", "searchDark.css", $style);
     $style = str_replace("{type}", "contrat", $style);
     $style = str_replace("{query}", $contractId, $style);
 

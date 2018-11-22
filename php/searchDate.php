@@ -8,7 +8,6 @@ function testInput($data) {
 }
 
 $dueDate = filter_input(INPUT_POST, "dueDate");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 
 function credsArr($credsStr)
 {
@@ -41,31 +40,14 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function selectLastComment($orderIdShort, $orderId, $paidStr)
+function selectLastComment($orderIdShort, $orderId)
 {
     $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId';";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
-        $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-        $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-        $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
-        $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
-        $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-
-        $comment = $rowComment['Commentaire'];
-        if (!$comment && $paidStr != "R") {
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"Nouveau commentaire\">";
-        } else {
-            if (strlen($comment) > 32)
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . substr($comment, 0, 32) . "...\">";
-            else
-                $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $comment . "\">";
-        }
-        $closeForm = "</form>";
-
-        echo "<td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+        echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
@@ -84,6 +66,10 @@ function getOrderDetails($orderId, $orderIdShort)
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
             echo "<td>" . $priceRaw . "</td>";
+            if ($rowOrder['Reglement'] == "R")
+                echo "<td id=\"isPaid\">Oui</td>";
+            else
+                echo "<td id=\"isNotPaid\">Non</td>";
 
             $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
@@ -93,7 +79,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 $contactName = $rowClient['NomContact1'];
                 echo "<td>" . $companyName . "</td>";
                 echo "<td>" . $contactName . "</td>";
-                selectLastComment($orderIdShort, $orderId, $rowOrder['Reglement']);
+                selectLastComment($orderIdShort, $orderId);
             }
         }
     } else {
@@ -125,6 +111,30 @@ function findReview($infoId)
     }
 }
 
+function isItPaid($orderId)
+{
+    $sqlPaid = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS['connectionW']->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
+function isItPub($reviewId)
+{
+    $sqlPub = "SELECT Paru FROM webcontrat_contrat WHERE id='$reviewId';";
+    if ($resultPub = $GLOBALS['connectionW']->query($sqlPub)) {
+
+        $rowPub = mysqli_fetch_array($resultPub);
+        return ($rowPub['Paru']);
+    } else {
+        echo "Query error: ". $sqlPub ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function findDates($dueDate)
 {
     $sqlDate = "SELECT Commentaire,Commande,Commande_courte FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
@@ -134,8 +144,30 @@ function findDates($dueDate)
 
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
-            echo "<tr><td>" . $orderIdShort . "</td>";
-            findReview($orderId);
+            $getPaid = isItPaid($orderId);
+
+            /* if ($getPaid == "R") */
+            /*     continue ; */
+
+            $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
+            $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
+            $idShortHidden = "<input type=\"submit\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
+            $closeForm = "</form>";
+
+            echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $closeForm . "</td>";
+            $final = findReview($orderId);
+            $published = isItPub($final['Id']);
+
+            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+            $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
+            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $published . "\">";
+            $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
+            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
+            $closeForm = "</form>";
+
+            echo "<tr><td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+
             getOrderDetails($orderId, $orderIdShort);
         }
     } else {
@@ -149,11 +181,6 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/search.html");
 
-    if ($darkBool == "true") {
-        $style = str_replace("searchLight.css", "searchDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
-
     $style = str_replace("{type}", "date", $style);
     $style = str_replace("{query}", $dueDate, $style);
 
@@ -166,6 +193,7 @@ if (mysqli_connect_error()) {
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
+    echo "<th>Payé</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Commentaire</th>";

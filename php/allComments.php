@@ -4,7 +4,6 @@ $orderId = filter_input(INPUT_POST, "hiddenId");
 $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
 $paidStr = filter_input(INPUT_POST, "hiddenPaid");
 $comment = filter_input(INPUT_POST, "comment");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 $clientId = NULL;
 
 function credsArr($credsStr)
@@ -115,14 +114,6 @@ function listComments()
             echo "<td>" . $rowComment['Auteur'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
 
-            /* $clientForm = "<form target=\"_blank\" action=\"clientOrders.php\" method=\"post\">"; */
-            /* /\* $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">"; *\/ */
-            /* /\* $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">"; *\/ */
-            /* $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $contact['id'] . "\">"; */
-            /* $clientInput = "<input type=\"submit\" id=\"tableSub\" name=\"clientName\" value=\"" . $contact['name'] . "\">"; */
-            /* $closeForm = "</form>"; */
-            /* echo "<td>" . $clientForm . /\* $darkBool . $getPaidOrders . *\/$clientHidden . $clientInput . $closeForm . "</td>"; */
-
             echo "<td>" . $contact['name'] . "</td>";
             $mailHref = "<a id=\"tableSub\" href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
@@ -136,33 +127,19 @@ function listComments()
     $GLOBALS['connectionW']->close();
 }
 
-function whichReview($orderId, $paidStr)
-{
-    $final = findReview($orderId);
-    $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
-    $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paidStr . "\">";
-    $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-    $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
-    $closeForm = "</form>";
-    echo $reviewForm . $paidHidden . $reviewHidden . $reviewInput . $closeForm;
-}
-
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/allComments.html");
 
-    if ($darkBool == "true") {
-        $style = str_replace("commentLight.css", "commentDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
-
     $style = str_replace("{order}", $orderIdShort, $style);
 
     echo $style;
     echo "<i><h1>Contrat: " . $orderIdShort . "</h1></i><br>";
-    echo "<i><h2>Paru sur: </h2></i>";
-    echo whichReview($orderId, $paidStr);
+    $revue = findReview($orderId);
+    echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
+    $client = getContactName($orderId);
+    echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";

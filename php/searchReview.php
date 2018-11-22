@@ -9,7 +9,6 @@ function testInput($data) {
 
 $reviewName = filter_input(INPUT_POST, "reviewName"); // NOM REVUE ex: Ann Mines
 $getPaid = filter_input(INPUT_POST, "paidBool");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 
 $reviewName = testInput($reviewName);
 
@@ -46,18 +45,20 @@ function findReview()
             $currReviewName = $rowReview['Nom'];
             $currReviewId = $rowReview['id'];
             $currReviewYear = $rowReview['Annee'];
+            $published = $rowReview['Paru'];
             $curr = array('Name' => $currReviewName, 'Id' => $currReviewId, 'Year' => $currReviewYear);
 
             $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
-            $darkBool = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
             $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $published . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
             $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
             $closeForm = "</form>";
 
+            echo "<tr><td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+
             $newDate = date("d/m/Y", strtotime($rowReview['DateCreation']));
-            echo "<tr><td>" . $reviewForm . $darkBool . $getPaidOrders . $reviewHidden . $reviewInput . $closeForm . "</td>";
-            if ($rowReview['Paru'] == 1)
+            if ($published == 1)
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
@@ -73,11 +74,6 @@ if (mysqli_connect_error()) {
     die("Connection error. Code: ". mysqli_connect_errno() ." Reason: " . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/search.html");
-
-    if ($darkBool == "true") {
-        $style = str_replace("searchLight.css", "searchDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
 
     $style = str_replace("{type}", "revue", $style);
     $style = str_replace("{query}", $reviewName, $style);

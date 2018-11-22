@@ -8,12 +8,11 @@ function testInput($data) {
 }
 
 $reviewName = filter_input(INPUT_POST, "reviewName");
-$darkBool = filter_input(INPUT_POST, "darkBool");
 $hiddenId = filter_input(INPUT_POST, "hiddenId");
+$published = filter_input(INPUT_POST, "published");
 $getPaid = filter_input(INPUT_POST, "hiddenPaid");
 
 $reviewName = testInput($reviewName);
-$hiddenId = testInput($hiddenId);
 
 function credsArr($credsStr)
 {
@@ -91,15 +90,16 @@ function getOrderDetails($orderId, $orderIdShort)
         $sqlOrder = "SELECT Client_id,PrixHT,Reglement,DateEmission FROM webcontrat_contrat WHERE Commande='$orderId' AND Reglement='';";
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
 
+        
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
 
             if ($rowOrder['PrixHT'] > 0) {
                 $clientId = $rowOrder['Client_id'];
                 $priceRaw = $rowOrder['PrixHT'];
 
+                $isPaid = ($rowOrder['Reglement'] == "R" ? "on" : "");
                 $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-                $darkHidden = "<input type=\"hidden\" name=\"darkBool\" value=\"" . $GLOBALS['darkBool'] . "\">";
-                $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+                $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
                 $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
                 $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
                 $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
@@ -107,7 +107,7 @@ function getOrderDetails($orderId, $orderIdShort)
 
                 $newDate = date("d/m/Y", strtotime($rowOrder['DateEmission']));
             
-                echo "<tr><td>" . $commentForm . $darkHidden . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+                echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
                 echo "<td>" . $newDate . "</td>";
                 echo "<td>" . $priceRaw . "</td>";
                 if ($rowOrder['Reglement'] == "R")
@@ -137,16 +137,19 @@ function getOrderDetails($orderId, $orderIdShort)
     }
 }
 
-function findOrders()
+function findOrders($revueId)
 {
-    $hiddenId = $GLOBALS['hiddenId'];
-    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$hiddenId';";
-    if ($result = $GLOBALS['connectionR']->query($sqlOrder)) {
+    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$revueId';";
+    if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
 
-        while ($rowOrder = mysqli_fetch_array($result)) {
+        $rowOrder = mysqli_fetch_all($resultOrder);
+        sort($rowOrder);
+        foreach ($rowOrder as $order) {
 
-            $orderId = $rowOrder['Info_id'];
-            $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
+            $orderId = $order[0];
+            $supportPart = substr($orderId, 2, 2);
+            $contractPart = substr($orderId, 10, 4);
+            $orderIdShort =  $supportPart . $contractPart;
 
             getOrderDetails($orderId, $orderIdShort);
         }
@@ -156,21 +159,73 @@ function findOrders()
     $GLOBALS['connectionR']->close();
 }
 
+function getNbOrders($revueId)
+{
+    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$revueId';";
+    if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
+
+        $rowsOrder = mysqli_num_rows($resultOrder);
+        return ($rowsOrder);
+    } else {
+        echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connectionR']->error;
+    }    
+}
+
+function getUnitPrice($orderId)
+{
+    $sqlPrice = "SELECT PrixHT FROM webcontrat_contrat WHERE Commande='$orderId';";
+    if ($resultPrice = $GLOBALS['connectionR']->query($sqlPrice)) {
+
+        $rowPrice = mysqli_fetch_array($resultPrice);
+        return ($rowPrice['PrixHT']);
+    } else {
+        echo "Query error: ". $sqlPrice ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
+function getTotalPrice($revueId)
+{
+    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$revueId';";
+    if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
+
+        $rowOrder = mysqli_fetch_all($resultOrder);
+        sort($rowOrder);
+        $totalPrice = 0;
+        foreach ($rowOrder as $order) {
+
+            $orderId = $order[0];
+            $totalPrice += getUnitPrice($orderId);
+        }
+        return ($totalPrice);
+    } else {
+        echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connectionR']->error;
+    }    
+}
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     $style = file_get_contents("../html/search.html");
-
-    if ($darkBool == "true") {
-        $style = str_replace("searchLight.css", "searchDark.css", $style);
-        $style = str_replace("homeLight.css", "homeDark.css", $style);
-    }
-
+    
     $style = str_replace("{type}", "revue", $style);
     $style = str_replace("{query}", $reviewName, $style);
 
+    $showPaid = file_get_contents("../html/showPaid.html");
+
+    $currFile = basename(__FILE__);
+    $showPaid = str_replace("{action.php}", $currFile, $showPaid);
+    $showPaid = str_replace("{reviewName}", $reviewName, $showPaid);
+    $showPaid = str_replace("{hiddenId}", $hiddenId, $showPaid);
+    $showPaid = str_replace("{published}", $published, $showPaid);
+    $showPaid = str_replace("{getPaid}", ($getPaid == "on" ? "" : "on"), $showPaid);
+    $showPaid = str_replace("{btnText}", ($getPaid == "on" ? "Afficher tout les non-reglés" : "Afficher tout les contrats"), $showPaid);
+
     echo $style;
     echo "<i><h1>Contrats dans la revue " . $reviewName . "</h1></i>";
+    echo "<i><h2 id=\"" . ($published == 1 ? "isPub" : "isNotPub") . "\">Revue" . ($published == 1 ? " parue " : " non-parue ") . "</h2></i>";
+    echo "<i><h3>Nombre de contrats: " . getNbOrders($hiddenId) . "</h3></i>";
+    echo "<i><h3>Chiffre d'affaire total: " . getTotalPrice($hiddenId) . "</h3></i>";
+    echo $showPaid;
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";
@@ -186,7 +241,7 @@ if (mysqli_connect_error()) {
     echo "</tr>";
 
     if (mysqli_set_charset($connectionR, "utf8") === TRUE)
-        findOrders();
+        findOrders($hiddenId);
     else
         die("MySQL SET CHARSET error: ". $connection->error);
 

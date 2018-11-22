@@ -12,7 +12,7 @@
   </head>
   <body>
     <!-- UNPAID
-     <form id="commentForm" target="commentFrame" enctype="multipart/form-data" method="post" action="addComment.php">
+     <form id="commentForm" target="_parent" enctype="multipart/form-data" method="post" action="addComment.php">
        <label for="numPhone">Numéro de téléphone</label><br>
        <input type="text" name="numPhone" id="numPhone">
 
@@ -24,12 +24,12 @@
        <br><br>
 
        <label for="nextDueDate">Prochaine relance</label><br>
-       <input type="date" name="nextDueDate" id="nextDueDate" required>
+       <input type="date" name="nextDueDate" id="nextDueDate">
 
        <br><br>
 
        <label for="unpaidReason">Raison impayé</label><br>
-       <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason"></textarea>
+       <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason" required></textarea>
 
        <br><br>
 
@@ -42,11 +42,11 @@
        <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
        <input type="hidden" name="clientId" value="{clientId}">
 
-       <input value="Envoyer" type="submit">
-       <input value="Réinitialiser" type="submit"><br><br>
+       <input value="Valider" type="submit">
      </form>
      <form id="paidForm" action="setPaid.php" method="post">
-       <input type="submit" value="Payé" name="paidConfirm" id="paidConfirm"><br>
+       <input type="hidden" name="hiddenId" value="{orderId}">
+       <input type="submit" value="Payé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
      </form>
      -->
     <iframe name="commentFrame" frameborder="0" scrolling="no" onload="resizeIframe(this);"></iframe>
