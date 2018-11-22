@@ -6,4 +6,6 @@ TODO
 notes
 credentials*.txt
 files/
+test/
 node_modules/
+sql/
