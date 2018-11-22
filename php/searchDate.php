@@ -94,7 +94,7 @@ function findReview($infoId)
 
         $row = mysqli_fetch_array($result);
         $finalId = $row['Revue_id'];
-        $sql = "SELECT id,Nom FROM webcontrat_revue WHERE id='$finalId';";
+        $sql = "SELECT id,Nom,Annee,Paru FROM webcontrat_revue WHERE id='$finalId';";
         if ($result = $GLOBALS['connectionR']->query($sql)) {
 
             $row = mysqli_fetch_array($result);
