@@ -100,7 +100,9 @@ function findReview($infoId)
             $row = mysqli_fetch_array($result);
             $finalName = $row['Nom'];
             $finalId = $row['id'];
-            $final = array('Name' => $finalName, 'Id' => $finalId);
+            $finalYear = $row['Annee'];
+            $finalPub = $row['Paru'];
+            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear, 'Pub' => $finalPub);
             return ($final);
         } else {
             echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
@@ -123,18 +125,6 @@ function isItPaid($orderId)
     }
 }
 
-function isItPub($reviewId)
-{
-    $sqlPub = "SELECT Paru FROM webcontrat_contrat WHERE id='$reviewId';";
-    if ($resultPub = $GLOBALS['connectionW']->query($sqlPub)) {
-
-        $rowPub = mysqli_fetch_array($resultPub);
-        return ($rowPub['Paru']);
-    } else {
-        echo "Query error: ". $sqlPub ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
 function findDates($dueDate)
 {
     $sqlDate = "SELECT Commentaire,Commande,Commande_courte FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
@@ -146,9 +136,6 @@ function findDates($dueDate)
             $orderIdShort = $rowDate['Commande_courte'];
             $getPaid = isItPaid($orderId);
 
-            /* if ($getPaid == "R") */
-            /*     continue ; */
-
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
@@ -157,13 +144,12 @@ function findDates($dueDate)
 
             echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $closeForm . "</td>";
             $final = findReview($orderId);
-            $published = isItPub($final['Id']);
 
             $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
             $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
-            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $published . "\">";
-            $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
+            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
+            $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
+            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
             $closeForm = "</form>";
 
             echo "<tr><td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";

@@ -104,7 +104,7 @@ function findReview($infoId)
             $finalName = $row['Nom'];
             $finalId = $row['id'];
             $finalYear = $row['Annee'];
-            $finalPub = $row['Parue'];
+            $finalPub = $row['Paru'];
             $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear, 'Pub' => $finalPub);
             return ($final);
         } else {
@@ -136,8 +136,8 @@ function findDates($dueDate)
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
-            echo "<td>" . $rowComment['Date'] . "</td>";
-            echo "<td>" . $rowComment['Prochaine_relance'] . "</td></tr>";
+            echo "<td>" . $rowDate['Date'] . "</td>";
+            echo "<td>" . $rowDate['Prochaine_relance'] . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;
