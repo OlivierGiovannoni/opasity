@@ -138,7 +138,7 @@ if (mysqli_connect_error()) {
     echo "<i><h1>Contrat: " . $orderIdShort . "</h1></i><br>";
     $revue = findReview($orderId);
     echo "PAIDSTR DEBUG $paidStr VALUE";
-    echo "<i><h1 " . ($paidStr == "R" ? "style=color:#008800" : "style=color:#880000") . ">" . ($paidStr == "R" ? "Contrat reglé" : "Contrat non-reglé") . "</i></h2>";
+    echo "<i><h1 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#880000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</i></h2>";
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
     $client = getContactName($orderId);
     echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
