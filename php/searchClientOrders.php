@@ -184,6 +184,7 @@ if (mysqli_connect_error()) {
     echo "<th>Numéro de télephone</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
+    echo "<th>Prochaine relance</th>";
     echo "</tr>";
 
     if (mysqli_set_charset($connectionR, "utf8") === TRUE)
