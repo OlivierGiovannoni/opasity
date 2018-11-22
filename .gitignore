@@ -7,3 +7,4 @@ notes
 credentials*.txt
 files/
 node_modules/
+sql/
