@@ -154,7 +154,7 @@ function findDates($dueDate)
             echo "<td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
 
             getOrderDetails($orderId, $orderIdShort);
-            $newDate = date("d/m/Y", $rowDate['Date']);
+            $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             echo "<td>" . $newDate . "</td></tr>";
         }
     } else {
