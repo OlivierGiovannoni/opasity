@@ -126,7 +126,7 @@ function isItPaid($orderId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire,Commande,Commande_courte FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
+    $sqlDate = "SELECT Commentaire,Commande,Commande_courte,Date FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
