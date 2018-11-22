@@ -104,7 +104,7 @@ function getContactName($orderId)
 function listComments()
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
-    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         while ($rowComment = mysqli_fetch_array($resultComment)) {
@@ -115,10 +115,12 @@ function listComments()
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
 
             echo "<td>" . $contact['name'] . "</td>";
-            $mailHref = "<a id=\"tableSub\" href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
+            $mailHref = "<a href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
-            echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
+            echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td>";
+            $fileHref = "<a href=" . $rowComment['Fichier'] . ">" . basename($rowComment['Fichier']) . "</a>";
+            echo "<td>" . $fileHref . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
@@ -150,6 +152,7 @@ if (mysqli_connect_error()) {
     echo "<th>E-mail</th>";
     echo "<th>Téléphone</th>";
     echo "<th>Prochaine relance</th>";
+    echo "<th>Fichier</th>";
     echo "</tr>";
 
     if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
