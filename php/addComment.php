@@ -51,7 +51,7 @@ $connectionW = new mysqli(
 function uploadFile($tmpFile, $fileName, $orderIdWhole)
 {
     $fileDirectory = "files/" . $orderIdWhole . "/";
-    $newFile = $fileDirectory . basename($fileName);
+    $newFile = $fileDirectory . rawurlencode(basename($fileName));
 
     if ($tmpFile === NULL || $fileName === NULL)
         return ("NULL");

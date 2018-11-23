@@ -11,43 +11,54 @@
     </script>
   </head>
   <body>
-    <!-- UNPAID
-     <form id="commentForm" target="_parent" enctype="multipart/form-data" method="post" action="addComment.php">
-       <label for="numPhone">Numéro de téléphone</label><br>
-       <input type="text" name="numPhone" id="numPhone">
+    <div id="commentDiv">
+      <!-- UNPAID
+      <form id="commentForm" target="_parent" enctype="multipart/form-data" method="post" action="addComment.php">
 
-       <br><br>
-    
-       <label for="emailAddr">Adresse e-mail</label><br>
-       <input type="email" name="emailAddr" id="emailAddr">
+	<div>
+	  <label for="numPhone">Numéro de téléphone</label><br>
+	  <input type="text" name="numPhone" id="numPhone">
+	  <br><br>
+	  <label for="emailAddr">Adresse e-mail</label><br>
+	  <input type="email" name="emailAddr" id="emailAddr">
+	  <br><br>
+	</div>
 
-       <br><br>
+	<div>
+	  <label for="unpaidReason">Commentaire</label><br>
+	  <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason" required></textarea>
 
-       <label for="nextDueDate">Prochaine relance</label><br>
-       <input type="date" name="nextDueDate" id="nextDueDate">
+	  <br><br>
 
-       <br><br>
+	  <label for="nextDueDate">Prochaine relance</label><br>
+	  <input type="date" name="nextDueDate" id="nextDueDate">
 
-       <label for="unpaidReason">Raison impayé</label><br>
-       <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason" required></textarea>
+	  <br><br>
 
-       <br><br>
+	  <input type="hidden" name="hiddenId" value="{orderId}">
+	  <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
+	  <input type="hidden" name="clientId" value="{clientId}">
 
-       <label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
-       <input type="file" name="fileUpload" id="fileUp" class="dropzone">
+	  <input value="Valider" type="submit">
+	</div>
 
-       <br><br>
-
-       <input type="hidden" name="hiddenId" value="{orderId}">
-       <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
-       <input type="hidden" name="clientId" value="{clientId}">
-
-       <input value="Valider" type="submit">
-     </form>
-     <form id="paidForm" action="setPaid.php" method="post">
-       <input type="hidden" name="hiddenId" value="{orderId}">
-       <input type="submit" value="Payé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
-     </form>
-     -->
-    <iframe name="commentFrame" frameborder="0" scrolling="no" onload="resizeIframe(this);"></iframe>
+      </form>
+      -->
+      <div>
+	<label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
+	<input type="file" name="fileUpload" id="fileUp" class="dropzone">
+      </div>
+      <!-- UNPAID
+      <div>
+	<form id="paidForm" action="setPaid.php" method="post">
+	  <input type="hidden" name="hiddenId" value="{orderId}">
+	  <input type="submit" value="Passer à l'état reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
+	</form>
+      </div>
+    </div>
+    -->
+      <div id="belowDiv">
+	<iframe name="commentFrame" frameborder="0" scrolling="no" onload="resizeIframe(this);"></iframe>
+      </div>
+      <br><br>    <br><br>    <br><br>
   </body>

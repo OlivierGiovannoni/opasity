@@ -42,7 +42,7 @@ function findClient($clientName)
 
             $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
             $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
-            $clientSubmit = "<input type=\"submit\" name=\"clientName\" id=\"tableSub\" value=\"" . $rowClient['NomSociete'] . "\">";
+            $clientSubmit = "<input type=\"submit\" name=\"clientName\" id=\"tableSuba\" value=\"" . $rowClient['NomSociete'] . "\">";
             $closeForm = "</form>";
             echo "<tr><td>" . $clientForm . $clientHidden . $clientSubmit . $closeForm . "</td>";
             echo "<td>" . $rowClient['NomContact1'] . "</td>";

@@ -142,11 +142,11 @@ function findClientOrders($clientId)
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
+            $commentInput = "<input type=\"submit\" id=\"tableSuba\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
 
             $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
+            $reviewInput = "<input type=\"submit\" id=\"tableSuba\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
 
             $closeForm = "</form>";
 

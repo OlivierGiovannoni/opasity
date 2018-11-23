@@ -24,14 +24,6 @@ th, td {
     font-style: italic;
 }
 
-#tableSub {
-    background-color: #e1e1e1;
-    color: blue;
-    text-decoration: underline;
-    border: none;
-    cursor: pointer;
-}
-
 #isPaid {
     background-color: #008800;
 }

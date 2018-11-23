@@ -52,7 +52,7 @@ function findReview()
             $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $published . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
+            $reviewInput = "<input type=\"submit\" id=\"tableSuba\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
             $closeForm = "</form>";
 
             echo "<tr><td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
