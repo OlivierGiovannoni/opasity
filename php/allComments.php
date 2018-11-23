@@ -120,7 +120,10 @@ function listComments()
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td>";
             $fileHref = "<a href=" . $rowComment['Fichier'] . ">" . basename($rowComment['Fichier']) . "</a>";
-            echo "<td>" . $fileHref . "</td></tr>";
+            if ($rowComment['Fichier'] != NULL)
+                echo "<td>" . $fileHref . "</td></tr>";
+            else
+                echo "<td></td></tr>";
         }
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;

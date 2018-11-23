@@ -46,7 +46,7 @@ function selectLastComment($orderIdShort, $orderId)
         echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
     } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
     }
 }
 
