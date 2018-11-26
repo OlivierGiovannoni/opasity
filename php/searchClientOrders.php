@@ -117,7 +117,8 @@ function findReview($infoId)
             $finalName = $rowReview['Nom'];
             $finalId = $rowReview['id'];
             $finalYear = $rowReview['Annee'];
-            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear);
+            $finalPub = $rowReview['Paru'];
+            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear, 'Pub' => $finalPub);
             return ($final);
         } else {
             echo "Query error: ". $sqlReview ." // ". $GLOBALS['connectionR']->error;
@@ -130,7 +131,7 @@ function findReview($infoId)
 
 function findClientOrders($clientId)
 {
-    $sqlOrders = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Client_id='$clientId' ORDER BY DateEmission DESC LIMIT 100;";
+    $sqlOrders = "SELECT Reglement,DateEmission,Commande FROM webcontrat_contrat WHERE Client_id='$clientId' ORDER BY DateEmission DESC LIMIT 100;";
     if ($resultOrders = $GLOBALS['connectionR']->query($sqlOrders)) {
 
         while ($rowOrders = mysqli_fetch_array($resultOrders)) {
