@@ -144,15 +144,17 @@ function findClientOrders($clientId)
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
 
-            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+
+            $reviewForm = "<form target=\"_blank\" action=\"php/reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
+            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
+            $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
 
             $closeForm = "</form>";
 
-            $newDate = date("d/m/Y", strtotime($rowOrders['DateEmission']));
+            echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
 
-            echo "<tr><td>" . $commentForm . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            $newDate = date("d/m/Y", strtotime($rowOrders['DateEmission']));
             echo "<td>" . $newDate . "</td>";
             echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td>";
             getOrderDetails($orderId, $orderIdShort);
@@ -172,7 +174,7 @@ if (mysqli_connect_error()) {
     $style = str_replace("{query}", $clientName, $style);
 
     echo $style;
-    echo "<i><h1>Contrats de l'entreprise: $clientName</h1></i>";
+    echo "<i><h1>Contrats de l'entreprise : $clientName</h1></i>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";

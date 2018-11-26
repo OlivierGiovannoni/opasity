@@ -124,7 +124,11 @@ function getOrderDetails($orderId, $orderIdShort)
                     $contactName = $rowClient['NomContact1'];
                     $clientId = $rowClient['id'];
                     $phoneNb =  getPhoneNumber($orderId, $clientId);
-                    echo "<td>" . $companyName . "</td>";
+                    $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
+                    $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
+                    $clientInput = "<input type=\"submit\" name=\"clientName\" value=\"" . $companyName . "\">";
+                    $closeForm = "</form>";
+                    echo "<td>" . $clientForm . $clientHidden . $clientInput . $closeForm . "</td>";
                     echo "<td>" . $contactName . "</td>";
                     echo "<td>" . $phoneNb . "</td>";
                     selectLastComment($orderId, $orderIdShort, $rowOrder['Reglement']);
@@ -170,6 +174,7 @@ function getNbOrders($revueId)
     } else {
         echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connectionR']->error;
     }    
+
 }
 
 function getUnitPrice($orderId)

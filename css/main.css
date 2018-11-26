@@ -16,6 +16,14 @@ h1,h2 {
     float: left;
 }
 
+#isPaid {
+    background-color: #008800;
+}
+
+#isNotPaid {
+    background-color: #880000;
+}
+
 input[type=text],[type=date] {
     width: 75%;
     background-color: #e1e1e1;

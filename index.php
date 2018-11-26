@@ -68,20 +68,26 @@ function getOrderDetails($orderId, $orderIdShort, $final)
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
             $closeForm = "</form>";
 
-            echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
             echo "<td>" . $priceRaw . "</td>";
             if ($rowOrder['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
 
-            $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
+            $sqlClient = "SELECT id,NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
 
                 $rowClient = mysqli_fetch_array($resultClient);
                 $companyName = $rowClient['NomSociete'];
                 $contactName = $rowClient['NomContact1'];
-                echo "<td>" . $companyName . "</td>";
+
+                $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
+                $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
+                $clientInput = "<input type=\"submit\" name=\"clientName\" value=\"" . $companyName . "\">";
+                $closeForm = "</form>";
+                echo "<td>" . $clientForm . $clientHidden . $clientInput . $closeForm . "</td>";
+
                 selectLastComment($orderIdShort, $orderId);
             }
         }
@@ -141,7 +147,10 @@ function findDates($dueDate)
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             echo "<td>" . $newDate . "</td>";
             $newDate = date("d/m/Y", strtotime($rowDate['Prochaine_relance']));
-            echo "<td>" . $newDate . "</td></tr>";
+            if ($newDate == NULL || $newDate == "00/00/0000" || $newDate == "01/01/1970")
+                echo "<td>Aucune</td></tr>";
+            else
+                echo "<td>" . $newDate . "</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;

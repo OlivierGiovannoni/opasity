@@ -137,7 +137,8 @@ function findReview($infoId)
             $finalName = $rowReview['Nom'];
             $finalId = $rowReview['id'];
             $finalYear = $rowReview['Annee'];
-            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear);
+            $finalPub = $rowReview['Paru'];
+            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear, 'Pub' => $finalPub);
             return ($final);
         } else {
             echo "Query error: ". $sqlReview ." // ". $GLOBALS['connectionR']->error;
@@ -172,10 +173,11 @@ function findOrder($supportPart, $contractPart, $contractId)
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";
 
-            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+
+            $reviewForm = "<form target=\"_blank\" action=\"php/reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
+            $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
+            $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
 
             $closeForm = "</form>";
 
@@ -183,7 +185,7 @@ function findOrder($supportPart, $contractPart, $contractId)
 
             echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
             echo "<td>" . $newDate . "</td>";
-            echo "<td>" . $reviewForm . $paidHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
             getOrderDetails($orderId, $orderIdShort);
         }
     } else {
