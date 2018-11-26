@@ -110,7 +110,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 $phoneNb = getPhoneNumber($orderId, $clientId);
                 $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
                 $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
-                $clientInput = "<input type=\"submit\" id=\"tableSuba\" name=\"clientName\" value=\"" . $companyName . "\">";
+                $clientInput = "<input type=\"submit\" name=\"clientName\" value=\"" . $companyName . "\">";
                 $closeForm = "</form>";
                 echo "<td>" . $clientForm . $clientHidden . $clientInput . $closeForm . "</td>";
                 echo "<td>" . $contactName . "</td>";
@@ -170,12 +170,12 @@ function findOrder($supportPart, $contractPart, $contractId)
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-            $commentInput = "<input type=\"submit\" id=\"tableSuba\" name=\"comment\" value=\"" . $orderIdShort . "\">";
+            $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";
 
             $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
-            $reviewInput = "<input type=\"submit\" id=\"tableSuba\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
+            $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . ' ' . $final['Year'] . "\">";
 
             $closeForm = "</form>";
 

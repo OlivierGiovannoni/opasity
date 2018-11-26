@@ -65,7 +65,7 @@ function getOrderDetails($orderId, $orderIdShort, $final)
             $reviewForm = "<form target=\"_blank\" action=\"php/reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
-            $reviewInput = "<input type=\"submit\" id=\"tableSub\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
+            $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
             $closeForm = "</form>";
 
             echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td>";
@@ -123,13 +123,15 @@ function findDates($dueDate)
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
 
+            if ($rowDate['Commande'] == "")
+                continue ;
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
 
             $commentForm = "<form target=\"_blank\" action=\"php/allComments.php\" method=\"post\" target=\"_blank\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-            $commentInput = "<input type=\"submit\" id=\"tableSub\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
+            $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
             $closeForm = "</form>";
 
             echo "<td>" . $commentForm . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";

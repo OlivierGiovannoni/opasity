@@ -103,7 +103,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
                 $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
                 $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
-                $commentInput = "<input type=\"submit\" id=\"tableSuba\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
+                $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
                 $closeForm = "</form>";
 
                 $newDate = date("d/m/Y", strtotime($rowOrder['DateEmission']));
