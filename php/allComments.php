@@ -123,7 +123,7 @@ function listComments()
             if ($rowComment['Fichier'] != NULL)
                 echo "<td>" . $fileHref . "</td></tr>";
             else
-                echo "<td></td></tr>";
+                echo "<td>Aucun</td></tr>";
         }
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;

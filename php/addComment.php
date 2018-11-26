@@ -51,7 +51,7 @@ $connectionW = new mysqli(
 function uploadFile($tmpFile, $fileName, $orderIdWhole)
 {
     $fileDirectory = "files/" . $orderIdWhole . "/";
-    $newFile = $fileDirectory . rawurlencode(basename($fileName));
+    $newFile = $fileDirectory . basename($fileName);
 
     if ($tmpFile === NULL || $fileName === NULL)
         return ("NULL");
@@ -101,6 +101,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
 
     //fetch comment id and set dernier to 0
     $newFile = uploadFile($tmpFile, $file, $orderId);
+    $newFile = rawurlencode($newFile);
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
