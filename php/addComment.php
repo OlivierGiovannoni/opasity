@@ -122,8 +122,9 @@ if (mysqli_connect_error()) {
     if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
-        newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
-        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page.";
+        echo "LONG $orderId STORY SHORT $orderIdShort";
+        //newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
+        //echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page.";
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);

@@ -154,7 +154,7 @@ function findClientOrders($clientId)
 
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . "</td>";
+            echo "<td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $newDate = date("d/m/Y", strtotime($rowOrders['DateEmission']));
             echo "<td>" . $newDate . "</td>";

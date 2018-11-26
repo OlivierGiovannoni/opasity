@@ -173,8 +173,7 @@ function findOrder($supportPart, $contractPart, $contractId)
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";
 
-
-            $reviewForm = "<form target=\"_blank\" action=\"php/reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
