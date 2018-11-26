@@ -110,7 +110,7 @@ function findReview($infoId)
 
         $rowReviewInfo = mysqli_fetch_array($resultReviewInfo);
         $finalId = $rowReviewInfo['Revue_id'];
-        $sqlReview = "SELECT id,Nom,Annee FROM webcontrat_revue WHERE id='$finalId';";
+        $sqlReview = "SELECT id,Nom,Annee,Paru FROM webcontrat_revue WHERE id='$finalId';";
         if ($resultReview = $GLOBALS['connectionR']->query($sqlReview)) {
 
             $rowReview = mysqli_fetch_array($resultReview);
