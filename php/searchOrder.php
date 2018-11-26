@@ -83,7 +83,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
     }
 }
-
+h
 function getOrderDetails($orderId, $orderIdShort)
 {
     $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";

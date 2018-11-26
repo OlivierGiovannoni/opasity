@@ -139,7 +139,7 @@ function findClientOrders($clientId)
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
             $final = findReview($orderId);
 
-            $isPaid = ($rowOrder['Reglement'] == "R" ? "on" : "");
+            $isPaid = ($rowOrders['Reglement'] == "R" ? "on" : "");
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
