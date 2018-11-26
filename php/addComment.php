@@ -58,6 +58,7 @@ function uploadFile($tmpFile, $fileName, $orderIdWhole)
     if (is_dir($fileDirectory) === FALSE)
         mkdir($fileDirectory, 0755, TRUE);
     if (move_uploaded_file($tmpFile, $newFile)) {
+        $newFile = $fileDirectory . rawurlencode(basename($fileName));        
         return ($newFile);
         /* echo basename($_FILES['fileUpload']['name']). " à été mis en ligne."; */
     } else {
@@ -101,7 +102,6 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
 
     //fetch comment id and set dernier to 0
     $newFile = uploadFile($tmpFile, $file, $orderId);
-    $newFile = rawurlencode($newFile);
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
