@@ -139,24 +139,26 @@ function findClientOrders($clientId)
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
             $final = findReview($orderId);
 
+            $isPaid = ($rowOrder['Reglement'] == "R" ? "on" : "");
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
 
 
-            $reviewForm = "<form target=\"_blank\" action=\"php/reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
 
             $closeForm = "</form>";
 
-            echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . "</td>";
 
             $newDate = date("d/m/Y", strtotime($rowOrders['DateEmission']));
             echo "<td>" . $newDate . "</td>";
-            echo "<td>" . $reviewForm . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
             getOrderDetails($orderId, $orderIdShort);
         }
     } else {
