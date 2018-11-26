@@ -82,7 +82,7 @@ function getOrderDetails($orderId, $orderIdShort, $final)
                 $companyName = $rowClient['NomSociete'];
                 $contactName = $rowClient['NomContact1'];
 
-                $clientForm = "<form target=\"_blank\" action=\"searchClientOrders.php\" method=\"post\">";
+                $clientForm = "<form target=\"_blank\" action=\"php/searchClientOrders.php\" method=\"post\">";
                 $clientHidden = "<input type=\"hidden\" name=\"clientId\" value=\"" . $rowClient['id'] . "\">";
                 $clientInput = "<input type=\"submit\" name=\"clientName\" value=\"" . $companyName . "\">";
                 $closeForm = "</form>";
