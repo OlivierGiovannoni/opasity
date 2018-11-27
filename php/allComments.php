@@ -81,7 +81,7 @@ function findReview($infoId)
 
 function getContactName($orderId)
 {
-    $sqlContactId = "SELECT Client_id FROM webcontrat_contrat WHERE Commande='$orderId' ORDER BY DateEmission DESC;";
+    $sqlContactId = "SELECT Client_id,PrixHT FROM webcontrat_contrat WHERE Commande='$orderId' ORDER BY DateEmission DESC;";
     if ($resultContactId = $GLOBALS['connectionR']->query($sqlContactId)) {
 
         $rowContactId = mysqli_fetch_array($resultContactId);
@@ -91,7 +91,7 @@ function getContactName($orderId)
 
             $rowContactName = mysqli_fetch_array($resultContactName);
             $contactName = $rowContactName['NomSociete'];
-            return (array('id' => $contactId, 'name' => $contactName));
+            return (array('id' => $contactId, 'name' => $contactName, 'price' => $rowContactId['Prix']));
         } else {
             echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connectionR']->error;
         }
@@ -118,13 +118,19 @@ function listComments()
             $mailHref = "<a href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
             echo "<td>" . $mailHref . "</td>";
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
-            echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td>";
+
+            if ($rowComment['Prochaine_relance'] == "1970-01-01" || $rowComment['Prochaine_relance'] == "0000-00-00")
+                $newDate = "Aucune";
+            else
+                $newDate = date("d/m/Y", strtotime($rowComment['Prochaine_relance']));
+            echo "<td>" . $newDate . "</td>";
             $fileHref = "<a href=" . $rowComment['Fichier'] . ">" . basename($rowComment['Fichier']) . "</a>";
             if ($rowComment['Fichier'] == "NULL")
                 echo "<td>Aucun</td>";
             else
                 echo "<td>" . $fileHref . "</td>";
 
+            
             $deleteForm = "<form action=\"deleteComment.php\" method=\"post\">";
             $deleteId = "<input type=\"hidden\" name=\"commId\" value=\"" . $rowComment['Commentaire_id'] . "\">";
             $deleteSub = "<input type=\"submit\" value=\"Supprimer\" name=\"delConfirm\" onclick=\"return confirm('Supprimer le commentaire?');\"><br>";
@@ -148,11 +154,11 @@ if (mysqli_connect_error()) {
     $style = str_replace("{order}", $orderIdShort, $style);
 
     echo $style;
-    echo "<i><h1>Contrat: " . $orderIdShort . "</h1></i>";
+    $client = getContactName($orderId);
+    echo "<i><h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1></i>";
     $revue = findReview($orderId);
     echo "<i><h2 " . ($paidStr == "on" ? "style=color:#00FF00" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</h2></i>";
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
-    $client = getContactName($orderId);
     echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
     echo "<table>";
     echo "<tr>";

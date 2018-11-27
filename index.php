@@ -133,7 +133,7 @@ function findDates($dueDate)
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             echo "<td>" . $newDate . "</td>";
             $newDate = date("d/m/Y", strtotime($rowDate['Prochaine_relance']));
-            if ($newDate == NULL || $newDate == "00/00/0000" || $newDate == "01/01/1970")
+            if ($newDate == "00/00/0000" || $newDate == "01/01/1970")
                 echo "<td>Aucune</td>";
             else
                 echo "<td>" . $newDate . "</td>";

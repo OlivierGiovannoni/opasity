@@ -94,10 +94,8 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     $orderIdShort = $GLOBALS['orderIdShort'];
     $today = date("Y-m-d");
 
-    if ($nextDueDate == "") {
-        $nextDueDate = strtotime("+2 weeks");
-        $nextDueDate = date("Y-m-d", $nextDueDate);
-    }
+    if ($nextDueDate == "")
+        $nextDueDate = "1970-01-01";
     if ($phone === "")
         $phone = getPhoneNumber($orderId, $clientId);
 
