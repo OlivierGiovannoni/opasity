@@ -120,10 +120,18 @@ function listComments()
             echo "<td>" . $rowComment['NumTelephone'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td>";
             $fileHref = "<a href=" . $rowComment['Fichier'] . ">" . basename($rowComment['Fichier']) . "</a>";
-            if ($rowComment['Fichier'] != NULL)
-                echo "<td>" . $fileHref . "</td></tr>";
+            if ($rowComment['Fichier'] == "NULL")
+                echo "<td>Aucun</td>";
             else
-                echo "<td>Aucun</td></tr>";
+                echo "<td>" . $fileHref . "</td>";
+
+            $deleteForm = "<form action=\"deleteComment.php\" method=\"post\">";
+            $deleteId = "<input type=\"hidden\" name=\"commId\" value=\"" . $rowComment['Commentaire_id'] . "\">";
+            $deleteSub = "<input type=\"submit\" value=\"Supprimer\" name=\"delConfirm\" onclick=\"return confirm('Supprimer le commentaire?');\"><br>";
+            $closeForm = "</form>";
+
+            echo "<td>" . $deleteForm . $deleteId . $deleteSub . $closeForm . "</td></tr>";
+
         }
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
@@ -156,6 +164,7 @@ if (mysqli_connect_error()) {
     echo "<th>Téléphone</th>";
     echo "<th>Prochaine relance</th>";
     echo "<th>Fichier</th>";
+    echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
 
     if (mysqli_set_charset($connectionR, "utf8") === TRUE) {

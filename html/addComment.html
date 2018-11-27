@@ -39,7 +39,7 @@
 	  <input type="hidden" name="hiddenIdShort" value="{orderIdShort}">
 	  <input type="hidden" name="clientId" value="{clientId}">
 
-	  <input value="Valider" type="submit">
+	  <input value="Valider" type="submit" id="submit">
 	</div>
 	<div>
 	  <label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
@@ -51,7 +51,11 @@
       <div>
 	<form id="paidForm" action="setPaid.php" method="post">
 	  <input type="hidden" name="hiddenId" value="{orderId}">
-	  <input type="submit" value="Passer à l'état reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
+	  <input type="submit" id="submit" value="Passer à l'état reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
+	</form>
+	<form id="paidForm" action="setUnpaid.php" method="post">
+	  <input type="hidden" name="hiddenId" value="{orderId}">
+	  <input type="submit" id="submit" value="Passer à l'état non-reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en non-reglé ?');"><br>
 	</form>
       </div>
     </div>

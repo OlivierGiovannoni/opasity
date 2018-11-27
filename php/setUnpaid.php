@@ -26,11 +26,11 @@ $connection = new mysqli(
 
 function setPaid($orderId)
 {
-    $sqlPaid = "UPDATE webcontrat_contrat SET Reglement='R' WHERE Commande='$orderId';";
+    $sqlPaid = "UPDATE webcontrat_contrat SET Reglement='' WHERE Commande='$orderId';";
     if ($resultPaid = $GLOBALS['connection']->query($sqlPaid)) {
 
         // UPDATE output doesn't need to be fetched.
-        echo "Le contrat à été passé en 'reglé' avec succès. ";
+        echo "Le contrat à été passé en 'non-reglé' avec succès. ";
         echo "<a  href=\"../index.php\">Retourner au menu</a>";
     } else {
         echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connection']->error;

@@ -35,21 +35,6 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function selectLastComment($orderIdShort, $orderId)
-{
-    $sqlComment = "SELECT Commentaire,AdresseMail FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id;";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-
-        $rowComment = mysqli_fetch_array($resultComment);
-
-        $mail = $rowComment['AdresseMail'];
-        echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
-        echo "<td>" . $rowComment['Commentaire'] . "</td>";
-    } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
-    }
-}
-
 function getOrderDetails($orderId, $orderIdShort, $final)
 {
     $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
@@ -87,8 +72,6 @@ function getOrderDetails($orderId, $orderIdShort, $final)
                 $clientInput = "<input type=\"submit\" name=\"clientName\" value=\"" . $companyName . "\">";
                 $closeForm = "</form>";
                 echo "<td>" . $clientForm . $clientHidden . $clientInput . $closeForm . "</td>";
-
-                selectLastComment($orderIdShort, $orderId);
             }
         }
     } else {
@@ -124,7 +107,7 @@ function findReview($infoId)
 function findDates($dueDate)
 {
     //$sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
-    $sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire ORDER BY Prochaine_relance DESC;";
+    $sqlDate = "SELECT Commentaire_id,AdresseMail,Commentaire,Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire ORDER BY Prochaine_relance DESC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -144,13 +127,24 @@ function findDates($dueDate)
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
+            $mail = $rowDate['AdresseMail'];
+            echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
+            echo "<td>" . $rowDate['Commentaire'] . "</td>";
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             echo "<td>" . $newDate . "</td>";
             $newDate = date("d/m/Y", strtotime($rowDate['Prochaine_relance']));
             if ($newDate == NULL || $newDate == "00/00/0000" || $newDate == "01/01/1970")
-                echo "<td>Aucune</td></tr>";
+                echo "<td>Aucune</td>";
             else
-                echo "<td>" . $newDate . "</td></tr>";
+                echo "<td>" . $newDate . "</td>";
+
+            $deleteForm = "<form action=\"php/deleteComment.php\" method=\"post\">";
+            $deleteId = "<input type=\"hidden\" name=\"commId\" value=\"" . $rowDate['Commentaire_id'] . "\">";
+            $deleteSub = "<input type=\"submit\" value=\"Supprimer\" name=\"delConfirm\" onclick=\"return confirm('Supprimer le commentaire?');\"><br>";
+            $closeForm = "</form>";
+
+            echo "<td>" . $deleteForm . $deleteId . $deleteSub . $closeForm . "</td></tr>";
+
         }
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;
@@ -176,6 +170,7 @@ if (mysqli_connect_error()) {
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "<th>Prochaine relance</th>";
+    echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
 
     if (mysqli_set_charset($connectionR, "utf8") === TRUE)

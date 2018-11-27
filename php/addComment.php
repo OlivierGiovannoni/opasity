@@ -124,7 +124,8 @@ if (mysqli_connect_error()) {
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
-        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page.";
+        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
+        echo "<a  href=\"../index.php\">Retourner au menu</a>";
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);
