@@ -51,15 +51,15 @@ $connectionW = new mysqli(
 function uploadFile($tmpFile, $fileName, $orderIdWhole)
 {
     $fileDirectory = "files/" . $orderIdWhole . "/";
-    //$newFile = $fileDirectory . str_replace(" ", "_", $fileName);
-    $newFile = $fileDirectory . basename($fileName);
+    $newFile = $fileDirectory . str_replace(" ", "_", $fileName);
+    //$newFile = $fileDirectory . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
         return ("NULL");
     if (is_dir($fileDirectory) === FALSE)
         mkdir($fileDirectory, 0755, TRUE);
     if (move_uploaded_file($tmpFile, $newFile)) {
-        $newFile = $fileDirectory . rawurlencode(basename($fileName));        
+        //$newFile = $fileDirectory . rawurlencode($fileName);
         return ($newFile);
         /* echo basename($_FILES['fileUpload']['name']). " à été mis en ligne."; */
     } else {
