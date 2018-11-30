@@ -91,7 +91,7 @@ function getContactName($orderId)
 
             $rowContactName = mysqli_fetch_array($resultContactName);
             $contactName = $rowContactName['NomSociete'];
-            return (array('id' => $contactId, 'name' => $contactName, 'price' => $rowContactId['Prix']));
+            return (array('id' => $contactId, 'name' => $contactName, 'price' => $rowContactId['PrixHT']));
         } else {
             echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connectionR']->error;
         }
