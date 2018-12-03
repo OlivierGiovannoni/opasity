@@ -10,14 +10,14 @@ function testInput($data) {
 $fname = filter_input(INPUT_POST, "fname");
 $lname = filter_input(INPUT_POST, "lname");
 $username = filter_input(INPUT_POST, "username");
-$mail = filter_input(INPUT_POST, "mail");
+$email = filter_input(INPUT_POST, "email");
 $password = filter_input(INPUT_POST, "password");
 $pwdrepeat = filter_input(INPUT_POST, "pwdrepeat");
 
 $fname = testInput($fname);
 $lname = testInput($lname);
 $username = testInput($username);
-$mail = testInput($mail);
+$email = testInput($email);
 $password = testInput($password);
 $pwdrepeat = testInput($pwdrepeat);
 
@@ -43,7 +43,7 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function register($fname, $lname, $username, $mail, $password, $pwdrepeat)
+function register($fname, $lname, $username, $email, $password, $pwdrepeat)
 {
     if ($password !== $pwdrepeat) {
         echo "Passwords do not match";
@@ -62,7 +62,7 @@ function register($fname, $lname, $username, $mail, $password, $pwdrepeat)
     $pwdhash = password_hash($password, PASSWORD_DEFAULT);
     $created = date("Y-m-d h:i:s");
     $rowNames = "username,passwordhash,email,fname,lname,created,lastLogin";
-    $rowValues = "'$username',\"$pwdhash\",'$mail','$fname','$lname','$created','$created'";
+    $rowValues = "'$username',\"$pwdhash\",'$email','$fname','$lname','$created','$created'";
     $sqlRegister = "INSERT INTO webcontrat_utilisateurs ($rowNames) VALUES ($rowValues);";
     if ($resultRegister = $GLOBALS['connectionW']->query($sqlRegister)) {
 
@@ -72,6 +72,6 @@ function register($fname, $lname, $username, $mail, $password, $pwdrepeat)
     }
 }
 
-register($fname, $lname, $username, $mail, $password, $pwdrepeat);
+register($fname, $lname, $username, $email, $password, $pwdrepeat);
 
 ?>

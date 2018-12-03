@@ -2,16 +2,30 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="logister.css">
+    <title>Register</title>
   </head>
   <body>
     <form action="register.php" method="post">
-      Firstname:<input type="text" name="fname"><br>
-      Lastname:<input type="text" name="lname"><br>
-      Username:<input type="text" name="username"><br>
-      Email:<input type="mail" name="mail"><br>
-      Password:<input type="password" name="password"><br>
-      Repeat:<input type="password" name="pwdrepeat"><br>
-      <input type="submit" value="Register">
+      <label for="fname">First name</label><br>
+      <input type="text" name="fname" id="fname" required><br><br>
+
+      <label for="lname">Last name</label><br>
+      <input type="text" name="lname" id="lname" required><br><br>
+
+      <label for="username">Username</label><br>
+      <input type="text" name="username" id="username" required><br><br>
+
+      <label for="email">Email</label><br>
+      <input type="email" name="email" id="email" required><br><br>
+
+      <label for="password">Password</label><br>
+      <input type="password" name="password" id="password" required><br><br>
+
+      <label for="pwdrepeat">Repeat password</label><br>
+      <input type="password" name="pwdrepeat" id="pwdrepeat" required><br><br>
+
+      <input type="submit" id="submit" value="Register">
     </form>
   </body>
 </html>

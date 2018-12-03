@@ -2,12 +2,18 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="logister.css">
+    <title>Connect</title>
   </head>
   <body>
     <form action="login.php" method="post">
-      Username:<input type="text" name="username"><br>
-      Password:<input type="password" name="password"><br>
-      <input type="submit" value="Login">
+      <label for="username">Username</label><br>
+      <input type="text" name="username" id="username" required><br><br>
+
+      <label for="password">Password</label><br>
+      <input type="password" name="password" id="password" required><br><br>
+
+      <input type="submit" id="submit" value="Login">
     </form>
     <a href="register.html">Register</a><br>
     <a href="forgot.html">Forgot password</a><br>
