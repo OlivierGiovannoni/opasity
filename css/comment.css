@@ -58,3 +58,8 @@ textarea {
     width: 25%;
     float: left;
 }
+
+#commentFrame {
+    width: 100%;
+    border: 0px;
+}

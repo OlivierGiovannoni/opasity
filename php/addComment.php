@@ -118,11 +118,11 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     
-    if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
+    if (mysqli_set_charset($connectionW, "utf8") === TRUE) {
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
-        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
+        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. $unpaidReason";
         echo "<a  href=\"../index.php\">Retourner au menu</a>";
     }
     else

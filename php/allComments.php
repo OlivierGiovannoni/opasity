@@ -149,6 +149,7 @@ function listComments()
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
+
     $style = file_get_contents("../html/allComments.html");
 
     $style = str_replace("{order}", $orderIdShort, $style);
@@ -160,6 +161,8 @@ if (mysqli_connect_error()) {
     echo "<i><h2 " . ($paidStr == "on" ? "style=color:#00FF00" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</h2></i>";
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
     echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
+
+    /* echo "<iframe name=\"commentFrame\" id=\"commentFrame\">"; */
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
@@ -180,8 +183,8 @@ if (mysqli_connect_error()) {
     }
     else
         die("MySQL SET CHARSET error: ". $connection->error);
-
     echo "</table><br><br><br>";
+    echo "</iframe>";
     echo "</html>";
 }
 
