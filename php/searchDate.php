@@ -65,7 +65,6 @@ function getOrderDetails($orderId, $orderIdShort)
                 $contactName = $rowClient['NomContact1'];
                 echo "<td>" . $companyName . "</td>";
                 echo "<td>" . $contactName . "</td>";
-                selectLastComment($orderIdShort, $orderId);
             }
         }
     } else {
@@ -168,7 +167,8 @@ if (mysqli_connect_error()) {
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
-    echo "<th>Payé</th>";
+    echo "<th>Payé compta</th>";
+    echo "<th>Payé base</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Commentaire</th>";
