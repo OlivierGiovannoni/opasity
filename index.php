@@ -176,7 +176,7 @@ if (mysqli_connect_error()) {
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
     echo "<th>Nom de l'entreprise</th>";
-    echo "<th>Payé compta</th>";
+    echo "<th>Payé base</th>";
     echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
