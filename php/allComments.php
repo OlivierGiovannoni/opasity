@@ -158,7 +158,7 @@ if (mysqli_connect_error()) {
     $client = getContactName($orderId);
     echo "<i><h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1></i>";
     $revue = findReview($orderId);
-    echo "<i><h2 " . ($paidStr == "on" ? "style=color:#00FF00" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</h2></i>";
+    echo "<i><h2 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</h2></i>";
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
     echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
 
@@ -176,13 +176,13 @@ if (mysqli_connect_error()) {
     echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionR, "utf8") === TRUE) {
+    if (mysqli_set_charset($connectionW, "utf8") === TRUE) {
 
         listComments();
         addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
     }
     else
-        die("MySQL SET CHARSET error: ". $connection->error);
+        die("MySQL SET CHARSET error: ". $connectionW->error);
     echo "</table><br><br><br>";
     echo "</iframe>";
     echo "</html>";

@@ -40,19 +40,6 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function selectLastComment($orderIdShort, $orderId)
-{
-    $sqlComment = "SELECT Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId';";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-
-        $rowComment = mysqli_fetch_array($resultComment);
-
-        echo "<td>" . $rowComment['Commentaire'] . "</td>";
-    } else {
-        echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
 function getOrderDetails($orderId, $orderIdShort)
 {
     $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
@@ -155,6 +142,7 @@ function findDates($dueDate)
 
             getOrderDetails($orderId, $orderIdShort);
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
+            echo "<td>" . $rowDate['Commentaire'] . "</td>";
             echo "<td>" . $newDate . "</td></tr>";
         }
     } else {
@@ -190,7 +178,7 @@ if (mysqli_connect_error()) {
     if (mysqli_set_charset($connectionR, "utf8") === TRUE)
         findDates($dueDate);
     else
-        die("MySQL SET CHARSET error: ". $connection->error);
+        die("MySQL SET CHARSET error: ". $connectionR->error);
 
     echo "</table><br><br><br>";
     echo "</html>";

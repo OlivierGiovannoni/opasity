@@ -59,10 +59,10 @@ function register($fname, $lname, $username, $email, $password, $pwdrepeat)
     } else {
         echo "Query error: ". $sqlLogin ." // ". $GLOBALS['connectionW']->error;
     }
-    $pwdhash = password_hash($password, PASSWORD_DEFAULT);
+    /* $pwdhash = password_hash($password, PASSWORD_DEFAULT); // Hash password */
     $created = date("Y-m-d h:i:s");
     $rowNames = "username,passwordhash,email,fname,lname,created,lastLogin";
-    $rowValues = "'$username',\"$pwdhash\",'$email','$fname','$lname','$created','$created'";
+    $rowValues = "'$username',\"$password\",'$email','$fname','$lname','$created','$created'";
     $sqlRegister = "INSERT INTO webcontrat_utilisateurs ($rowNames) VALUES ($rowValues);";
     if ($resultRegister = $GLOBALS['connectionW']->query($sqlRegister)) {
 

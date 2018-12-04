@@ -106,8 +106,7 @@ function findReview($infoId)
 
 function findDates($dueDate)
 {
-    //$sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
-    $sqlDate = "SELECT Commentaire_id,AdresseMail,Commentaire,Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire ORDER BY Prochaine_relance DESC;";
+    $sqlDate = "SELECT Commande,Commande_courte,Date,Prochaine_relance FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -173,10 +172,10 @@ if (mysqli_connect_error()) {
     echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionR, "utf8") === TRUE)
+    if (mysqli_set_charset($connectionW, "utf8") === TRUE)
         findDates($today);
     else
-        die("MySQL SET CHARSET error: ". $connection->error);
+        die("MySQL SET CHARSET error: ". $connectionW->error);
 
     echo "</table>";
     echo "</html>";

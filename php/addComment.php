@@ -89,6 +89,17 @@ function getPhoneNumber($orderId, $clientId)
     }
 }
 
+function getLastId($orderId)
+{
+    $sqlComment = "SELECT Commentaire_id FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
+        $rowComment = mysqli_fetch_array($resultComment);
+        return ($rowComment['Commentaire_id']);
+    } else {
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file)
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
@@ -99,7 +110,15 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     if ($phone === "")
         $phone = getPhoneNumber($orderId, $clientId);
 
-    //fetch comment id and set dernier to 0
+    $lastId = getLastId($orderId);
+    $sqlNewLast = "UPDATE webcontrat_commentaire SET DernierCom=0 WHERE Commentaire_id='$lastId';";
+    if ($resultNewLast = $GLOBALS['connectionW']->query($sqlNewLast)) {
+
+        // UPDATE output doesn't need to be fetched.
+    } else {
+        echo "Query error: ". $sqlNewLast ." // ". $GLOBALS['connectionW']->error; 
+    }
+
     $newFile = uploadFile($tmpFile, $file, $orderId);
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
@@ -117,7 +136,6 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    
     if (mysqli_set_charset($connectionW, "utf8") === TRUE) {
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
@@ -126,7 +144,7 @@ if (mysqli_connect_error()) {
         echo "<a  href=\"../index.php\">Retourner au menu</a>";
     }
     else
-        die("MySQL SET CHARSET error: ". $connection->error);
+        die("MySQL SET CHARSET error: ". $connectionW->error);
 }
 
 ?>

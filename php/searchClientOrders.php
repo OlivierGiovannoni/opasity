@@ -195,7 +195,7 @@ if (mysqli_connect_error()) {
     if (mysqli_set_charset($connectionR, "utf8") === TRUE)
         findClientOrders($clientId);
     else
-        die("MySQL SET CHARSET error: ". $connection->error);
+        die("MySQL SET CHARSET error: ". $connectionR->error);
 
 
     echo "</table><br><br><br>";

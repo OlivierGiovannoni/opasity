@@ -15,7 +15,7 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
-$credsFile = "../credentials.txt";
+$credsFile = "../credentialsW.txt";
 $credentials = credsArr(file_get_contents($credsFile));
 
 $connection = new mysqli(
@@ -26,7 +26,7 @@ $connection = new mysqli(
 
 function setPaid($orderId)
 {
-    $sqlPaid = "UPDATE webcontrat_contrat SET Reglement='' WHERE Commande='$orderId';";
+    $sqlPaid = "UPDATE webcontrat_commentaire SET Reglement='' WHERE Commande='$orderId';";
     if ($resultPaid = $GLOBALS['connection']->query($sqlPaid)) {
 
         // UPDATE output doesn't need to be fetched.

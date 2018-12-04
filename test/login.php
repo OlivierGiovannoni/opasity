@@ -45,8 +45,9 @@ function login($username, $password)
             return ;
         }
         $rowLogin = mysqli_fetch_array($resultLogin);
-        $check = password_verify($password, $rowLogin['passwordhash']);
-        if ($check === FALSE) {
+        /* $check = password_verify($password, $rowLogin['passwordhash']); // Check if password hash corresponds */
+        /* if ($check === FALSE) { // If not, throw */
+        if ($password !== $rowLogin['passwordhash']) {
             echo "Invalid password";
             return ;
         }
