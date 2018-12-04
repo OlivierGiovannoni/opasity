@@ -59,7 +59,7 @@ function getOrderDetails($orderId, $orderIdShort, $final)
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
-
+            echo "<td>EN COURS</td>";
             $sqlClient = "SELECT id,NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
 
@@ -163,7 +163,8 @@ if (mysqli_connect_error()) {
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
-    echo "<th>Payé</th>";
+    echo "<th>Payé compta</th>";
+    echo "<th>Payé base</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
