@@ -55,10 +55,6 @@ function getOrderDetails($orderId, $orderIdShort, $final)
 
             echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
             echo "<td>" . $priceRaw . "</td>";
-            if ($rowOrder['Reglement'] == "R")
-                echo "<td id=\"isPaid\">Oui</td>";
-            else
-                echo "<td id=\"isNotPaid\">Non</td>";
             $sqlClient = "SELECT id,NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
 
@@ -179,9 +175,8 @@ if (mysqli_connect_error()) {
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
-    echo "<th>Payé compta</th>";
     echo "<th>Nom de l'entreprise</th>";
-    echo "<th>Payé base</th>";
+    echo "<th>Payé compta</th>";
     echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";

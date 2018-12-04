@@ -43,6 +43,6 @@ function reEncode($columns, $table, $separator)
 
 mysqli_set_charset($connectionW, "utf8");
 reEncode($columns, $table, $separator);
-//unlink(__FILE__);
+unlink(__FILE__);
 
 ?>
