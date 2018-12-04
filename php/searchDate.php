@@ -56,7 +56,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
-
+            echo "<td>EN COURS</td>";
             $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
 
