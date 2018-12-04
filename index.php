@@ -103,6 +103,18 @@ function findReview($infoId)
     }
 }
 
+function isItPaid($orderId)
+{
+    $sqlPaid = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function findDates($dueDate)
 {
     $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
@@ -110,7 +122,8 @@ function findDates($dueDate)
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
 
-            if ($rowDate['Commande'] == "")
+            $paid = isItPaid($rowDate['Commande']);
+            if ($paid == "R")
                 continue ;
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
