@@ -59,7 +59,6 @@ function getOrderDetails($orderId, $orderIdShort, $final)
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
-            echo "<td>EN COURS</td>";
             $sqlClient = "SELECT id,NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
 
@@ -106,7 +105,7 @@ function findReview($infoId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
+    $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance DESC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -126,6 +125,10 @@ function findDates($dueDate)
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
+            if ($rowDate['Reglement'] == "R")
+                echo "<td id=\"isPaid\">Oui</td>";
+            else
+                echo "<td id=\"isNotPaid\">Non</td>";
             $mail = $rowDate['AdresseMail'];
             echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
             echo "<td>" . $rowDate['Commentaire'] . "</td>";
@@ -164,8 +167,8 @@ if (mysqli_connect_error()) {
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
     echo "<th>Payé compta</th>";
-    echo "<th>Payé base</th>";
     echo "<th>Nom de l'entreprise</th>";
+    echo "<th>Payé base</th>";
     echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
