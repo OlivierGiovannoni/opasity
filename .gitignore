@@ -5,7 +5,7 @@
 TODO
 notes
 credentials*.txt
-php/helper*.php
+!php/helper*.php
 php/files/
 node_modules/
 sql/
