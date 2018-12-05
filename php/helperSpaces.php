@@ -24,7 +24,7 @@ $connectionW = new mysqli(
 
 function updater($val, $id)
 {
-    $sqlUpdate = "UPDATE webcontrat_commentaire SET Fichier=$val WHERE Commentaire_id=$id;";
+    $sqlUpdate = "UPDATE webcontrat_commentaire SET Fichier=\"$val\" WHERE Commentaire_id=$id;";
     if ($resultUpdate = $GLOBALS['connectionW']->query($sqlUpdate)) {
 
         //UPDATE ain't need no fetcha boi
