@@ -122,7 +122,7 @@ function findDates($dueDate)
             $getPaid = isItPaid($orderId);
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($getPaid == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"submit\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $closeForm = "</form>";
