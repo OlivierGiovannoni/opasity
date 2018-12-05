@@ -152,11 +152,11 @@ function findReview($infoId)
 function findOrder($supportPart, $contractPart, $contractId)
 {
     if (strlen($contractId) === 6)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "______" . $contractPart . "';";
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "______" . $contractPart . "';";
     else if (strlen($contractId) === 4)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC LIMIT 100;";
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC LIMIT 100;";
     else if (strlen($contractId) === 2)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC LIMIT 100;";
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC LIMIT 100;";
     else
         return ;
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
@@ -164,11 +164,12 @@ function findOrder($supportPart, $contractPart, $contractId)
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
 
             $orderId = $rowOrder['Commande'];
+            $paid = $rowOrder['Reglement'];
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
             $final = findReview($orderId);
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";
