@@ -185,10 +185,15 @@ if (mysqli_connect_error()) {
     echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionW, "utf8") === TRUE)
-        findDates($today);
-    else
+    $charsetR = mysqli_set_charset($connectionR, "utf8");
+    $charsetW = mysqli_set_charset($connectionW, "utf8");
+
+    if ($charsetR === FALSE)
+        die("MySQL SET CHARSET error: ". $connectionR->error);
+    else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
+
+    findDates($today);
 
     echo "</table>";
     echo "</html>";

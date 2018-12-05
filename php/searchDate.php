@@ -175,10 +175,15 @@ if (mysqli_connect_error()) {
     echo "<th>Date commentaire</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionR, "utf8") === TRUE)
-        findDates($dueDate);
-    else
+    $charsetR = mysqli_set_charset($connectionR, "utf8");
+    $charsetW = mysqli_set_charset($connectionW, "utf8");
+
+    if ($charsetR === FALSE)
         die("MySQL SET CHARSET error: ". $connectionR->error);
+    else if ($charsetW === FALSE)
+        die("MySQL SET CHARSET error: ". $connectionW->error);
+
+    findDates($dueDate);
 
     echo "</table><br><br><br>";
     echo "</html>";

@@ -192,11 +192,15 @@ if (mysqli_connect_error()) {
     echo "<th>Prochaine relance</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionR, "utf8") === TRUE)
-        findClientOrders($clientId);
-    else
-        die("MySQL SET CHARSET error: ". $connectionR->error);
+    $charsetR = mysqli_set_charset($connectionR, "utf8");
+    $charsetW = mysqli_set_charset($connectionW, "utf8");
 
+    if ($charsetR === FALSE)
+        die("MySQL SET CHARSET error: ". $connectionR->error);
+    else if ($charsetW === FALSE)
+        die("MySQL SET CHARSET error: ". $connectionW->error);
+
+    findClientOrders($clientId);
 
     echo "</table><br><br><br>";
     echo "</html>";

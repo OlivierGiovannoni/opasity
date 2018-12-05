@@ -247,10 +247,15 @@ if (mysqli_connect_error()) {
     echo "<th>Prochaine relance</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionR, "utf8") === TRUE)
-        findOrders($hiddenId);
-    else
+    $charsetR = mysqli_set_charset($connectionR, "utf8");
+    $charsetW = mysqli_set_charset($connectionW, "utf8");
+
+    if ($charsetR === FALSE)
         die("MySQL SET CHARSET error: ". $connectionR->error);
+    else if ($charsetW === FALSE)
+        die("MySQL SET CHARSET error: ". $connectionW->error);
+
+    findOrders($hiddenId);
 
     echo "</table><br><br><br>";
     echo "</html>";

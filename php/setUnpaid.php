@@ -40,12 +40,13 @@ function setPaid($orderId)
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    
-    if (mysqli_set_charset($connection, "utf8") === TRUE) {
-        setPaid($orderId);
-    }
-    else
+
+    $charset = mysqli_set_charset($connection, "utf8");
+
+    if ($charset === FALSE)
         die("MySQL SET CHARSET error: ". $connection->error);
+
+    setPaid($orderId);
 }
 
 ?>

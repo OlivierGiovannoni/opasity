@@ -176,15 +176,19 @@ if (mysqli_connect_error()) {
     echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connectionW, "utf8") === TRUE) {
+    $charsetR = mysqli_set_charset($connectionR, "utf8");
+    $charsetW = mysqli_set_charset($connectionW, "utf8");
 
-        listComments();
-        addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
-    }
-    else
+    if ($charsetR === FALSE)
+        die("MySQL SET CHARSET error: ". $connectionR->error);
+    else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
+
+    listComments();
+    addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
+
     echo "</table><br><br><br>";
-    echo "</iframe>";
+    /* echo "</iframe>"; */
     echo "</html>";
 }
 

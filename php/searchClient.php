@@ -71,11 +71,12 @@ if (mysqli_connect_error()) {
     echo "<th>Numéro de télephone</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connection, "utf8") === TRUE)
-        findClient($clientName);
-    else
+    $charset = mysqli_set_charset($connection, "utf8");
+
+    if ($charset === FALSE)
         die("MySQL SET CHARSET error: ". $connection->error);
 
+    findClient($clientName);
 
     echo "</table><br><br><br>";
     echo "</html>";

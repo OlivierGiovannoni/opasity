@@ -87,10 +87,12 @@ if (mysqli_connect_error()) {
     echo "<th>Date création</th>";
     echo "</tr>";
 
-    if (mysqli_set_charset($connection, "utf8") === TRUE)
-        findReview();
-    else
+    $charset = mysqli_set_charset($connection, "utf8");
+
+    if ($charset === FALSE)
         die("MySQL SET CHARSET error: ". $connection->error);
+
+    findReview();
 
     echo "</table><br><br><br>";
     echo "</html>";
