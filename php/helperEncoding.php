@@ -22,27 +22,34 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']);
 
-$columns = filter_input(INPUT_GET, "columns");
-$table = filter_input(INPUT_GET, "table");
-$separator = filter_input(INPUT_GET, "separator");
-
-function reEncode($columns, $table, $separator)
+function updater($id, $column)
 {
-    $columns = explode($separator, $columns);
-    foreach ($columns as $column) {
+    $sqlHelper = "UPDATE webcontrat_commentaire SET $column = CONVERT(CAST($column AS BINARY) USING utf8) WHERE Commentaire_id=$id;";
+    if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
 
-        $sqlHelper = "UPDATE $table SET $column = CONVERT( CAST($column AS BINARY) USING utf8);";
-        if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
-
-            // UPDATE output doesn't need to be fetched.
-        } else {
-            echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
-        }
+        // UPDATE output doesn't need to be fetched.
+    } else {
+        echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
     }
 }
 
+function reEncode()
+{
+        $sqlHelper = "SELECT Commentaire_id FROM webcontrat_commentaire;";
+        if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
+
+            while ($rowHelper = mysqli_fetch_array($resultHelper)) {
+
+                updater($rowHelper['Commentaire_id'], "Commentaire");
+                updater($rowHelper['Commentaire_id'], "Fichier");
+            }
+        } else {
+            echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
+        }
+}
+
 mysqli_set_charset($connectionW, "utf8");
-reEncode($columns, $table, $separator);
-unlink(__FILE__);
+reEncode();
+//unlink(__FILE__);
 
 ?>

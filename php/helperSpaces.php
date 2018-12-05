@@ -36,19 +36,18 @@ function updater($val, $id)
 
 function changeLast()
 {
-    $orders = getAllOrders();
-    foreach ($orders as $order) {
+    $sqlHelper = "SELECT Commentaire_id,Fichier FROM webcontrat_commentaire;";
+    if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
 
-        $sqlHelper = "SELECT Commentaire_id,Fichier FROM webcontrat_commentaire;";
-        if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
+        while ($rowHelper = mysqli_fetch_array($resultHelper)) {
 
-            while ($rowHelper = mysqli_fetch_array($resultHelper))
-
-                $file = $rowHelper['Fichier'];
-                updater($rowHelper['Commentaire_id'], 0);
-        } else {
-            echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
+            $file = $rowHelper['Fichier'];
+            $file = str_replace(" ", "_", $file);
+            $file = str_replace("%20", "_", $file);
+            updater($file, $rowHelper['Commentaire_id']);
         }
+    } else {
+        echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
     }
 }
 
