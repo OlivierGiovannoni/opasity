@@ -41,12 +41,9 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
     
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
     $charsetW = mysqli_set_charset($connectionW, "utf8");
 
-    if ($charsetR === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
-    else if ($charsetW === FALSE)
+    if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
     deleteComment($commId);

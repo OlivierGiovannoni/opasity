@@ -57,11 +57,14 @@ function getPhoneNumber($orderId, $clientId)
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Date,Commentaire,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Date,Reglement,Commentaire,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
-
+        if ($rowComment['Reglement'] == "R")
+            echo "<td id=\"isPaid\">Oui</td>";
+        else
+            echo "<td id=\"isNotPaid\">Non</td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
@@ -187,6 +190,7 @@ if (mysqli_connect_error()) {
     echo "<th>Payé</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Numéro de télephone</th>";
+    echo "<th>Payé base</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "<th>Prochaine relance</th>";

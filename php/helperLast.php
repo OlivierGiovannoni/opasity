@@ -43,7 +43,7 @@ function getAllOrders()
     return (NULL);
 }
 
-function updater($id, $val)
+function updater($val, $id)
 {
     $sqlUpdate = "UPDATE webcontrat_commentaire SET DernierCom=$val WHERE Commentaire_id=$id;";
     if ($resultUpdate = $GLOBALS['connectionW']->query($sqlUpdate)) {
@@ -64,9 +64,9 @@ function changeLast()
         if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
 
             $rowHelper = mysqli_fetch_array($resultHelper);
-            updater($rowHelper['Commentaire_id'], 1);
+            updater(1, $rowHelper['Commentaire_id']);
             while ($rowHelper = mysqli_fetch_array($resultHelper))
-                updater($rowHelper['Commentaire_id'], 0);
+                updater(0, $rowHelper['Commentaire_id']);
         } else {
             echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
         }

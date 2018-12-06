@@ -47,12 +47,16 @@ $connectionW = new mysqli(
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Date,Commentaire,AdresseMail,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Reglement,Date,Commentaire,AdresseMail,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
         $mail = $rowComment['AdresseMail'];
+        if ($rowComment['Reglement'] == "R")
+            echo "<td id=\"isPaid\">Oui</td>";
+        else
+            echo "<td id=\"isNotPaid\">Non</td>";
         echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
@@ -237,10 +241,11 @@ if (mysqli_connect_error()) {
     echo "<th>Contrat</th>";
     echo "<th>Date enregistrement</th>";
     echo "<th>Prix HT</th>";
-    echo "<th>Payé</th>";
+    echo "<th>Payé compta</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Numéro de télephone</th>";
+    echo "<th>Payé base</th>";
     echo "<th>E-mail</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
