@@ -166,7 +166,7 @@ if (mysqli_connect_error()) {
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
     echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
 
-    /* echo "<iframe name=\"commentFrame\" id=\"commentFrame\">"; */
+    /* echo <iframe name=\"commentFrame\" id=\"commentFrame\">; */
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
