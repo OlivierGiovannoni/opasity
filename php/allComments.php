@@ -158,6 +158,10 @@ if (mysqli_connect_error()) {
     $client = getContactName($orderId);
     echo "<i><h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1></i>";
     $revue = findReview($orderId);
+
+    $charsetR = mysqli_set_charset($connectionR, "utf8");
+    $charsetW = mysqli_set_charset($connectionW, "utf8");
+
     echo "<i><h2 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</h2></i>";
     echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
     echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
@@ -175,9 +179,6 @@ if (mysqli_connect_error()) {
     echo "<th>Fichier</th>";
     echo "<th>Supprimer commentaire</th>";
     echo "</tr>";
-
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
-    $charsetW = mysqli_set_charset($connectionW, "utf8");
 
     if ($charsetR === FALSE)
         die("MySQL SET CHARSET error: ". $connectionR->error);
