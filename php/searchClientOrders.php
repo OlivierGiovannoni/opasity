@@ -97,7 +97,7 @@ function getOrderDetails($orderId, $orderIdShort)
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
             $paidCompta = isItPaid($rowOrder['Commande'], "webcontrat_contrat", "connectionR");
-            if ($rowComment['Reglement'] == "R" )
+            if ($rowOrder['Reglement'] == "R" )
                 echo "<td id=\"isPaid\">Oui</td>";
             else if ($paidCompta == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
