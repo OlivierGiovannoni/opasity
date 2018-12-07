@@ -70,7 +70,7 @@ function changePaid()
     foreach ($orders as $order) {
 
         $sqlHelper = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$order';";
-        if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
+        if ($resultHelper = $GLOBALS['connectionR']->query($sqlHelper)) {
 
             while ($rowHelper = mysqli_fetch_array($resultHelper))
                 updater($rowHelper['Reglement'], $order);
