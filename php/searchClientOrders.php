@@ -74,7 +74,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
         $rowComment = mysqli_fetch_array($resultComment);
         $paidCompta = isItPaid($rowComment['Commande'], "webcontrat_contrat", "connectionR");
-        if ($rowComment['Reglement'] == "R" )
+        if ($rowComment['Reglement'] == "R")
             echo "<td id=\"isPaid\">Oui</td>";
         else if ($paidCompta == "R")
             echo "<td id=\"isPaid\">Oui</td>";
@@ -99,6 +99,7 @@ function getOrderDetails($orderId, $orderIdShort)
 
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
+            echo "<td>" . $priceRaw . "</td>";
             if ($rowOrder['Reglement'] == "R" )
                 echo "<td id=\"isPaid\">Oui</td>";
             else
