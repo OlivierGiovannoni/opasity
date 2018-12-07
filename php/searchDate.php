@@ -145,10 +145,11 @@ function findDates($dueDate)
 
             getOrderDetails($orderId, $orderIdShort);
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
+            $paidCompta = isItPaid($rowDate['Commande'], "webcontrat_contrat", "connectionR");
             if ($rowDate['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
-            else if ()
-                
+            else if ($paidCompta == "R")
+                echo "<td id=\"isPaid\">Oui</td>";                
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
             echo "<td>" . $rowDate['Commentaire'] . "</td>";
