@@ -76,7 +76,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         $paidCompta = isItPaid($rowComment['Commande'], "webcontrat_contrat", "connectionR");
         if ($rowComment['Reglement'] == "R")
             echo "<td id=\"isPaid\">Oui</td>";
-        else if ($paidCompta == "R")
+        else if ($paidCompta != "")
             echo "<td id=\"isPaid\">Oui</td>";
         else
             echo "<td id=\"isNotPaid\">Non</td>";
