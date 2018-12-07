@@ -32,23 +32,25 @@ DONE:
 --Hid orders with negative prices.
 --Purged dark mode.
 --Fixed \" on textarea on addComments.php page.
+--Added "Payé base & Payé compta" on every page
 
 BEFORE TODAY:
+--Invalid data on index.php page ???
 --File for each ORDER not COMMENT.
 --Automatically fill phone number and e-mail using value="{value}" on allComments.php
 --Auto-upload Dropzone
---COOKIES
 --Validated and non-validated "relances", meaning, client has been succesfully reached or not, non-validated push to x days later ?
 
 WAITING:
 --Create 'refactor' branch to refactor code and style. Make a generic code generator script with generic form and input generator using Arrays.
 --Now showing client orders before phone on searchClient.php.
---Use COOKIES instead of smuggling HIDDEN DATA.
 --Change "Paru sur" button to <a> if data is in cookies.
 
 URGENT:
+--Use COOKIES instead of smuggling HIDDEN DATA.
+--Change POST to GET to use <a> elements instead of <form> elements with hidden <input>s. Mixed with COOKIES.
 --Refactor code.
---Edit reminder date.
+--Edit reminder date if clicked on "edit icon" that will be added.
 --Edit comment by clicking on it, or date, or CSS image button.
 --Login system wih Groups/Profiles/Timeouts and connection logs (timeLogin/timeLogout/username/session_id) (with encrypted passwords obvv) and tasks GENERAL and USER_SPECIFIC.
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
