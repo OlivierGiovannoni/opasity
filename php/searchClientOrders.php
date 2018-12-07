@@ -79,7 +79,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
         else if ($paidCompta != "R")
             echo "<td id=\"isPaid\">Non</td>";
         else
-            echo "<td id=\"isNotPaid\">Oui</td>";
+            echo "<td id=\"isNotPaid\">ZZZZZZ</td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
