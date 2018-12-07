@@ -73,7 +73,7 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
-        $paidCompta = isItPaid($rowOrder['Commande'], "webcontrat_contrat", "connectionR");
+        $paidCompta = isItPaid($rowComment['Commande'], "webcontrat_contrat", "connectionR");
         if ($rowComment['Reglement'] == "R" )
             echo "<td id=\"isPaid\">Oui</td>";
         else if ($paidCompta == "R")
