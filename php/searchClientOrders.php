@@ -55,24 +55,6 @@ function getPhoneNumber($orderId, $clientId)
     }
 }
 
-function selectLastComment($orderId, $orderIdShort, $paidStr)
-{
-    $sqlComment = "SELECT Commentaire_id,Date,Reglement,Commentaire,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-
-        $rowComment = mysqli_fetch_array($resultComment);
-        if ($rowComment['Reglement'] == "R")
-            echo "<td id=\"isPaid\">Oui</td>";
-        else
-            echo "<td id=\"isNotPaid\">Non</td>";
-        echo "<td>" . $rowComment['Commentaire'] . "</td>";
-        echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
-        echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
-    } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
 function isItPaid($orderId, $table, $connection)
 {
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
@@ -82,6 +64,27 @@ function isItPaid($orderId, $table, $connection)
         return ($rowPaid['Reglement']);
     } else {
         echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
+function selectLastComment($orderId, $orderIdShort, $paidStr)
+{
+    $sqlComment = "SELECT Commentaire_id,Date,Reglement,Commentaire,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
+
+        $rowComment = mysqli_fetch_array($resultComment);
+        $paidCompta = isItPaid($rowOrder['Commande'], "webcontrat_contrat", "connectionR");
+        if ($rowOrder['Reglement'] == "R" )
+            echo "<td id=\"isPaid\">Oui</td>";
+        else if ($paidCompta == "R")
+            echo "<td id=\"isPaid\">Oui</td>";
+        else
+            echo "<td id=\"isNotPaid\">Non</td>";
+        echo "<td>" . $rowComment['Commentaire'] . "</td>";
+        echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
+        echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
+    } else {
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
     }
 }
 
@@ -96,10 +99,7 @@ function getOrderDetails($orderId, $orderIdShort)
 
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
-            $paidCompta = isItPaid($rowOrder['Commande'], "webcontrat_contrat", "connectionR");
             if ($rowOrder['Reglement'] == "R" )
-                echo "<td id=\"isPaid\">Oui</td>";
-            else if ($paidCompta == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
