@@ -61,7 +61,6 @@ function isItPaid($orderId, $table, $connection)
     if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
-        echo "<br>||" . $rowPaid['Reglement'] . "||<br>";
         return ($rowPaid['Reglement']);
     } else {
         echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;

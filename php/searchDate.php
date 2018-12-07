@@ -147,6 +147,8 @@ function findDates($dueDate)
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             if ($rowDate['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
+            else if ()
+                
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
             echo "<td>" . $rowDate['Commentaire'] . "</td>";
