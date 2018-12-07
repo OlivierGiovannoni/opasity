@@ -57,6 +57,7 @@ function getPhoneNumber($orderId, $clientId)
 
 function isItPaid($orderId, $table, $connection)
 {
+    echo "\\" . $orderId . "\\";
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
     if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
