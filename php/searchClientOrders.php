@@ -57,7 +57,7 @@ function getPhoneNumber($orderId, $clientId)
 
 function isItPaid($orderId, $table, $connection)
 {
-    $sqlPaid = "SELECT Reglement FROM $table_contrat WHERE Commande LIKE '$orderId';";
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande LIKE '$orderId';";
     if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
