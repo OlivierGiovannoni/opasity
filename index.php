@@ -47,7 +47,7 @@ function getOrderDetails($orderId, $orderIdShort, $final)
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
 
-            $reviewForm = "<form target=\"_blank\" action=\"php/reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"php/searchReviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
@@ -170,7 +170,7 @@ if (mysqli_connect_error()) {
 } else {
     $newDate = date("d/m/Y", strtotime($today));
 
-    echo "<i><h1>Contrats à relancer le " . $newDate . ":</h1></i>";
+    echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";

@@ -34,7 +34,7 @@ input[type=text],[type=date] {
     border-radius: 8px;
 }
 
-#submit, #reset {
+#submit {
     width: 75%;
     background-color: #e1e1e1;
     color: #131313;

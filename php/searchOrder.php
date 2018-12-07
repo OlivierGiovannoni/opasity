@@ -72,11 +72,15 @@ function getPhoneNumber($orderId, $clientId)
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Date,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Date,Reglement,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
+        if ($rowComment['Reglement'] == "R")
+                echo "<td id=\"isPaid\">Oui</td>";
+            else
+                echo "<td id=\"isNotPaid\">Non</td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
@@ -149,6 +153,18 @@ function findReview($infoId)
     }
 }
 
+function isItPaid($orderId, $table)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function findOrder($supportPart, $contractPart, $contractId)
 {
     if (strlen($contractId) === 6)
@@ -168,13 +184,16 @@ function findOrder($supportPart, $contractPart, $contractId)
             $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
             $final = findReview($orderId);
 
+            $getPaidBase = isItPaid($orderId, "webcontrat_commentaire");
+
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
+            $paidHiddenBase = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($getPaidBase == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";
 
-            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"searchReviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
@@ -183,7 +202,7 @@ function findOrder($supportPart, $contractPart, $contractId)
 
             $newDate = date("d/m/Y", strtotime($rowOrder['DateEmission']));
 
-            echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<tr><td>" . $commentForm . $paidHidden . $paidHiddenBase . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
             echo "<td>" . $newDate . "</td>";
             echo "<td>" . $reviewForm . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
             getOrderDetails($orderId, $orderIdShort);
@@ -203,17 +222,18 @@ if (mysqli_connect_error()) {
     $style = str_replace("{query}", $contractId, $style);
 
     echo $style;
-    echo "<i><h1>Contrats trouvés:</h1></i>";
+    echo "<h1>Contrats trouvés:</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";
     echo "<th>Date enregistrement</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
-    echo "<th>Payé</th>";
+    echo "<th>Payé compta</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
     echo "<th>Numéro de télephone</th>";
+    echo "<th>Payé base</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "</tr>";

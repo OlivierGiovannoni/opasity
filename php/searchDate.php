@@ -56,7 +56,6 @@ function getOrderDetails($orderId, $orderIdShort)
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
-            echo "<td>EN COURS</td>";
             $sqlClient = "SELECT NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
             if ($resultClient = $GLOBALS['connectionR']->query($sqlClient)) {
 
@@ -98,9 +97,9 @@ function findReview($infoId)
     }
 }
 
-function isItPaid($orderId)
+function isItPaid($orderId, $table)
 {
-    $sqlPaid = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
     if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
@@ -112,25 +111,27 @@ function isItPaid($orderId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire,Commande,Commande_courte,Date FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate';";
+    $sqlDate = "SELECT Commentaire,Commande,Reglement,Commande_courte,Date FROM webcontrat_commentaire WHERE Prochaine_relance='$dueDate' AND DernierCom=1;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
 
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
-            $getPaid = isItPaid($orderId);
+            $getPaid = isItPaid($orderId, "webcontrat_contrat");
+            $getPaidBase = isItPaid($orderId, "webcontrat_commentaire");
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($getPaid == "R" ? "on" : "") . "\">";
+            $paidHiddenBase = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($getPaidBase == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"submit\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $closeForm = "</form>";
 
-            echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $closeForm . "</td>";
+            echo "<tr><td>" . $commentForm . $paidHidden . $paidHiddenBase . $idHidden . $idShortHidden . $closeForm . "</td>";
             $final = findReview($orderId);
 
-            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"searchReviewOrders.php\" method=\"post\">";
             $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $getPaid . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
@@ -141,6 +142,10 @@ function findDates($dueDate)
 
             getOrderDetails($orderId, $orderIdShort);
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
+            if ($rowDate['Reglement'] == "R")
+                echo "<td id=\"isPaid\">Oui</td>";
+            else
+                echo "<td id=\"isNotPaid\">Non</td>";
             echo "<td>" . $rowDate['Commentaire'] . "</td>";
             echo "<td>" . $newDate . "</td></tr>";
         }
@@ -161,16 +166,16 @@ if (mysqli_connect_error()) {
     $newDate = date("d/m/Y", strtotime($dueDate));
 
     echo $style;
-    echo "<i><h1>Contrats à relancer le " . $newDate . ":</h1></i>";
+    echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
     echo "<th>Prix HT</th>";
     echo "<th>Payé compta</th>";
-    echo "<th>Payé base</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Nom du contact</th>";
+    echo "<th>Payé base</th>";
     echo "<th>Commentaire</th>";
     echo "<th>Date commentaire</th>";
     echo "</tr>";

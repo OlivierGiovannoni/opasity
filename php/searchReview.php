@@ -48,7 +48,7 @@ function findReview()
             $published = $rowReview['Paru'];
             $curr = array('Name' => $currReviewName, 'Id' => $currReviewId, 'Year' => $currReviewYear);
 
-            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"searchReviewOrders.php\" method=\"post\">";
             $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $published . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
@@ -79,7 +79,7 @@ if (mysqli_connect_error()) {
     $style = str_replace("{query}", $reviewName, $style);
 
     echo $style;
-    echo "<i><h1>Revues trouvées:</h1></i>";
+    echo "<h1>Revues trouvées:</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Revue</th>";

@@ -3,6 +3,7 @@
 $orderId = filter_input(INPUT_POST, "hiddenId");
 $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
 $paidStr = filter_input(INPUT_POST, "hiddenPaid");
+$paidBase = filter_input(INPUT_POST, "hiddenPaidBase");
 $comment = filter_input(INPUT_POST, "comment");
 $clientId = NULL;
 
@@ -155,16 +156,18 @@ if (mysqli_connect_error()) {
     $style = str_replace("{order}", $orderIdShort, $style);
 
     echo $style;
-    $client = getContactName($orderId);
-    echo "<i><h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1></i>";
-    $revue = findReview($orderId);
 
     $charsetR = mysqli_set_charset($connectionR, "utf8");
     $charsetW = mysqli_set_charset($connectionW, "utf8");
 
-    echo "<i><h2 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé" : "Contrat non-reglé") . "</h2></i>";
-    echo "<i><h2>Paru sur: " . $revue['Name'] . "</h2></i>";
-    echo "<i><h2>Client: " . $client['name'] . " id: " . $client['id'] . "</h2></i>";
+    $client = getContactName($orderId);
+    echo "<h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1>";
+    $revue = findReview($orderId);
+
+    echo "<h2 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé compta" : "Contrat non-reglé compta") . "</h2>";
+    echo "<h2 " . ($paidBase == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidBase == "on" ? "Contrat reglé base" : "Contrat non-reglé base") . "</h2>";
+    echo "<h2>Paru sur: " . $revue['Name'] . "</h2>";
+    echo "<h2>Client: " . $client['name'] . " (" . $client['id'] . ")</h2>";
 
     /* echo <iframe name=\"commentFrame\" id=\"commentFrame\">; */
     echo "<table>";

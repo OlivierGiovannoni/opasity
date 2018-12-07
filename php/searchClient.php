@@ -63,7 +63,7 @@ if (mysqli_connect_error()) {
     $style = str_replace("{query}", $clientName, $style);
 
     echo $style;
-    echo "<i><h1>Contrats trouvés:</h1></i>";
+    echo "<h1>Clients trouvés:</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Nom de l'entreprise</th>";

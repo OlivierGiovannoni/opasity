@@ -87,6 +87,18 @@ function getPhoneNumber($orderId, $clientId)
     }
 }
 
+function isItPaid($orderId, $table)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function getOrderDetails($orderId, $orderIdShort)
 {
     if ($GLOBALS['getPaid'] == "on")
@@ -103,8 +115,11 @@ function getOrderDetails($orderId, $orderIdShort)
                 $priceRaw = $rowOrder['PrixHT'];
 
                 $isPaid = ($rowOrder['Reglement'] == "R" ? "on" : "");
+                $getPaidBase = isItPaid($orderId, "webcontrat_commentaire");
+
                 $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
                 $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
+                $paidHiddenBase = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($getPaidBase == "R" ? "on" : "") . "\">";
                 $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
                 $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
                 $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
@@ -112,7 +127,7 @@ function getOrderDetails($orderId, $orderIdShort)
 
                 $newDate = date("d/m/Y", strtotime($rowOrder['DateEmission']));
             
-                echo "<tr><td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+                echo "<tr><td>" . $commentForm . $paidHidden . $paidHiddenBase . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
                 echo "<td>" . $newDate . "</td>";
                 echo "<td>" . $priceRaw . "</td>";
                 if ($rowOrder['Reglement'] == "R")
@@ -231,10 +246,10 @@ if (mysqli_connect_error()) {
     $showPaid = str_replace("{btnText}", ($getPaid == "on" ? "Afficher tout les non-reglés" : "Afficher tout les contrats"), $showPaid);
 
     echo $style;
-    echo "<i><h1>Contrats dans la revue " . $reviewName . "</h1></i>";
-    echo "<i><h2 id=\"" . ($published == 1 ? "isPub" : "isNotPub") . "\">Revue" . ($published == 1 ? " parue " : " non-parue ") . "</h2></i>";
-    echo "<i><h3>Nombre de contrats: " . getNbOrders($hiddenId) . "</h3></i>";
-    echo "<i><h3>Chiffre d'affaire total: " . getTotalPrice($hiddenId) . "</h3></i>";
+    echo "<h1>Contrats dans la revue " . $reviewName . "</h1>";
+    echo "<h2 id=\"" . ($published == 1 ? "isPub" : "isNotPub") . "\">Revue" . ($published == 1 ? " parue " : " non-parue ") . "</h2>";
+    echo "<h3>Nombre de contrats: " . getNbOrders($hiddenId) . "</h3>";
+    echo "<h3>Chiffre d'affaire total: " . getTotalPrice($hiddenId) . "</h3>";
     echo $showPaid;
     echo "<table>";
     echo "<tr>";

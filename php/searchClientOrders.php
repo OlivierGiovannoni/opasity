@@ -132,6 +132,18 @@ function findReview($infoId)
     }
 }
 
+function isItPaid($orderId, $table)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function findClientOrders($clientId)
 {
     $sqlOrders = "SELECT Reglement,DateEmission,Commande FROM webcontrat_contrat WHERE Client_id='$clientId' ORDER BY DateEmission DESC LIMIT 100;";
@@ -144,21 +156,24 @@ function findClientOrders($clientId)
             $final = findReview($orderId);
 
             $isPaid = ($rowOrders['Reglement'] == "R" ? "on" : "");
+            $getPaidBase = isItPaid($orderId, "webcontrat_commentaire");
+
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
+            $paidHiddenBase = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($getPaidBase == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
 
 
-            $reviewForm = "<form target=\"_blank\" action=\"reviewOrders.php\" method=\"post\">";
+            $reviewForm = "<form target=\"_blank\" action=\"searchReviewOrders.php\" method=\"post\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $final['Id'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $final['Pub'] . "\">";
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $final['Name'] . " " . $final['Year'] . "\">";
 
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<td>" . $commentForm . $paidHidden . $paidHiddenBase . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $newDate = date("d/m/Y", strtotime($rowOrders['DateEmission']));
             echo "<td>" . $newDate . "</td>";
@@ -180,7 +195,7 @@ if (mysqli_connect_error()) {
     $style = str_replace("{query}", $clientName, $style);
 
     echo $style;
-    echo "<i><h1>Contrats de l'entreprise : $clientName</h1></i>";
+    echo "<h1>Contrats de l'entreprise : $clientName</h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";
