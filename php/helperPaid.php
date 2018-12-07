@@ -57,7 +57,7 @@ function updater($val, $id)
     $sqlUpdate = "UPDATE webcontrat_commentaire SET Reglement='$val' WHERE Commande=$id;";
     if ($resultUpdate = $GLOBALS['connectionW']->query($sqlUpdate)) {
 
-        //UPDATE ain't need no fetcha boi
+        //UPDATE ain't need no fetcha boi bb
     } else {
         echo "Query error: ". $sqlUpdate ." // ". $GLOBALS['connectionW']->error;
     }
