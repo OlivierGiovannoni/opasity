@@ -2,8 +2,6 @@
 .*~
 #*
 .#*
-TODO
-notes
 credentials*.txt
 !php/helper*.php
 php/files/

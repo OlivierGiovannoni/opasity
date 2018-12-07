@@ -1,0 +1,153 @@
+to select all columns from a table : SELECT * FROM tableName;
+to select a specific column from a table : SELECT colName FROM tableName;
+to select a specific value from a column from a table : SELECT colName FROM tableName WHERE rowName = 'rowValue';
+
+to delete :
+-delete - removes the rows from the table - where clause can be used to delete specific rows. - If where is not specified, then all the rows in the table will be removed - rollback can be done.
+-truncate - removes all the rows from the table. - rollback cannot be done.
+-drop - removes a table from the database. - rows, indexes and privileges will also be removed. - rollback cannot be done.
+
+use Date() object to check if due date is today or not in the database
+search for a specific day using <input type="date" name="dueDate">
+push to X days with <input type="date" name="newDueDate">
+add "Reason" textbox to add WHY the bill stayed unpaid <textarea rows="6" cols="66" name="raisonImpaye" type="text" id="input-message">Raison de l'impaye:</textarea>
+
+Do everything client-side with HTML then PHP then SQL or server-side with NodeJS then Express and MySQL ?
+
+Form then shows the .pdf contract and all details (phone email name address etcz)
+Create the goddamn PHP file that communicates with mysql db
+
+0: Open local PHP dev serv using `php -S localhost:port` (usually 8000)
+2: Open local MySQL testing using `mysql -u root -p`
+
+Faire un select poru pouvoir changer de type de recher avec un select group
+Rechercher par revue/par commande ou contrat
+Chercher listing PARU => NON REGLÉ
+
+
+Commande: commande => clic => details
+	  revue => clic => toutes commandes => clic => details
+
+REVUE: revue => clic => toutes commandes => clic => details
+
+AFFICHER
+-1 Numéro contrat
+-1 Payé
+-1 Prix HT
+-1 Prix TTC
+
+-2 Nom de l'entreprise
+-2 Nom contact
+-2 Adresse
+
+Nouvel ONGLET ou POPUP dans DB
+checkbox dark/light mode
+
+POUR CHANGER NON-PAYÉ EN PAYÉ:
+UPDATE webcontrat_contrat SET Reglement='R' WHERE Commande='OPGI00004A4468';
+
+IF REGLEMENT == 'R'
+   	NE PAS AFFICHER TEXTBOX + CHECKBOX
+ELSE
+	AFFICHE TOUT
+
+CONTRAT(GI4468) NOMCLIENT MONTANTHT REGLEBOOL CHECKBOX_tous_ou_payés SURFACE
+LISTE COMMENTAIRES, DERNIER COMMENTAIRE AFFICHÉ, SI CLICK, POPUP/ONGLET AVEC INFOS + TOUS LES COMMENTAIRES
+textbox NOUVEAU COMMENTAIRE
+VALEURS CHANGEABLES dans la DB dIrectement
+AJOUTER CASE "AUTRE CONTACT" (UN OU PLUSIEURS) (DANS wc_ contrat pas client)
+AJOUTER COLONNE NomContact dans wc_contrat
+DANS CONTACT (client et contrat) lien mailto: et numero de telephone
+AFFICHER Chiffre d'affaires total + Manque a payer
+PDF + EML
+AJOUTER/SUPPRIMER PLUSIEURS TYPES D'ELEMENTS
+
+Commentaire + mail + telephone + nom + date recherchable
+(systeme de login + groupes)[laisser une trace]
+rappels GENERALS + PERSONNELS (avec login) (dropdown)
+
+"Fichier will be MEDIUMBLOB if storing data, else VARCHAR(128) to stor eonly filename"
+
+mysql> CREATE TABLE webcontrat_commentaire ( Commentaire_id INT NOT NULL AUTO_INCREMENT,
+       	      	    			     Commentaire VARCHAR(512) NOT NULL,
+					     Auteur VARCHAR(32) NOT NULL,
+					     Date DATE NOT NULL,
+					     Commande VARCHAR(14) NOT NULL,
+					     Commande_courte VARCHAR(6) NOT NULL,
+					     Prochaine_relance DATE,
+					     NumTelephone VARCHAR(16) NOT NULL,
+					     AdresseMail VARCHAR(256),
+					     Fichier VARCHAR(128),
+					     PRIMARY KEY (Commentaire_id) );
+
+mysql> DESCRIBE webcontrat_commentaire;
++-----------------------+--------------+------+-----+---------+----------------+
+| Field                 | Type         | Null | Key | Default | Extra          |
++-----------------------+--------------+------+-----+---------+----------------+
+| Commentaire_id        | int(11)      | NO   | PRI | NULL    | auto_increment |
+| Commentaire           | varchar(512) | NO   |     | NULL    |                |
+| Auteur                | varchar(32)  | NO   |     | NULL    |                |
+| Date                  | date         | NO   |     | NULL    |                |
+| Commande              | varchar(14)  | NO   |     | NULL    |                |
+| Commande_courte       | varchar(6)   | NO   |     | NULL    |                |
+| Prochaine_relance     | date         | YES  |     | NULL    |                |
+| NumTelephone          | varchar(16)  | NO   |     | NULL    |                |
+| AdresseMail           | varchar(256) | YES  |     | NULL    |                |
+| Fichier               | varchar(128) | YES  |     | NULL    |                |
++-----------------------+--------------+------+-----+---------+----------------+
+
+mysql> INSERT INTO webcontrat_commentaire (Commentaire,
+					   Auteur,
+					   Date,
+					   Commande,
+					   Commande_courte,
+					   Payee,
+					   Prochaine_relance,
+					   NumTelephone,
+					   AdresseEmail,
+					   Fichier)
+					   
+					   VALUES
+					
+					  ("$comment",
+					   'dev',
+					   '$today',
+					   '$orderId',
+					   '$orderIdShort',
+					   '$nextDueDate' or NULL,
+					   '$phone' OR '$oldPhone'
+					   '$email' OR NULL,
+					   '$file' OR NULL);
+
+mysql> CREATE TABLE webcontrat_utilisateurs ( id INT AUTO_INCREMENT PRIMARY KEY,
+       	      	    			      username VARCHAR(128) NOT NULL,
+					      passwordhash VARCHAR(1024) NOT NULL,
+					      email VARCHAR(128) NOT NULL,
+					      fname VARCHAR(64) NOT NULL,
+					      lname VARCHAR(128) NOT NULL,
+					      created DATETIME NOT NULL,
+					      lastLogin DATETIME NOT NULL,
+					      superuser TINYINT );
+
+mysql> DESCRIBE webcontrat_utilisateurs;
++--------------+---------------+------+-----+-------------------+-----------------------------+
+| Field        | Type          | Null | Key | Default           | Extra                       |
++--------------+---------------+------+-----+-------------------+-----------------------------+
+| id           | int(11)       | NO   | PRI | NULL              | auto_increment              |
+| username     | varchar(128)  | NO   |     | NULL              |                             |
+| passwordhash | varchar(1024) | NO   |     | NULL              |                             |
+| email        | varchar(128)  | NO   |     | NULL              |                             |
+| fname        | varchar(64)   | NO   |     | NULL              |                             |
+| lname        | varchar(128)  | NO   |     | NULL              |                             |
+| created      | datetime      | NO   |     | NULL              |                             |
+| lastLogin    | datetime      | NO   |     | NULL              |                             |
+| superuser    | tinyint(4)    | YES  |     | NULL              |                             |
++--------------+---------------+------+-----+-------------------+-----------------------------+
+
+Comment is UPDATEable if clicked on, or edit css imgbutton, re-fill textboxes with previous data.
+
+Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
+-----------------------------------------------------------
+
+Copier systeme creation de contact pour les commerciaux qui doivent appeler des nouveaux clients
+accepté/refusé

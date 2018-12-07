@@ -1,0 +1,71 @@
+DONE:
+--Empty error message on index.php if table is empty, removed.
+--Liste Nouv. comments, removed.
+--Request too long because of splitEvery() function, deleted.
+--Added an icon that redirects to index.php.
+--Added a few lines breaks below the </table> so we can clearly see the end.
+--Added "Prochaine relance" column next to "Date commentaire"
+--Changed text size smaller in td.
+--Remove "Nom du contact" and "numéro de telephone" in index.php and searchClient.php (each).
+--Mail Column with MAILTO: searchReviewOrders.php and index.php
+--Paid checkbox becomes a button, with validation to avoid mistakes.
+--If 'Prochaine relance' input date is empty and contract is not paid yet, it will be automatically set to 2 weeks from now.
+--New color for cancelled orders. REMOVED
+--COMPLETELY REMOVED dark mode.
+--Renamed "Nom du contact" with "Nom de l'entreprise" on main page.
+--Add "Parue" or "Non-parue" in Green or Red on searchReviewOrders.php page.
+--Sorted orders by ASC order number.
+--Payé button re-creates a request and refreshes page.
+--Added client name in h1 on searchClientOrders.php
+--Checked if uploaded file is NULL to avoid creating empty directories.
+--Displayed all "relances" temporarily till DATE bug is fixed.
+--Tmp echoed "Le commentaire à été envoyé".
+--Number total of contracts + Total price. (only review)
+--When showing all, button is now "Afficher les non-reglés", else "Afficher tout".
+--Fixed DATE <= Today display bug.
+--Fixed encoding problem on review name on allComments.php and change btn to lnk or simple txt.
+--Moved button "Payé" to the right and RE-ORGANIZE ALL THAT SHIT on allComments.php page. Used divs.
+--Removed #tableSub and disguised Submit buttons.
+--Added "Commentaire" as required field on addComments.html fields.
+--Added "Fichier" column.
+--Displayed only last comment for "relances" per order using "DernierCom" column.
+--Hid orders with negative prices.
+--Purged dark mode.
+--Fixed \" on textarea on addComments.php page.
+
+BEFORE TODAY:
+--File for each ORDER not COMMENT.
+--Automatically fill phone number and e-mail using value="{value}" on allComments.php
+--Auto-upload Dropzone
+--COOKIES
+--Validated and non-validated "relances", meaning, client has been succesfully reached or not, non-validated push to x days later ?
+
+WAITING:
+--Create 'refactor' branch to refactor code and style. Make a generic code generator script with generic form and input generator using Arrays.
+--Now showing client orders before phone on searchClient.php.
+--Use COOKIES instead of smuggling HIDDEN DATA.
+--Change "Paru sur" button to <a> if data is in cookies.
+
+URGENT:
+--Refactor code.
+--Edit reminder date.
+--Edit comment by clicking on it, or date, or CSS image button.
+--Login system wih Groups/Profiles/Timeouts and connection logs (timeLogin/timeLogout/username/session_id) (with encrypted passwords obvv) and tasks GENERAL and USER_SPECIFIC.
+--Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
+--Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
+--In addComments.php, re-arrange the iframe size, add dynamic refresh so it's easier to use.
+--In addComments.html, re-arranged all the text inputs, textarea, and move comment textarea below input date 'Prochaine relance'.
+--Add "Paru non-reglé" option.
+--Add comments on this shitcode that will be refactored.
+--Add comment "Author" when login system is done.
+--Add comment date and reminder date timestamp HH:MM:SS (h:i:s).
+
+TODO:
+--Clickable date to searchDate.php.
+--Replace 'connectionR' and 'connectionW' with 'connection', delete 'credentialsW.txt'.
+--Add SURFACE column.
+--Date auto + effective date.
+--Align the divs on main.html.
+--The DOTS ! (PrixHT).
+--Add 'Relances du jour' from previous days using DateAuto and DateEffective.
+--Add 'Relances du jour' Unpaid AND Date <= TODAY.
