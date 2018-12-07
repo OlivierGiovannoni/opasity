@@ -70,6 +70,18 @@ function getPhoneNumber($orderId, $clientId)
     }
 }
 
+function isItPaid($orderId, $table, $connection)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
     $sqlComment = "SELECT Commentaire_id,Date,Reglement,Commentaire FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
@@ -77,10 +89,13 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
         $rowComment = mysqli_fetch_array($resultComment);
 
-        if ($rowComment['Reglement'] == "R")
-                echo "<td id=\"isPaid\">Oui</td>";
-            else
-                echo "<td id=\"isNotPaid\">Non</td>";
+        $paidCompta = isItPaid($rowComment['Commande'], "webcontrat_contrat", "connectionR");
+        if ($rowComment['Reglement'] == "R" )
+            echo "<td id=\"isPaid\">Oui</td>";
+        else if ($paidCompta == "R")
+            echo "<td id=\"isPaid\">Oui</td>";
+        else
+            echo "<td id=\"isNotPaid\">Non</td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . $rowComment['Date'] . "</td></tr>";
     } else {
@@ -150,18 +165,6 @@ function findReview($infoId)
     } else {
         echo "Query error: ". $sqlReviewInfo ." // ". $GLOBALS['connectionR']->error;
 
-    }
-}
-
-function isItPaid($orderId, $table, $connection)
-{
-    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
-
-        $rowPaid = mysqli_fetch_array($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
     }
 }
 

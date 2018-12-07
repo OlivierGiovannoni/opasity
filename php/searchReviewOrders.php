@@ -45,15 +45,30 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
+function isItPaid($orderId, $table, $connection)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {
-    $sqlComment = "SELECT Commentaire_id,Reglement,Date,Commentaire,AdresseMail,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Commande,Reglement,Date,Commentaire,AdresseMail,Prochaine_relance FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
 
+        $paidCompta = isItPaid($rowComment['Commande'], "webcontrat_contrat", "connectionR");
         $mail = $rowComment['AdresseMail'];
-        if ($rowComment['Reglement'] == "R")
+        if ($rowComment['Reglement'] == "R" )
+            echo "<td id=\"isPaid\">Oui</td>";
+        else if ($paidCompta == "R")
             echo "<td id=\"isPaid\">Oui</td>";
         else
             echo "<td id=\"isNotPaid\">Non</td>";
@@ -84,18 +99,6 @@ function getPhoneNumber($orderId, $clientId)
         return ($rowComment['NumTelephone']);
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
-function isItPaid($orderId, $table, $connection)
-{
-    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
-
-        $rowPaid = mysqli_fetch_array($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
     }
 }
 

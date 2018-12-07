@@ -40,6 +40,18 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
+function isItPaid($orderId, $table, $connection)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function getOrderDetails($orderId, $orderIdShort)
 {
     $sqlOrder = "SELECT Commande,Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
@@ -52,7 +64,10 @@ function getOrderDetails($orderId, $orderIdShort)
             $clientId = $rowOrder['Client_id'];
             $priceRaw = $rowOrder['PrixHT'];
             echo "<td>" . $priceRaw . "</td>";
-            if ($rowOrder['Reglement'] == "R")
+            $paidCompta = isItPaid($rowComment['Commande'], "webcontrat_contrat", "connectionR");
+            if ($rowComment['Reglement'] == "R" )
+                echo "<td id=\"isPaid\">Oui</td>";
+            else if ($paidCompta == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
@@ -94,18 +109,6 @@ function findReview($infoId)
     } else {
         echo "Query error: ". $sql ." // ". $GLOBALS['connectionR']->error;
 
-    }
-}
-
-function isItPaid($orderId, $table, $connection)
-{
-    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
-
-        $rowPaid = mysqli_fetch_array($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
     }
 }
 
