@@ -57,11 +57,12 @@ function getPhoneNumber($orderId, $clientId)
 
 function isItPaid($orderId, $table, $connection)
 {
+    echo "//" . $table . "//<br>";
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
     if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
-        echo "\\" . $rowPaid['Reglement'] . "\\";
+        echo "\\" . $rowPaid['Reglement'] . "\\<br>";
         return ($rowPaid['Reglement']);
     } else {
         echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
