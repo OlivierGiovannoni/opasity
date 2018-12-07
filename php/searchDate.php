@@ -97,10 +97,10 @@ function findReview($infoId)
     }
 }
 
-function isItPaid($orderId, $table)
+function isItPaid($orderId, $table, $connection)
 {
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
         return ($rowPaid['Reglement']);
@@ -118,8 +118,8 @@ function findDates($dueDate)
 
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
-            $getPaid = isItPaid($orderId, "webcontrat_contrat");
-            $getPaidBase = isItPaid($orderId, "webcontrat_commentaire");
+            $getPaid = isItPaid($orderId, "webcontrat_contrat", "connectionR");
+            $getPaidBase = isItPaid($orderId, "webcontrat_commentaire", "connectionW");
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($getPaid == "R" ? "on" : "") . "\">";

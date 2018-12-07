@@ -87,10 +87,10 @@ function getPhoneNumber($orderId, $clientId)
     }
 }
 
-function isItPaid($orderId, $table)
+function isItPaid($orderId, $table, $connection)
 {
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
         $rowPaid = mysqli_fetch_array($resultPaid);
         return ($rowPaid['Reglement']);
@@ -115,7 +115,7 @@ function getOrderDetails($orderId, $orderIdShort)
                 $priceRaw = $rowOrder['PrixHT'];
 
                 $isPaid = ($rowOrder['Reglement'] == "R" ? "on" : "");
-                $getPaidBase = isItPaid($orderId, "webcontrat_commentaire");
+                $getPaidBase = isItPaid($orderId, "webcontrat_commentaire", "connectionW");
 
                 $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
                 $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $isPaid . "\">";
