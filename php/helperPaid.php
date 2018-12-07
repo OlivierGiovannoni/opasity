@@ -72,8 +72,11 @@ function changePaid()
         $sqlHelper = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$order';";
         if ($resultHelper = $GLOBALS['connectionR']->query($sqlHelper)) {
 
-            while ($rowHelper = mysqli_fetch_array($resultHelper))
-                updater($rowHelper['Reglement'], $order);
+            while ($rowHelper = mysqli_fetch_array($resultHelper)) {
+
+                if ($rowHelper['Reglement'] == "R")
+                    updater($rowHelper['Reglement'], $order);
+            }
         } else {
             echo "Query error: ". $sqlHelper ." // ". $GLOBALS['connectionW']->error;
         }

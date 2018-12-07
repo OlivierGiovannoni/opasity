@@ -7,13 +7,16 @@
   </head>
   <body>
     <h1>Système de recherche de factures impayées</h1>
+    <form action="php/helperPaid.php">
+      <input type="submit" id="submit" value="Check payé compta">
+    </form>
     <div id="mainDiv">
       <div>
 	<h2>Recherche par revue:</h2>
 	<form target="_blank" name="searchReview" id="formReview" action="php/searchReview.php" method="post">
 
-	  <label for="reviewName">Nom de revue:</label>
-	  <br><input type="text" name="reviewName" id="reviewName" required><br><br>
+	  <label for="reviewName">Nom de revue:</label><br>
+	  <input type="text" name="reviewName" id="reviewName" required><br><br>
 
 	  <input type="submit" id="submit" value="Chercher">
 	</form>
@@ -23,8 +26,8 @@
 	<h2>Recherche par contrat:</h2>
 	<form target="_blank" name="searchContract" id="formOrder" action="php/searchOrder.php" method="post">
 
-    	  <label for="contractId">Contrat:</label>
-    	  <br><input type="text" name="contractId" id="contractId" required><br><br>
+    	  <label for="contractId">Contrat:</label><br>
+    	  <input type="text" name="contractId" id="contractId" required><br><br>
 
     	  <input type="submit" id="submit" value="Chercher">
 	</form>
@@ -34,8 +37,8 @@
 	<h2>Recherche par date de relance:</h2>
 	<form target="_blank" name="searchDate" id="formDate" action="php/searchDate.php" method="post">
 
-	  <label for="reviewName">Date de relance:</label>
-	  <br><input type="date" name="dueDate" id="dueDate" required><br><br>
+	  <label for="reviewName">Date de relance:</label><br>
+	  <input type="date" name="dueDate" id="dueDate" required><br><br>
 
 	  <input type="submit" id="submit" value="Chercher">
 	</form>
@@ -45,8 +48,8 @@
 	<h2>Recherche par entreprise:</h2>
 	<form target="_blank" name="searchClient" id="formClient" action="php/searchClient.php" method="post">
 
-    	  <label for="clientName">Nom de l'entreprise:</label>
-    	  <br><input type="text" name="clientName" id="clientName" required><br><br>
+    	  <label for="clientName">Nom de l'entreprise:</label><br>
+    	  <input type="text" name="clientName" id="clientName" required><br><br>
 
     	  <input type="submit" id="submit" value="Chercher">
 	</form>
