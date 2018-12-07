@@ -54,7 +54,7 @@ function getAllOrders()
 
 function updater($val, $id)
 {
-    $sqlUpdate = "UPDATE webcontrat_commentaire SET Reglement=$val WHERE Commande=$id;";
+    $sqlUpdate = "UPDATE webcontrat_commentaire SET Reglement='$val' WHERE Commande=$id;";
     if ($resultUpdate = $GLOBALS['connectionW']->query($sqlUpdate)) {
 
         //UPDATE ain't need no fetcha boi
