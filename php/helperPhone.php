@@ -33,7 +33,7 @@ function updater($val, $id)
     }
 }
 
-function reEncode()
+function reZero()
 {
         $sqlHelper = "SELECT Commentaire_id,NumTelephone FROM webcontrat_commentaire;";
         if ($resultHelper = $GLOBALS['connectionW']->query($sqlHelper)) {
@@ -53,7 +53,7 @@ function reEncode()
 }
 
 mysqli_set_charset($connectionW, "utf8");
-reEncode();
+reZero();
 //unlink(__FILE__);
 
 ?>

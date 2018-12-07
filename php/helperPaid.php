@@ -13,6 +13,15 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
+$credsFile = "../credentials.txt";
+$credentials = credsArr(file_get_contents($credsFile));
+
+$connectionR = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']);
+
 $credsFileW = "../credentialsW.txt";
 $credentialsW = credsArr(file_get_contents($credsFileW));
 
@@ -55,7 +64,7 @@ function updater($val, $id)
 
 }
 
-function changeLast()
+function changePaid()
 {
     $orders = getAllOrders();
     foreach ($orders as $order) {
@@ -72,8 +81,9 @@ function changeLast()
 }
 
 mysqli_set_charset($connectionW, "utf8");
-changeLast();
+changePaid();
 //unlink(__FILE__);
+$connectionR->close();
 $connectionW->close();
 
 ?>
