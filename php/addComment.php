@@ -48,9 +48,9 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function uploadFile($tmpFile, $fileName, $orderIdWhole)
+function uploadFile($tmpFile, $fileName, $orderId)
 {
-    $fileDirectory = "files/" . $orderIdWhole . "/";
+    $fileDirectory = "files/" . $orderId . "/";
     $newFile = $fileDirectory . str_replace(" ", "_", $fileName);
     //$newFile = $fileDirectory . $fileName;
 
@@ -58,14 +58,9 @@ function uploadFile($tmpFile, $fileName, $orderIdWhole)
         return ("NULL");
     if (is_dir($fileDirectory) === FALSE)
         mkdir($fileDirectory, 0755, TRUE);
-    if (move_uploaded_file($tmpFile, $newFile)) {
-        //$newFile = $fileDirectory . rawurlencode($fileName);
+    if (move_uploaded_file($tmpFile, $newFile))
         return ($newFile);
-        /* echo basename($_FILES['fileUpload']['name']). " à été mis en ligne."; */
-    } else {
-        return ("NULL");
-        /* echo "Il y a eu un problème pendant la mise en ligne du fichier..."; */
-    }
+    return ("NULL");
 }
 
 function getPhoneNumber($orderId, $clientId)

@@ -40,7 +40,9 @@ function deleteComment($commId)
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    
+
+    echo "<meta charset=\"utf-8\">";
+
     $charsetW = mysqli_set_charset($connectionW, "utf8");
 
     if ($charsetW === FALSE)

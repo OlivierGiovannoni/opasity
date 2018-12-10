@@ -32,7 +32,8 @@ DONE:
 --Hid orders with negative prices.
 --Purged dark mode.
 --Fixed \" on textarea on addComments.php page.
---Added "Payé base & Payé compta" on every page
+--Added "Payé base & Payé compta" on every page.
+--Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
 
 BEFORE TODAY:
 --Invalid data on index.php page ???
@@ -54,7 +55,6 @@ URGENT:
 --Edit comment by clicking on it, or date, or CSS image button.
 --Login system wih Groups/Profiles/Timeouts and connection logs (timeLogin/timeLogout/username/session_id) (with encrypted passwords obvv) and tasks GENERAL and USER_SPECIFIC.
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
---Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
 --In addComments.php, re-arrange the iframe size, add dynamic refresh so it's easier to use.
 --In addComments.html, re-arranged all the text inputs, textarea, and move comment textarea below input date 'Prochaine relance'.
 --Add "Paru non-reglé" option.
