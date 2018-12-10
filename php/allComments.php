@@ -169,7 +169,7 @@ if (mysqli_connect_error()) {
     echo "<h2>Paru sur: " . $revue['Name'] . "</h2>";
     echo "<h2>Client: " . $client['name'] . " (" . $client['id'] . ")</h2>";
 
-    echo "<iframe name=\"commentFrame\" id=\"commentFrame\" srcdoc=\"";
+    /* echo "<iframe name=\"commentFrame\" id=\"commentFrame\" srcdoc=\""; */
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
@@ -192,7 +192,7 @@ if (mysqli_connect_error()) {
     addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
 
     echo "</table><br><br><br>";
-    echo "</iframe>";
+    /* echo "</iframe>"; */
     echo "</html>";
 }
 
