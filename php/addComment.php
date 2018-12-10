@@ -52,9 +52,9 @@ function uploadFile($tmpFile, $fileName, $orderId)
 {
     $fileDirectory = "files/" . $orderId . "/";
     $newFile = $fileDirectory . str_replace(" ", "_", $fileName);
-    $newFile = $fileDirectory . str_replace("é", "e", $newFile);
-    $newFile = $fileDirectory . str_replace("è", "e", $newFile);
-    $newFile = $fileDirectory . str_replace("°", "-", $newFile);
+    /* $newFile = $fileDirectory . str_replace("é", "e", $newFile); */
+    /* $newFile = $fileDirectory . str_replace("è", "e", $newFile); */
+    /* $newFile = $fileDirectory . str_replace("°", "-", $newFile); */
     //$newFile = $fileDirectory . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
