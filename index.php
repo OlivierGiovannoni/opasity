@@ -126,12 +126,13 @@ function findDates($dueDate)
 
             $commentForm = "<form target=\"_blank\" action=\"php/allComments.php\" method=\"post\" target=\"_blank\">";
             $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
+            $paidBaseHidden = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($rowDate['Reglement'] == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $paidHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<td>" . $commentForm . $paidHidden . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
