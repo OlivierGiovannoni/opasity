@@ -171,7 +171,7 @@ if (mysqli_connect_error()) {
 } else {
     $newDate = date("d/m/Y", strtotime($today));
 
-    echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
+    echo "<h1><a href=#>Contrats à relancer le " . $newDate . ":</a></h1>";
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";
