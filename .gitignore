@@ -6,4 +6,3 @@ credentials*.txt
 !php/helper*.php
 php/files/
 node_modules/
-sql/

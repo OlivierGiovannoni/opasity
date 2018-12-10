@@ -1,20 +1,8 @@
 <?php
 
-$clientName = filter_input(INPUT_POST, "clientName");
-$clientId = filter_input(INPUT_POST, "clientId");
+$clientId = filter_input(INPUT_GET, "clientId");
 
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
+require_once 'helperFunctions.php';
 
 $credsFile = "../credentials.txt";
 $credentials = credsArr(file_get_contents($credsFile));
