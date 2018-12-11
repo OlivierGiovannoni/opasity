@@ -125,7 +125,7 @@ function findDates($dueDate)
             $orderIdShort = $rowDate['Commande_courte'];
 
             $commentForm = "<form target=\"_blank\" action=\"php/allComments.php\" method=\"post\" target=\"_blank\">";
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"\">";
             $paidBaseHidden = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($rowDate['Reglement'] == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";

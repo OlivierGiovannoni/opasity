@@ -4,7 +4,6 @@ $orderId = filter_input(INPUT_POST, "hiddenId");
 $orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
 $paidStr = filter_input(INPUT_POST, "hiddenPaid");
 $paidBase = filter_input(INPUT_POST, "hiddenPaidBase");
-$comment = filter_input(INPUT_POST, "comment");
 $clientId = NULL;
 
 function credsArr($credsStr)
