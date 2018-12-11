@@ -1,31 +1,9 @@
 <?php
 
-function testInput($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
 
-$reviewName = filter_input(INPUT_POST, "reviewName");
-$hiddenId = filter_input(INPUT_POST, "hiddenId");
-$published = filter_input(INPUT_POST, "published");
-$getPaid = filter_input(INPUT_POST, "hiddenPaid");
+$reviewId = filter_input(INPUT_GET, "reviewId");
 
 $reviewName = testInput($reviewName);
-
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
 
 $credsFile = "../credentials.txt";
 $credentials = credsArr(file_get_contents($credsFile));
@@ -45,17 +23,7 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function isItPaid($orderId, $table, $connection)
-{
-    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
-
-        $rowPaid = mysqli_fetch_array($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
-    }
-}
+require_once 'helperFunctions.php';
 
 function selectLastComment($orderId, $orderIdShort, $paidStr)
 {

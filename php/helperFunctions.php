@@ -1,3 +1,10 @@
+function testInput($data) {
+    $data = trim($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
 function credsArr($credsStr)
 {
     $credsArr = array();
@@ -24,6 +31,10 @@ function sqlQuery($query)
 
 }
 
+/*
+** Parameters: String, String, String, Array, Array
+** Return: Array;
+*/
 function generateForm()
 {
 
@@ -32,6 +43,18 @@ function generateForm()
 function generateTable()
 {
 
+}
+
+function isItPaid($orderId, $table, $connection)
+{
+    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
 }
 
 function getData($table, $columns, $connection, $whereColumn, $whereOperator, $whereValue)
