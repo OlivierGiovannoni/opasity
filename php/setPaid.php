@@ -24,17 +24,44 @@ $connection = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB
 
+function checkEmpty($orderId)
+{
+    $sqlComment = "SELECT Commentaire_id FROM webcontrat_commentaire WHERE Commande='$orderId';";
+    if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
+
+        return (mysqli_num_rows($resultComment));
+    } else {
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connection']->error;
+    }
+}
+
 function setPaid($orderId)
 {
-    $sqlPaid = "UPDATE webcontrat_commentaire SET Reglement='R' WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS['connection']->query($sqlPaid)) {
+    $today = date("Y-m-d");
+    $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
+    $checkEmpty = checkEmpty($orderId);
+    if ($checkEmpty === 0) {
+        $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom,Reglement";
+        $rowValues = "'             ','dev','$today','$orderId','$orderIdShort','1970-01-01','','','NULL',1,'R'";
+        $sqlPaid = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
+        if ($resultPaid = $GLOBALS['connection']->query($sqlPaid)) {
 
-        // UPDATE output doesn't need to be fetched.
-        echo "Le contrat à été passé en 'reglé' avec succès. ";
-        echo "<a  href=\"../index.php\">Retourner au menu</a>";
+            // INSERT output doesn't need to be fetched.
+        } else {
+            echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionW']->error; 
+        }
+
     } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connection']->error;
+        $sqlPaid = "UPDATE webcontrat_commentaire SET Reglement='R' WHERE Commande='$orderId';";
+        if ($resultPaid = $GLOBALS['connection']->query($sqlPaid)) {
+
+            // UPDATE output doesn't need to be fetched.
+        } else {
+            echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connection']->error;
+        }
     }
+    echo "Le contrat à été passé en 'reglé' avec succès. ";
+    echo "<a  href=\"../index.php\">Retourner au menu</a>";
 }
 
 if (mysqli_connect_error()) {

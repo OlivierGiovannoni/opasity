@@ -34,11 +34,13 @@ DONE:
 --Fixed \" on textarea on addComments.php page.
 --Added "Payé base & Payé compta" on every page.
 --Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
+--Added 'Relances du jour' Unpaid AND Date <= TODAY.
+--Automatically filled phone number using "{phone}" on allComments.php
+--Now order can be set to Paid/Unpaid even if there was no comment, using fake comment INSERT.
 
 BEFORE TODAY:
 --Invalid data on index.php page ???
 --File for each ORDER not COMMENT.
---Automatically fill phone number and e-mail using value="{value}" on allComments.php
 --Auto-upload Dropzone
 --Validated and non-validated "relances", meaning, client has been succesfully reached or not, non-validated push to x days later ?
 
@@ -70,4 +72,3 @@ TODO:
 --Align the divs on main.html.
 --The DOTS ! (PrixHT).
 --Add 'Relances du jour' from previous days using DateAuto and DateEffective.
---Add 'Relances du jour' Unpaid AND Date <= TODAY.

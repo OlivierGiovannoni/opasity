@@ -37,7 +37,7 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $paidStr)
+function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone, $paidStr)
 {
     // Get file data.
     $htmlFileData = file_get_contents($htmlFileName);
@@ -47,6 +47,7 @@ function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $paidS
         $htmlFileData = str_replace("<!-- UNPAID", "", $htmlFileData);
         $htmlFileData = str_replace("-->", "", $htmlFileData);
         // Replace fake variables with real values.
+        $htmlFileData = str_replace("{phone}", $phone, $htmlFileData);
         $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
         $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
         $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
@@ -76,6 +77,28 @@ function findReview($infoId)
     } else {
         echo "Query error: ". $sqlReviewInfo ." // ". $GLOBALS['connectionR']->error;
 
+    }
+}
+
+function getPhoneNumber($orderId, $clientId)
+{
+    $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' AND DernierCom=1 ORDER BY Commentaire_id DESC;";
+    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
+
+        $rowComment = mysqli_fetch_array($resultComment);
+
+        if ($rowComment['NumTelephone'] == "") {
+            $sqlPhone = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY id DESC;";
+            if ($resultPhone = $GLOBALS['connectionR']->query($sqlPhone)) {
+                $rowPhone = mysqli_fetch_array($resultPhone);
+                return ($rowPhone['Tel']);
+            } else {
+                echo "Query error: ". $sqlPhone ." // ". $GLOBALS['connectionR']->error;
+            }
+        }
+        return ($rowComment['NumTelephone']);
+    } else {
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
     }
 }
 
@@ -109,6 +132,8 @@ function listComments()
 
         while ($rowComment = mysqli_fetch_array($resultComment)) {
 
+            if ($rowComment['Commentaire'] == "             ")
+                continue ;
             $contact = getContactName($GLOBALS['orderId']);
             echo "<tr><td>" . $rowComment['Commentaire'] . "</td>";
             echo "<td>" . $rowComment['Auteur'] . "</td>";
@@ -140,7 +165,7 @@ function listComments()
 
         }
     } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
     }
     $GLOBALS['connectionR']->close();
     $GLOBALS['connectionW']->close();
@@ -187,8 +212,9 @@ if (mysqli_connect_error()) {
     else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
+    $phone = getPhoneNumber($orderId, $client['id']);
     listComments();
-    addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
+    addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $client['id'], $phone, $paidStr);
 
     echo "</table><br><br><br>";
     /* echo "</iframe>"; */
