@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Factures impayées</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
 <?php
 
 $orderId = filter_input(INPUT_POST, "hiddenId");
@@ -222,3 +230,5 @@ if (mysqli_connect_error()) {
 }
 
 ?>
+</body>
+</html>

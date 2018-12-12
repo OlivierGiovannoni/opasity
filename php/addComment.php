@@ -1,3 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Factures impayées</title>
+    <link rel="stylesheet" href="css/main.css">
+  </head>
+  <body>
 <?php
 
 function testInput($data) {
@@ -48,21 +56,30 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
+function skip_accents( $str, $charset='utf-8' ) {
+ 
+    $str = htmlentities( $str, ENT_NOQUOTES, $charset );
+    
+    $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
+    $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
+    $str = preg_replace( '#&[^;]+;#', '', $str );
+    $str = str_replace(" ", "_", $str);
+    return $str;
+}
+
 function uploadFile($tmpFile, $fileName, $orderId)
 {
     $fileDirectory = "files/" . $orderId . "/";
-    $newFile = $fileDirectory . str_replace(" ", "_", $fileName);
-    /* $newFile = $fileDirectory . str_replace("é", "e", $newFile); */
-    /* $newFile = $fileDirectory . str_replace("è", "e", $newFile); */
-    /* $newFile = $fileDirectory . str_replace("°", "-", $newFile); */
-    //$newFile = $fileDirectory . $fileName;
+	
+	$newFile = $fileDirectory . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
         return ("NULL");
     if (is_dir($fileDirectory) === FALSE)
         mkdir($fileDirectory, 0755, TRUE);
+	
     if (move_uploaded_file($tmpFile, $newFile))
-        return ($newFile);
+		return ($newFile);
     return ("NULL");
 }
 
@@ -118,6 +135,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     }
 
     $newFile = uploadFile($tmpFile, $file, $orderId);
+	echo "DATABASE: $newFile <br>";
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
@@ -145,9 +163,12 @@ if (mysqli_connect_error()) {
 
     $tmpFile = $_FILES['fileUpload']['tmp_name'];
     $file = $_FILES['fileUpload']['name'];
+	$file = skip_accents($file);
     newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
     echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
     echo "<a  href=\"../index.php\">Retourner au menu</a>";
 }
 
 ?>
+</body>
+</html>
