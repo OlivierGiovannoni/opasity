@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8">
     <title>Factures impayées</title>
-    <link rel="stylesheet" href="css/main.css">
   </head>
   <body>
 <?php
@@ -56,15 +55,16 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function skip_accents( $str, $charset='utf-8' ) {
- 
-    $str = htmlentities( $str, ENT_NOQUOTES, $charset );
-    
-    $str = preg_replace( '#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str );
-    $str = preg_replace( '#&([A-za-z]{2})(?:lig);#', '\1', $str );
-    $str = preg_replace( '#&[^;]+;#', '', $str );
+function skip_accents($str, $charset = "utf-8")
+{
+    $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+    $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+    $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
+    $str = preg_replace('#&[^;]+;#', '', $str);
+
     $str = str_replace(" ", "_", $str);
-    return $str;
+    return ($str);
 }
 
 function uploadFile($tmpFile, $fileName, $orderId)
@@ -135,7 +135,6 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     }
 
     $newFile = uploadFile($tmpFile, $file, $orderId);
-	echo "DATABASE: $newFile <br>";
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
