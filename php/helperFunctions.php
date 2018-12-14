@@ -1,3 +1,7 @@
+/*
+** Parameters: String
+** Return: String
+*/
 function testInput($data) {
     $data = trim($data);
     $data = stripslashes($data);
@@ -5,7 +9,11 @@ function testInput($data) {
     return $data;
 }
 
-function credsArr($credsStr)
+/*
+** Parameters: String
+** Return: Array
+*/
+function getCredentials($credsStr)
 {
     $credsArr = array();
     $linesArr = explode(";", $credsStr);
@@ -18,33 +26,64 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
-function sqlQuery($query)
+/*
+** Parameters: String, Object
+** Return: Array
+*/
+function querySQL($query, $connection)
 {
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande LIKE '$orderId';";
-    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
+    $result = $connection->query($sql);
+    if ($result) {
 
-        $rowPaid = mysqli_fetch_array($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+        $rows = mysqli_fetch_all($result);
+        return ($rows);
     }
-
+    echo "MySQL query error: " . $sql . "<br>Error: " . $connection->error . "<br>";
+    return (NULL);
 }
 
 /*
-** Parameters: String, String, String, Array, Array
-** Return: Array;
+** Parameters: String, String, String, String
+** Return: String
 */
-function generateForm()
+function generateInput($type, $name, $id, $value)
 {
-
+    $input = "<input type=\"" . $type . "\" name=\"" . $name . "\" id=\"" . $id . "\" value=\"" . $value . "\">";
+    return ($input);
 }
 
-function generateTable()
+/*
+** Parameters: String, String, String, Array
+** Return: Array
+*/
+function generateForm($target, $action, $method, $inputs)
 {
+    $form = array();
+    $formOpen = "<form target=\"" . $target . "\" action=\"" . $action . "\" method=\"" . $method . "\">";
+    array_push($form, $formOpen);
+    foreach ($inputs as $input) {
 
+        array_push($form, $input);
+    }
+    $formClose = "</form>";
+    array_push($form, $formClose);
+    return ($form);
 }
 
+/*
+** Parameters: String, String, String, Array
+** Return: Array
+*/
+function generateLine($input)
+{
+    //;
+}
+
+/*
+** Parameters: 
+** Return: 
+*/
 function isItPaid($orderId, $table, $connection)
 {
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
@@ -57,6 +96,10 @@ function isItPaid($orderId, $table, $connection)
     }
 }
 
+/*
+** Parameters: 
+** Return: 
+*/
 function getData($table, $columns, $connection, $whereColumn, $whereOperator, $whereValue)
 {
     $sqlPaid = "SELECT $columns FROM $table WHERE Commande LIKE '$orderId';";
