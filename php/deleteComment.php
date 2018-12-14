@@ -24,14 +24,54 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
+function updatePrevious($prevId)
+{
+    $sqlComment = "UPDATE webcontrat_commentaire SET DernierCom=1 WHERE Commentaire_id=$prevId;";
+    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
+
+        //echo "<br>SQL UPDATE: $sqlComment";
+        // UPDATE output doesn't need to be fetched.
+    } else {
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
+    }
+}
+
 function deleteComment($commId)
 {
     $sqlComment = "DELETE FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
+        //echo "<br>SQL DEL $sqlComment";
         // DELETE output doesn't need to be fetched.
         echo "Le commentaire à été supprimé avec succès. ";
         echo "<a  href=\"../index.php\">Retourner au menu</a>";
+    } else {
+        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
+    }
+}
+
+function selectPrevious($commId)
+{
+    $sqlComment = "SELECT Commande,DernierCom FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
+    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
+
+        $rowComment = mysqli_fetch_array($resultComment);
+        $orderId = $rowComment['Commande'];
+        $last = $rowComment['DernierCom'];
+        if ($last !== 1)
+            return (-1);
+        //echo "<br>CMD: ". $rowComment['Commande'];
+        $sqlComment = "SELECT Commentaire_id FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+        if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
+
+            $rowComment = mysqli_fetch_array($resultComment);
+            //echo "<br>DELETE ID: ". $rowComment['Commentaire_id'];
+            $rowComment = mysqli_fetch_array($resultComment);
+            //echo "<br>UPDATE ID: ". $rowComment['Commentaire_id'];
+            return ($rowComment['Commentaire_id']);
+        } else {
+            echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
+        }
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
     }
@@ -46,7 +86,10 @@ if (mysqli_connect_error()) {
     if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
+    $prevId = selectPrevious($commId);
     deleteComment($commId);
+    if ($prevId !== -1)
+        updatePrevious($prevId);
 }
 
 ?>

@@ -50,6 +50,9 @@ function isItPaid($orderId, $table, $connection)
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
     if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
+        $rows = mysqli_num_rows($resultPaid);
+        if ($rows === 0)
+            return ("R");
         $rowPaid = mysqli_fetch_array($resultPaid);
         return ($rowPaid['Reglement']);
     } else {

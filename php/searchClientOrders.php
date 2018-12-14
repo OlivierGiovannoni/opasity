@@ -60,6 +60,9 @@ function isItPaid($orderId, $table, $connection)
     $sqlPaid = "SELECT Reglement FROM $table WHERE Commande LIKE '$orderId';";
     if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
 
+        $rows = mysqli_num_rows($resultPaid);
+        if ($rows === 0)
+            return ("R");
         $rowPaid = mysqli_fetch_array($resultPaid);
         return ($rowPaid['Reglement']);
     } else {
@@ -74,11 +77,11 @@ function selectLastComment($orderId, $orderIdShort, $paidStr)
 
         $rowComment = mysqli_fetch_array($resultComment);
         if ($rowComment['Reglement'] == "R")
-            echo "<td id=\"isPaid\">Yes</td>";
+            echo "<td id=\"isPaid\">Oui</td>";
         else if ($paidStr == "R")
             echo "<td id=\"isPaid\">Oui</td>";
         else
-            echo "<td id=\"isNotPaid\">Nein</td>";
+            echo "<td id=\"isNotPaid\">Non</td>";
         echo "<td>" . $rowComment['Commentaire'] . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
         echo "<td>" . date("d/m/Y", strtotime($rowComment['Prochaine_relance'])) . "</td></tr>";
