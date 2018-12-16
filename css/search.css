@@ -21,7 +21,6 @@ table, th, td {
 th, td {
     padding: 3px;
     font-size: 13px;
-    font-style: italic;
 }
 
 #isPaid {

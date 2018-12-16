@@ -29,7 +29,7 @@ function updatePrevious($prevId)
     $sqlComment = "UPDATE webcontrat_commentaire SET DernierCom=1 WHERE Commentaire_id=$prevId;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
-        //echo "<br>SQL UPDATE: $sqlComment";
+        echo "<br>SQL UPDATE: $sqlComment";
         // UPDATE output doesn't need to be fetched.
     } else {
         echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
@@ -41,7 +41,7 @@ function deleteComment($commId)
     $sqlComment = "DELETE FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
-        //echo "<br>SQL DEL $sqlComment";
+        echo "<br>SQL DEL $sqlComment <br>";
         // DELETE output doesn't need to be fetched.
         echo "Le commentaire à été supprimé avec succès. ";
         echo "<a  href=\"../index.php\">Retourner au menu</a>";
@@ -58,16 +58,17 @@ function selectPrevious($commId)
         $rowComment = mysqli_fetch_array($resultComment);
         $orderId = $rowComment['Commande'];
         $last = $rowComment['DernierCom'];
-        if ($last !== 1)
+        echo "<br>LAST: $last";
+        if ($last != 1)
             return (-1);
-        //echo "<br>CMD: ". $rowComment['Commande'];
+        echo "<br>CMD: $orderId ";
         $sqlComment = "SELECT Commentaire_id FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
         if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
             $rowComment = mysqli_fetch_array($resultComment);
-            //echo "<br>DELETE ID: ". $rowComment['Commentaire_id'];
+            echo "<br>DELETE ID: ". $rowComment['Commentaire_id'];
             $rowComment = mysqli_fetch_array($resultComment);
-            //echo "<br>UPDATE ID: ". $rowComment['Commentaire_id'];
+            echo "<br>UPDATE ID: ". $rowComment['Commentaire_id'];
             return ($rowComment['Commentaire_id']);
         } else {
             echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
@@ -88,7 +89,7 @@ if (mysqli_connect_error()) {
 
     $prevId = selectPrevious($commId);
     deleteComment($commId);
-    if ($prevId !== -1)
+    if ($prevId != -1)
         updatePrevious($prevId);
 }
 
