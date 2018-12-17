@@ -70,3 +70,13 @@ function generateForm($target, $action, $method, $inputs)
     array_push($form, $formClose);
     return ($form);
 }
+
+/*
+** Parameters: String, String, String
+** Return: String
+*/
+function generateLink($href, $target, $text)
+{
+    $link = "<a href=\"" . $href . "\" target=\"" . $target . "\">" . $text . "</a>";
+    return ($link);
+}
