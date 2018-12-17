@@ -125,13 +125,8 @@ function findDates($dueDate)
             $orderIdShort = $rowDate['Commande_courte'];
 
             $commentForm = "<form target=\"_blank\" action=\"php/allComments.php\" method=\"post\" target=\"_blank\">";
-<<<<<<< HEAD
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
-            $paidBaseHidden = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($rowDate['Reglement'] == "R" ? "on" : "") . "\">";
-=======
             //$paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paid . "\">";
             $paidBaseHidden = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . $rowDate['Reglement'] . "\">";
->>>>>>> 85f8af0... trying to fix mysterious paid/unpaid error but fml
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
