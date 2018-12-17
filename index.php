@@ -99,6 +99,18 @@ function findReview($infoId)
     }
 }
 
+function isItPaid($orderId)
+{
+    $sqlPaid = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    if ($resultPaid = $GLOBALS['connectionR']->query($sqlPaid)) {
+
+        $rowPaid = mysqli_fetch_array($resultPaid);
+        return ($rowPaid['Reglement']);
+    } else {
+        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
+    }
+}
+
 function findDates($dueDate)
 {
     $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
@@ -106,18 +118,21 @@ function findDates($dueDate)
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
 
+            $paid = isItPaid($rowDate['Commande']);
+            if ($paid == "R")
+                continue ;
             $orderId = $rowDate['Commande'];
             $orderIdShort = $rowDate['Commande_courte'];
 
             $commentForm = "<form target=\"_blank\" action=\"php/allComments.php\" method=\"post\" target=\"_blank\">";
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"\">";
+            //$paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
             $paidBaseHidden = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($rowDate['Reglement'] == "R" ? "on" : "") . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $paidHidden . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<td>" . $commentForm . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
