@@ -188,8 +188,8 @@ function findOrder($supportPart, $contractPart, $contractId)
             $getPaidBase = isItPaid($orderId, "webcontrat_commentaire", "connectionW");
 
             $commentForm = "<form target=\"_blank\" action=\"allComments.php\" method=\"post\" target=\"_blank\">";
-            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . ($paid == "R" ? "on" : "") . "\">";
-            $paidHiddenBase = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . ($getPaidBase == "R" ? "on" : "") . "\">";
+            $paidHidden = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $paid . "\">";
+            $paidHiddenBase = "<input type=\"hidden\" name=\"hiddenPaidBase\" value=\"" . $getPaidBase . "\">";
             $idHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $orderId . "\">";
             $idShortHidden = "<input type=\"hidden\" name=\"hiddenIdShort\" value=\"" . $orderIdShort . "\">";
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";

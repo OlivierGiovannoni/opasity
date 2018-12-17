@@ -164,8 +164,8 @@ if (mysqli_connect_error()) {
     echo "<h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1>";
     $revue = findReview($orderId);
 
-    echo "<h2 " . ($paidStr == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "on" ? "Contrat reglé compta" : "Contrat non-reglé compta") . "</h2>";
-    echo "<h2 " . ($paidBase == "on" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidBase == "on" ? "Contrat reglé base" : "Contrat non-reglé base") . "</h2>";
+    echo "<h2 " . ($paidStr == "R" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "R" ? "Contrat reglé compta" : "Contrat non-reglé compta") . "</h2>";
+    echo "<h2 " . ($paidBase == "R" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidBase == "R" ? "Contrat reglé base" : "Contrat non-reglé base") . "</h2>";
     echo "<h2>Paru sur: " . $revue['Name'] . "</h2>";
     echo "<h2>Client: " . $client['name'] . " (" . $client['id'] . ")</h2>";
 
