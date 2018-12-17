@@ -205,7 +205,7 @@ if (mysqli_connect_error()) {
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
-    echo "<th>DernierCom</th>"
+    echo "<th>DernierCom</th>";
     echo "<th>Auteur</th>";
     echo "<th>Date commentaire</th>";
     echo "<th>Nom de l'entreprise</th>";
