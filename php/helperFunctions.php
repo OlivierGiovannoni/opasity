@@ -6,7 +6,7 @@ function testInput($data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
-    return $data;
+    return ($data);
 }
 
 /*
@@ -39,7 +39,7 @@ function querySQL($query, $connection)
         $rows = mysqli_fetch_all($result);
         return ($rows);
     }
-    echo "MySQL query error: " . $sql . "<br>Error: " . $connection->error . "<br>";
+    echo "MySQL query error:<br>Query: " . $sql . "<br>Error: " . $connection->error . "<br>";
     return (NULL);
 }
 
@@ -69,46 +69,4 @@ function generateForm($target, $action, $method, $inputs)
     $formClose = "</form>";
     array_push($form, $formClose);
     return ($form);
-}
-
-/*
-** Parameters: String, String, String, Array
-** Return: Array
-*/
-function generateLine($input)
-{
-    //;
-}
-
-/*
-** Parameters: 
-** Return: 
-*/
-function isItPaid($orderId, $table, $connection)
-{
-    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande='$orderId';";
-    if ($resultPaid = $GLOBALS[$connection]->query($sqlPaid)) {
-
-        $rowPaid = mysqli_fetch_array($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "Query error: ". $sqlPaid ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
-/*
-** Parameters: 
-** Return: 
-*/
-function getData($table, $columns, $connection, $whereColumn, $whereOperator, $whereValue)
-{
-    $sqlPaid = "SELECT $columns FROM $table WHERE Commande LIKE '$orderId';";
-    if ($resultData = $GLOBALS[$connection]->query($sqlPaid)) {
-
-        $rowPaid = mysqli_fetch_all($resultPaid);
-        return ($rowPaid['Reglement']);
-    } else {
-        echo "MySQL query error.<br>Query: ". $sqlData . "<br>Error: ". $connection->error . "<br>";
-        return (NULL);
-    }
 }

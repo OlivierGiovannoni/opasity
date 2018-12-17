@@ -26,7 +26,7 @@ $connectionW = new mysqli(
 
 function updatePrevious($prevId)
 {
-    $sqlComment = "UPDATE webcontrat_commentaire SET DernierCom=1 WHERE Commentaire_id=$prevId;";
+    $sqlComment = "UPDATE webcontrat_commentaire SET DernierCom=1 WHERE Commentaire_id='$prevId';";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         echo "<br>SQL UPDATE: $sqlComment";
