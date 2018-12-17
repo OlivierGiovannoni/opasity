@@ -134,7 +134,7 @@ function getContactName($orderId)
 function listComments()
 {
     $orderIdShort = $GLOBALS['orderIdShort'];
-    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier,DernierCom FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
 
         while ($rowComment = mysqli_fetch_array($resultComment)) {
@@ -143,6 +143,7 @@ function listComments()
                 continue ;
             $contact = getContactName($GLOBALS['orderId']);
             echo "<tr><td>" . $rowComment['Commentaire'] . "</td>";
+            echo "<td>" . $rowComment['DernierCom'] . "</td>";
             echo "<td>" . $rowComment['Auteur'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
 
@@ -204,6 +205,7 @@ if (mysqli_connect_error()) {
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
+    echo "<th>DernierCom</th>"
     echo "<th>Auteur</th>";
     echo "<th>Date commentaire</th>";
     echo "<th>Nom de l'entreprise</th>";

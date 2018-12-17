@@ -113,7 +113,7 @@ function isItPaid($orderId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
+    $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement,DernierCom FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -135,6 +135,7 @@ function findDates($dueDate)
             echo "<td>" . $commentForm . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $final = findReview($orderId);
+            echo "<td>" . $rowDate['DernierCom'] . "</td>";
             getOrderDetails($orderId, $orderIdShort, $final);
             if ($rowDate['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
@@ -176,6 +177,7 @@ if (mysqli_connect_error()) {
     echo "<tr>";
     echo "<th>Contrat</th>";
     echo "<th>Revue</th>";
+    echo "<th>DernierCom</th>"
     echo "<th>Prix HT</th>";
     echo "<th>Nom de l'entreprise</th>";
     echo "<th>Payé base</th>";
