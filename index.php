@@ -132,7 +132,7 @@ function findDates($dueDate)
             $commentInput = "<input type=\"submit\" name=\"comment\" value=\"" . $orderIdShort . "\">";            
             $closeForm = "</form>";
 
-            echo "<td>" . $commentForm . $paidHidden . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
+            echo "<td>" . $commentForm . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $final = findReview($orderId);
             getOrderDetails($orderId, $orderIdShort, $final);
