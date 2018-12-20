@@ -41,7 +41,7 @@ $commId = filter_input(INPUT_GET, "id");
 
 require_once "helperFunctions.php";
 
-$credentialsW = getCredentials("credentialsW.txt");
+$credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

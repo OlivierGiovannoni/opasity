@@ -1,8 +1,8 @@
 <?php
 
-$orderId = filter_input(INPUT_POST, "id");
+$orderId = filter_input(INPUT_GET, "id");
 
-$credentials = getCredentials("credentials.txt");
+$credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -10,7 +10,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credentialsW = getCredentials("credentialsW.txt");
+$credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],
@@ -132,7 +132,7 @@ if (mysqli_connect_error()) {
 } else {
 
     $style = file_get_contents("../html/allComments.html");
-
+    $orderIdShort = getOrderIdShort($orderId);
     $style = str_replace("{order}", $orderIdShort, $style);
 
     echo $style;
@@ -149,19 +149,11 @@ if (mysqli_connect_error()) {
     echo "<h2>Paru sur: " . $revue['Name'] . "</h2>";
     echo "<h2>Client: " . $client['name'] . " (" . $client['id'] . ")</h2>";
 
-    /* echo <iframe name=\"commentFrame\" id=\"commentFrame\">; */
     echo "<table>";
-    echo "<tr>";
-    echo "<th>Commentaire</th>";
-    echo "<th>Auteur</th>";
-    echo "<th>Date commentaire</th>";
-    echo "<th>Nom de l'entreprise</th>";
-    echo "<th>E-mail</th>";
-    echo "<th>Téléphone</th>";
-    echo "<th>Prochaine relance</th>";
-    echo "<th>Fichier</th>";
-    echo "<th>Supprimer commentaire</th>";
-    echo "</tr>";
+    $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Supprimer commentaire");//tmp fichier
+    $cells = generateRow($cells, true);
+    foreach ($cells as $cell)
+        echo $cell;
 
     if ($charsetR === FALSE)
         die("MySQL SET CHARSET error: ". $connectionR->error);
@@ -172,7 +164,6 @@ if (mysqli_connect_error()) {
     addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $clientId, $paidStr);
 
     echo "</table><br><br><br>";
-    /* echo "</iframe>"; */
     echo "</html>";
 }
 

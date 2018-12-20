@@ -1,6 +1,6 @@
 <?php
 
-$orderId = filter_input(INPUT_POST, "hiddenId");
+$orderId = filter_input(INPUT_GET, "hiddenId");
 
 REMOVE THIS SHIT($credsStr)
 {
@@ -16,7 +16,7 @@ REMOVE THIS SHIT($credsStr)
 }
 
  REMOVE "../credentialsW.txt";
-$credentials = getCredentials("credentials.txt"));
+$credentials = getCredentials("../credentials.txt"));
 
 $connection = new mysqli(
     $credentials['hostname'],

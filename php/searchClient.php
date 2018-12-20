@@ -7,11 +7,11 @@ REMOVE THIS CRAP$data) {
     return $data;
 }
 
-$clientName = filter_input(INPUT_POST, "clientName");
+$clientName = filter_input(INPUT_GET, "clientName");
 
 $clientName = sanitizeInput($clientName);
 
-$credentials = getCredentials("credentials.txt");
+$credentials = getCredentials("../credentials.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

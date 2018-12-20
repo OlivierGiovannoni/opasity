@@ -14,7 +14,7 @@ REMOVE THIS SHIT($credsStr)
 }
 
  REMOVE "../credentialsW.txt";
-$credentialsW = getCredentials("credentialsW.txt"));
+$credentialsW = getCredentials("../credentialsW.txt"));
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

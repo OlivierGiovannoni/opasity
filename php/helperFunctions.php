@@ -1,6 +1,12 @@
 <?php
 
 /*
+** ***********************
+** ** Generic functions **
+** ***********************
+*/
+
+/*
 ** Parameters: String
 ** Return: String
 */
@@ -33,7 +39,7 @@ function getCredentials($credsFile)
 ** Parameters: String, Object, Bool, Bool
 ** Return: Array
 */
-function querySQL($query, $connection, $first = false, $results = true)
+function querySQL($query, $connection, $results = true, $first = false)
 {
     $result = $connection->query($query);
     if ($result && $results === true) {
@@ -86,15 +92,12 @@ function getOrderIdShort($orderId)
     return ($orderIdShort);
 }
 
-/*
-** Parameters: String, Bool
-** Return: String
-*/
-function generateCell($data, $header = false)
+//tmp delete
+function generateCell($cell, $header = false)
 {
     $open = ($header === true ? "<th>" : "<td>");
     $close = ($header === true ? "</th>" : "</td>");
-    $cell = $open . $data . $close;
+    $cell = $open . $cell . $close;
     return ($cell);
 }
 
@@ -102,17 +105,20 @@ function generateCell($data, $header = false)
 ** Parameters: Array, Bool
 ** Return: Array
 */
-function generateRow($cells, $header)
+function generateRow($cells, $header = false)
 {
     $row = array();
     $rowOpen = "<tr>";
     array_push($row, $rowOpen);
     foreach ($cells as $cell) {
 
+        $open = ($header === true ? "<th>" : "<td>");
+        $close = ($header === true ? "</th>" : "</td>");
+        $cell = $open . $cell . $close;
         array_push($row, $cell);
     }
     $rowClose = "</tr>";
-    array_push($form, $rowClose);
+    array_push($row, $rowClose);
     return ($row);
 
 }
@@ -121,10 +127,85 @@ function generateRow($cells, $header)
 ** Parameters: String, String, String
 ** Return: String
 */
-function generateLink($href, $target, $text)
+function generateLink($href, $text, $target = "_self", $onclick = null)
 {
-    $link = "<a href=\"" . $href . "\" target=\"" . $target . "\">" . $text . "</a>";
+    $link = "<a href=\"" . $href . "\" target=\"" . $target . "\" onclick=\"" . $onclick . "\">" . $text . "</a>";
     return ($link);
+}
+
+/*
+** Parameters: String, String
+** Return: String
+*/
+function skipAccents($str, $charset = "utf-8")
+{
+    $str = htmlentities($str, ENT_NOQUOTES, $charset);
+
+    $str = preg_replace('#&([A-za-z])(?:acute|cedil|caron|circ|grave|orn|ring|slash|th|tilde|uml);#', '\1', $str);
+    $str = preg_replace('#&([A-za-z]{2})(?:lig);#', '\1', $str);
+    $str = preg_replace('#&[^;]+;#', '', $str);
+
+    $str = str_replace(" ", "_", $str);
+    return ($str);
+}
+
+/*
+** ***************************
+** ** App-specific function **
+** ***************************
+*/
+
+/*
+** Parameters: String
+** Return: Array
+*/
+function getOrderDetails($orderId)
+{
+    $sqlOrder = "SELECT Client_id,PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    $rowOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
+
+    while ($rowOrder) {
+
+        $clientId = $rowOrder['Client_id'];
+        $priceRaw = $rowOrder['PrixHT'];
+        $sqlClient = "SELECT id,NomSociete,NomContact1 FROM webcontrat_client WHERE id='$clientId';";
+        $rowClient = querySQL($sqlClient, $GLOBALS['connectionR'], true, true);
+        $companyName = $rowClient['NomSociete'];
+        $contactName = $rowClient['NomContact1'];
+
+        $details = array('clientId' => $clientId, 'companyName' => $companyName, 'contactName' => $contactName, 'priceRaw' => $priceRaw);
+        return ($details);
+    }
+}
+
+/*
+** Parameters: String
+** Return: Array
+*/
+function findReview($infoId)
+{
+    $sqlInfoReview = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
+    $rowInfoReview = querySQL($sqlInfoReview, $GLOBALS['connectionR'], true, true);
+    $finalId = $rowInfoReview['Revue_id'];
+    $sqlReview = "SELECT id,Nom,Annee,Paru FROM webcontrat_revue WHERE id='$finalId';";
+    $rowReview = querySQL($sqlReview, $GLOBALS['connectionR'], true, true);
+    $finalName = $rowReview['Nom'];
+    $finalId = $rowReview['id'];
+    $finalYear = $rowReview['Annee'];
+    $finalPub = $rowReview['Paru'];
+    $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear, 'Pub' => $finalPub);
+    return ($final);
+}
+
+/*
+** Parameters: String
+** Return: String
+*/
+function isItPaid($orderId)
+{
+    $sqlPaid = "SELECT Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    $rowPaid = querySQL($sqlPaid, $GLOBALS['connectionR'], true, true);
+    return ($rowPaid['Reglement']);
 }
 
 ?>

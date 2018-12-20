@@ -7,7 +7,7 @@ REMOVE THIS CRAP$data) {
     return $data;
 }
 
-$contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
+$contractId = filter_input(INPUT_GET, "contractId"); // CODE CONTRAT ex: GI4468
 
 $contractId = sanitizeInput($contractId);
 
@@ -17,7 +17,7 @@ $contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
 if (strlen($contractId) === 4)
     $contractPart = $contractId;
 
-$credentials = getCredentials("credentials.txt");
+$credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -25,7 +25,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credentialsW = getCredentials("credentialsW.txt");
+$credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

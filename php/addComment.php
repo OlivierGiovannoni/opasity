@@ -3,51 +3,37 @@
 function uploadFile($tmpFile, $fileName, $orderId)
 {
     $fileDirectory = "files/" . $orderId . "/";
-    $newFile = $fileDirectory . str_replace(" ", "_", $fileName);
-    /* $newFile = $fileDirectory . str_replace("é", "e", $newFile); */
-    /* $newFile = $fileDirectory . str_replace("è", "e", $newFile); */
-    /* $newFile = $fileDirectory . str_replace("°", "-", $newFile); */
-    $newFile = $fileDirectory . $fileName;
+
+	$newFile = $fileDirectory . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
         return ("NULL");
     if (is_dir($fileDirectory) === FALSE)
         mkdir($fileDirectory, 0755, TRUE);
+	
     if (move_uploaded_file($tmpFile, $newFile))
-        return ($newFile);
+		return ($newFile);
     return ("NULL");
 }
 
 function getPhoneNumber($orderId, $clientId)
 {
     $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-        $rowComment = mysqli_fetch_array($resultComment);
+    $rowComment = querySQL($sqlComment, $GLOBALS['connectionW'], true, true);
 
-        if ($rowComment['NumTelephone'] == "") {
-            $sqlPhone = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY id DESC;";
-            if ($resultPhone = $GLOBALS['connectionR']->query($sqlPhone)) {
-                $rowPhone = mysqli_fetch_array($resultPhone);
-                return ($rowPhone['Tel']);
-            } else {
-                echo "Query error: ". $sqlPhone ." // ". $GLOBALS['connectionR']->error;
-            }
-        }
-        return ($rowComment['NumTelephone']);
-    } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
+    if ($rowComment['NumTelephone'] == "") {
+        $sqlPhone = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY id DESC;";
+        $rowPhone = querySQL($sqlPhone, $GLOBALS['connectionR'], true, true);
+        return ($rowPhone['Tel']);
     }
+    return ($rowComment['NumTelephone']);
 }
 
 function getLastId($orderId)
 {
     $sqlComment = "SELECT Commentaire_id FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-        $rowComment = mysqli_fetch_array($resultComment);
-        return ($rowComment['Commentaire_id']);
-    } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionR']->error;
-    }
+    $rowComment = querySQL($sqlComment, $GLOBALS['connectionW'], true, true);
+    return ($rowComment['Commentaire_id']);
 }
 
 function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file)
@@ -62,38 +48,28 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
 
     $lastId = getLastId($orderId);
     $sqlNewLast = "UPDATE webcontrat_commentaire SET DernierCom=0 WHERE Commentaire_id='$lastId';";
-    if ($resultNewLast = $GLOBALS['connectionW']->query($sqlNewLast)) {
-
-        // UPDATE output doesn't need to be fetched.
-    } else {
-        echo "Query error: ". $sqlNewLast ." // ". $GLOBALS['connectionW']->error; 
-    }
+    querySQL($sqlNewLast, $GLOBALS['connectionW'], false);
 
     $newFile = uploadFile($tmpFile, $file, $orderId);
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
-    if ($resultNewComment = $GLOBALS['connectionW']->query($sqlNewComment)) {
-
-        // INSERT output doesn't need to be fetched.
-    } else {
-        echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connectionW']->error; 
-    }
+    querySQL($sqlNewComment, $GLOBALS['connectionW'], false);
 }
 
 require_once "php/helperFunctions.php";
 
-$clientId = filter_input(INPUT_POST, "clientId");
-$orderId = filter_input(INPUT_POST, "hiddenId");
-$orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
-$phone = filter_input(INPUT_POST, "numPhone");
-$email = filter_input(INPUT_POST, "emailAddr");
-$nextDueDate = filter_input(INPUT_POST, "nextDueDate");
-$unpaidReason = filter_input(INPUT_POST, "unpaidReason");
+$clientId = filter_input(INPUT_GET, "clientId");
+$orderId = filter_input(INPUT_GET, "hiddenId");
+$orderIdShort = filter_input(INPUT_GET, "hiddenIdShort");
+$phone = filter_input(INPUT_GET, "numPhone");
+$email = filter_input(INPUT_GET, "emailAddr");
+$nextDueDate = filter_input(INPUT_GET, "nextDueDate");
+$unpaidReason = filter_input(INPUT_GET, "unpaidReason");
 
 $unpaidReason = sanitizeInput($unpaidReason);
 
-$credentials = getCredentials("credentials.txt");
+$credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -101,7 +77,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credentialsW = getCredentials("credentialsW.txt");
+$credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],
@@ -123,9 +99,8 @@ if (mysqli_connect_error()) {
 
     $tmpFile = $_FILES['fileUpload']['tmp_name'];
     $file = $_FILES['fileUpload']['name'];
+    $file = skipAccents($file);
     newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
-    echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
-    echo "<a  href=\"../index.php\">Retourner au menu</a>";
 
     $connectionR->close();
     $connectionW->close();
