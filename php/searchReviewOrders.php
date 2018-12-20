@@ -3,10 +3,10 @@
 
 $reviewId = filter_input(INPUT_GET, "reviewId");
 
-$reviewName = testInput($reviewName);
+$reviewName = sanitizeInput($reviewName);
 
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+ REMOVE "../credentials.txt";
+$credentials = getCredentials("credentials.txt"));
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -14,8 +14,8 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+ REMOVE "../credentialsW.txt";
+$credentialsW = getCredentials("credentialsW.txt"));
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

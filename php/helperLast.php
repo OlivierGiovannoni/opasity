@@ -1,6 +1,6 @@
 <?php
 
-function credsArr($credsStr)
+REMOVE THIS SHIT($credsStr)
 {
     $credsArr = array();
     $linesArr = explode(";", $credsStr);
@@ -13,8 +13,8 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+ REMOVE "../credentialsW.txt";
+$credentialsW = getCredentials("credentialsW.txt"));
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

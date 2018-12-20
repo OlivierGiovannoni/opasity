@@ -1,27 +1,8 @@
 <?php
 
-$orderId = filter_input(INPUT_POST, "hiddenId");
-$orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
-$paidStr = filter_input(INPUT_POST, "hiddenPaid");
-$paidBase = filter_input(INPUT_POST, "hiddenPaidBase");
-$comment = filter_input(INPUT_POST, "comment");
-$clientId = NULL;
+$orderId = filter_input(INPUT_POST, "id");
 
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
-
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credentials = getCredentials("credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -29,8 +10,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+$credentialsW = getCredentials("credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],
@@ -59,7 +39,7 @@ function findReview($infoId)
 {
     $sqlReviewInfo = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
     if ($resultReviewInfo = $GLOBALS['connectionR']->query($sqlReviewInfo)) {
-
+        $rowReviewInfo = querySQL($sqlReviewInfo);
         $rowReviewInfo = mysqli_fetch_array($resultReviewInfo);
         $finalId = $rowReviewInfo['Revue_id'];
         $sqlReview = "SELECT id,Nom,Annee FROM webcontrat_revue WHERE id='$finalId';";

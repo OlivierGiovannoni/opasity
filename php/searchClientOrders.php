@@ -4,8 +4,7 @@ $clientId = filter_input(INPUT_GET, "clientId");
 
 require_once 'helperFunctions.php';
 
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credentials = getCredentials("credentials.txt"));
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -13,8 +12,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+$credentialsW = getCredentials("credentialsW.txt"));
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

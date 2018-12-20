@@ -1,61 +1,13 @@
 <?php
 
-function testInput($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
-$clientId = filter_input(INPUT_POST, "clientId");
-$orderId = filter_input(INPUT_POST, "hiddenId");
-$orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
-$phone = filter_input(INPUT_POST, "numPhone");
-$email = filter_input(INPUT_POST, "emailAddr");
-$nextDueDate = filter_input(INPUT_POST, "nextDueDate");
-$unpaidReason = filter_input(INPUT_POST, "unpaidReason");
-
-$unpaidReason = testInput($unpaidReason);
-
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
-
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
-
-$connectionR = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
-
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
-
-$connectionW = new mysqli(
-    $credentialsW['hostname'],
-    $credentialsW['username'],
-    $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
-
 function uploadFile($tmpFile, $fileName, $orderId)
 {
     $fileDirectory = "files/" . $orderId . "/";
     $newFile = $fileDirectory . str_replace(" ", "_", $fileName);
-    $newFile = $fileDirectory . str_replace("é", "e", $newFile);
-    $newFile = $fileDirectory . str_replace("è", "e", $newFile);
-    $newFile = $fileDirectory . str_replace("°", "-", $newFile);
-    //$newFile = $fileDirectory . $fileName;
+    /* $newFile = $fileDirectory . str_replace("é", "e", $newFile); */
+    /* $newFile = $fileDirectory . str_replace("è", "e", $newFile); */
+    /* $newFile = $fileDirectory . str_replace("°", "-", $newFile); */
+    $newFile = $fileDirectory . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
         return ("NULL");
@@ -127,9 +79,35 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     } else {
         echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connectionW']->error; 
     }
-    $GLOBALS['connectionR']->close();
-    $GLOBALS['connectionW']->close();
 }
+
+require_once "php/helperFunctions.php";
+
+$clientId = filter_input(INPUT_POST, "clientId");
+$orderId = filter_input(INPUT_POST, "hiddenId");
+$orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
+$phone = filter_input(INPUT_POST, "numPhone");
+$email = filter_input(INPUT_POST, "emailAddr");
+$nextDueDate = filter_input(INPUT_POST, "nextDueDate");
+$unpaidReason = filter_input(INPUT_POST, "unpaidReason");
+
+$unpaidReason = sanitizeInput($unpaidReason);
+
+$credentials = getCredentials("credentials.txt");
+
+$connectionR = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']); // CONNEXION A LA DB READ
+
+$credentialsW = getCredentials("credentialsW.txt");
+
+$connectionW = new mysqli(
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -148,6 +126,9 @@ if (mysqli_connect_error()) {
     newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
     echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
     echo "<a  href=\"../index.php\">Retourner au menu</a>";
+
+    $connectionR->close();
+    $connectionW->close();
 }
 
 ?>

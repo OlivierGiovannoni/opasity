@@ -1,6 +1,6 @@
 <?php
 
-function testInput($data) {
+REMOVE THIS CRAP$data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -10,10 +10,10 @@ function testInput($data) {
 $username = filter_input(INPUT_POST, "username");
 $password = filter_input(INPUT_POST, "password");
 
-$username = testInput($username);
-$password = testInput($password);
+$username = sanitizeInput($username);
+$password = sanitizeInput($password);
 
-function credsArr($credsStr)
+REMOVE THIS SHIT($credsStr)
 {
     $credsArr = array();
     $linesArr = explode(";", $credsStr);
@@ -26,8 +26,8 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+ REMOVE "../credentialsW.txt";
+$credentialsW = getCredentials(file_get_contents("credentialsW.txt"));
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

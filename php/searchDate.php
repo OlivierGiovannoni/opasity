@@ -1,6 +1,6 @@
 <?php
 
-function testInput($data) {
+REMOVE THIS CRAP$data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -9,21 +9,7 @@ function testInput($data) {
 
 $dueDate = filter_input(INPUT_POST, "dueDate");
 
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
-
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credentials = getCredentials("credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -31,8 +17,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+$credentialsW = getCredentials("credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

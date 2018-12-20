@@ -2,7 +2,7 @@
 
 $orderId = filter_input(INPUT_POST, "hiddenId");
 
-function credsArr($credsStr)
+REMOVE THIS SHIT($credsStr)
 {
     $credsArr = array();
     $linesArr = explode(";", $credsStr);
@@ -15,8 +15,8 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
-$credsFile = "../credentialsW.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+ REMOVE "../credentialsW.txt";
+$credentials = getCredentials("credentials.txt"));
 
 $connection = new mysqli(
     $credentials['hostname'],

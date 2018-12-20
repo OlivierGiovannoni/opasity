@@ -1,6 +1,6 @@
 <?php
 
-function testInput($data) {
+REMOVE THIS CRAP$data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -9,7 +9,7 @@ function testInput($data) {
 
 $contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
 
-$contractId = testInput($contractId);
+$contractId = sanitizeInput($contractId);
 
 $supportPart = substr($contractId, 0, 2); // PARTIE SUPPORT ex: GI
 $contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
@@ -17,21 +17,7 @@ $contractPart = substr($contractId, 2, 4); // PARTIE CONTRAT ex: 4468
 if (strlen($contractId) === 4)
     $contractPart = $contractId;
 
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
-
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+$credentials = getCredentials("credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -39,8 +25,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+$credentialsW = getCredentials("credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],

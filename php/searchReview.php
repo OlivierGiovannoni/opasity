@@ -1,6 +1,6 @@
 <?php
 
-function testInput($data) {
+REMOVE THIS CRAP$data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -10,9 +10,9 @@ function testInput($data) {
 $reviewName = filter_input(INPUT_POST, "reviewName"); // NOM REVUE ex: Ann Mines
 $getPaid = filter_input(INPUT_POST, "paidBool");
 
-$reviewName = testInput($reviewName);
+$reviewName = sanitizeInput($reviewName);
 
-function credsArr($credsStr)
+REMOVE THIS SHIT($credsStr)
 {
     $credsArr = array();
     $linesArr = explode(";", $credsStr);
@@ -25,8 +25,8 @@ function credsArr($credsStr)
     return ($credsArr);
 }
 
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+ REMOVE "../credentials.txt";
+$credentials = getCredentials("credentials.txt"));
 
 $connection = new mysqli(
     $credentials['hostname'],

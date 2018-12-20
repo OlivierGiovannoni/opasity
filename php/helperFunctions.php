@@ -1,8 +1,10 @@
+<?php
+
 /*
 ** Parameters: String
 ** Return: String
 */
-function testInput($data) {
+function sanitizeInput($data) {
     $data = trim($data);
     $data = stripslashes($data);
     $data = htmlspecialchars($data);
@@ -13,8 +15,9 @@ function testInput($data) {
 ** Parameters: String
 ** Return: Array
 */
-function getCredentials($credsStr)
+function getCredentials($credsFile)
 {
+    $credsStr = file_get_contents($credsFile);
     $credsArr = array();
     $linesArr = explode(";", $credsStr);
     $linesArr = explode("\n", $linesArr[0]);
@@ -27,16 +30,18 @@ function getCredentials($credsStr)
 }
 
 /*
-** Parameters: String, Object
+** Parameters: String, Object, Bool, Bool
 ** Return: Array
 */
-function querySQL($query, $connection)
+function querySQL($query, $connection, $first = false, $results = true)
 {
-    $sqlPaid = "SELECT Reglement FROM $table WHERE Commande LIKE '$orderId';";
-    $result = $connection->query($sql);
-    if ($result) {
+    $result = $connection->query($query);
+    if ($result && $results === true) {
 
-        $rows = mysqli_fetch_all($result);
+        if ($first === false)
+            $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+        else
+            $rows = mysqli_fetch_array($result, MYSQLI_ASSOC);
         return ($rows);
     }
     echo "MySQL query error:<br>Query: " . $sql . "<br>Error: " . $connection->error . "<br>";
@@ -72,6 +77,47 @@ function generateForm($target, $action, $method, $inputs)
 }
 
 /*
+** Parameters: String
+** Return: String
+*/
+function getOrderIdShort($orderId)
+{
+    $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
+    return ($orderIdShort);
+}
+
+/*
+** Parameters: String, Bool
+** Return: String
+*/
+function generateCell($data, $header = false)
+{
+    $open = ($header === true ? "<th>" : "<td>");
+    $close = ($header === true ? "</th>" : "</td>");
+    $cell = $open . $data . $close;
+    return ($cell);
+}
+
+/*
+** Parameters: Array, Bool
+** Return: Array
+*/
+function generateRow($cells, $header)
+{
+    $row = array();
+    $rowOpen = "<tr>";
+    array_push($row, $rowOpen);
+    foreach ($cells as $cell) {
+
+        array_push($row, $cell);
+    }
+    $rowClose = "</tr>";
+    array_push($form, $rowClose);
+    return ($row);
+
+}
+
+/*
 ** Parameters: String, String, String
 ** Return: String
 */
@@ -80,3 +126,5 @@ function generateLink($href, $target, $text)
     $link = "<a href=\"" . $href . "\" target=\"" . $target . "\">" . $text . "</a>";
     return ($link);
 }
+
+?>
