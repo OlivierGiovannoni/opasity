@@ -41,14 +41,14 @@ function login($username, $password)
     if ($resultLogin = $GLOBALS['connectionW']->query($sqlLogin)) {
         $total = mysqli_num_rows($resultLogin);
         if ($total === 0) {
-            echo "User doesn't exist";
+            echo "L'utilisateur n'existe pas";
             return ;
         }
         $rowLogin = mysqli_fetch_array($resultLogin);
         /* $check = password_verify($password, $rowLogin['passwordhash']); // Check if password hash corresponds */
         /* if ($check === FALSE) { // If not, throw */
         if ($password !== $rowLogin['passwordhash']) {
-            echo "Invalid password";
+            echo "Mot de passe incorrect";
             return ;
         }
         $now = date("Y-m-d h:i:s");
@@ -59,9 +59,9 @@ function login($username, $password)
         } else {
             echo "Query error: ". $sqlRefresh ." // ". $GLOBALS['connection']->error;
         }
-        echo "Login success";
-    } else {
-        echo "Query error: ". $sqlLogin ." // ". $GLOBALS['connectionW']->error;
+        setcookie("author", $username, time() + 3600, "/");
+        echo "Connexion réussie. Vous pouvez maintenant utiliser ";
+        echo "<a href=\"/index.php\">l'outil.</a>";
     }
 }
 

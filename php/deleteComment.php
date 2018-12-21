@@ -81,10 +81,20 @@ if (mysqli_connect_error()) {
     if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
-    $prevId = selectPrevious($commId);
-    deleteComment($commId);
-    if ($prevId != -1)
-        updatePrevious($prevId);
+    if (isset($_COOKIE['author'])) {
+
+        $prevId = selectPrevious($commId);
+        deleteComment($commId);
+        if ($prevId != -1)
+            updatePrevious($prevId);
+    } else {
+
+        $loginHTML = file_get_contents("../html/login.html");
+        echo "Veuillez vous connecter pour pouvoir utiliser cet outil.";
+        echo $loginHTML;
+    }
+    $connectionR->close();
+    $connectionW->close();
 }
 
 ?>

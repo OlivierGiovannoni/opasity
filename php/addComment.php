@@ -134,9 +134,10 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
         echo "Query error: ". $sqlNewLast ." // ". $GLOBALS['connectionW']->error; 
     }
 
+    $author = $_COOKIE['author'];
     $newFile = uploadFile($tmpFile, $file, $orderId);
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
-    $rowValues = "\"$unpaidReason\",'dev','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
+    $rowValues = "\"$unpaidReason\",'$author','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
     if ($resultNewComment = $GLOBALS['connectionW']->query($sqlNewComment)) {
 
@@ -144,8 +145,6 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     } else {
         echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connectionW']->error; 
     }
-    $GLOBALS['connectionR']->close();
-    $GLOBALS['connectionW']->close();
 }
 
 if (mysqli_connect_error()) {
@@ -160,12 +159,24 @@ if (mysqli_connect_error()) {
     else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
-    $tmpFile = $_FILES['fileUpload']['tmp_name'];
-    $file = $_FILES['fileUpload']['name'];
-	$file = skip_accents($file);
-    newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
-    echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
-    echo "<a  href=\"../index.php\">Retourner au menu</a>";
+    if (isset($_COOKIE['author'])) {
+        $connectionR->close();
+        $connectionW->close();
+        $connectionR->close();
+        $connectionW->close();
+
+        $tmpFile = $_FILES['fileUpload']['tmp_name'];
+        $file = $_FILES['fileUpload']['name'];
+        $file = skip_accents($file);
+        newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
+        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
+        echo "<a  href=\"../index.php\">Retourner au menu</a>";
+    } else {
+    
+        $loginHTML = file_get_contents("../html/login.html");
+        echo "Veuillez vous connecter pour pouvoir utiliser cet outil.";
+        echo $loginHTML;
+    }
 }
 
 ?>

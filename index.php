@@ -1,9 +1,5 @@
 <?php
 
-$mainHTML = file_get_contents("main.html");
-echo $mainHTML;
-$today = date("Y-m-d");
-
 function credsArr($credsStr)
 {
     $credsArr = array();
@@ -163,43 +159,56 @@ function findDates($dueDate)
     } else {
         echo "Query error: ". $sqlDate ." // ". $GLOBALS['connectionR']->error;
     }
-    $GLOBALS['connectionR']->close();
-    $GLOBALS['connectionW']->close();
 }
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $newDate = date("d/m/Y", strtotime($today));
 
-    echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
-    echo "<table>";
-    echo "<tr>";
-    echo "<th>Contrat</th>";
-    echo "<th>DernierCom</th>";
-    echo "<th>Revue</th>";
-    echo "<th>Prix HT</th>";
-    echo "<th>Nom de l'entreprise</th>";
-    echo "<th>Payé base</th>";
-    echo "<th>E-mail</th>";
-    echo "<th>Commentaire</th>";
-    echo "<th>Date commentaire</th>";
-    echo "<th>Prochaine relance</th>";
-    echo "<th>Supprimer commentaire</th>";
-    echo "</tr>";
+    if (isset($_COOKIE['author'])) {
 
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
-    $charsetW = mysqli_set_charset($connectionW, "utf8");
+        $mainHTML = file_get_contents("html/index.html");
+        echo $mainHTML;
+        $today = date("Y-m-d");
 
-    if ($charsetR === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
-    else if ($charsetW === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionW->error);
+        $newDate = date("d/m/Y", strtotime($today));
 
-    findDates($today);
+        echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
+        echo "<table>";
+        echo "<tr>";
+        echo "<th>Contrat</th>";
+        echo "<th>DernierCom</th>";
+        echo "<th>Revue</th>";
+        echo "<th>Prix HT</th>";
+        echo "<th>Nom de l'entreprise</th>";
+        echo "<th>Payé base</th>";
+        echo "<th>E-mail</th>";
+        echo "<th>Commentaire</th>";
+        echo "<th>Date commentaire</th>";
+        echo "<th>Prochaine relance</th>";
+        echo "<th>Supprimer commentaire</th>";
+        echo "</tr>";
 
-    echo "</table>";
-    echo "</html>";
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+        $charsetW = mysqli_set_charset($connectionW, "utf8");
+
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+        else if ($charsetW === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionW->error);
+
+        findDates($today);
+
+        echo "</table><br><br><br>";
+    } else {
+
+        $loginHTML = file_get_contents("html/login.html");
+        echo "Veuillez vous connecter pour pouvoir utiliser cet outil.";
+        echo $loginHTML;
+    }
+    $connectionR->close();
+    $connectionW->close();
+    //echo "</html>";
 }
 
 ?>

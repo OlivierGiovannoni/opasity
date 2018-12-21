@@ -70,6 +70,9 @@ function register($fname, $lname, $username, $email, $password, $pwdrepeat)
     } else {
         echo "Query error: ". $sqlRegister ." // ". $GLOBALS['connectionW']->error; 
     }
+    $loginHTML = file_get_contents("../html/login.html");
+    echo "Le compte a été crée avec succès. Veuillez vous connecter.";
+    echo $loginHTML;
 }
 
 register($fname, $lname, $username, $email, $password, $pwdrepeat);
