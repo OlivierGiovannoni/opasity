@@ -31,11 +31,22 @@
       </div>      
 
       <div>
+	<h2>Recherche par montant:</h2>
+	<form target="_blank" name="searchPrice" id="formOrder" action="php/searchPrice.php" method="get">
+
+    	  <label for="price">Montant du contrat:</label><br>
+    	  <input type="text" name="price" id="price" placeholder="Montant" required><br><br>
+
+    	  <input type="submit" id="submit" value="Chercher">
+	</form>
+      </div>      
+
+      <div>
 	<h2>Recherche par date de relance:</h2>
 	<form target="_blank" name="searchDate" id="formDate" action="php/searchDate.php" method="get">
 
 	  <label for="reviewName">Date de relance:</label><br>
-	  <input type="date" name="dueDate" id="dueDate" placeholder="Date de relance" required><br><br>
+	  <input type="date" name="dueDate" id="dueDate" placeholder="Date de relance (AAAA-MM-JJ)" required><br><br>
 
 	  <input type="submit" id="submit" value="Chercher">
 	</form>
