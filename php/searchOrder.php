@@ -177,10 +177,6 @@ function findOrder($supportPart, $contractPart, $contractId)
         $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC;";
     else if (strlen($contractId) === 2)
         $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC;";
-    else if (strpos($contractId, "€") != false) {
-        $contractId = str_replace("€", "", $contractId);
-        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$contractId AND Reglement='' ORDER BY DateEmission DESC;";
-    }
     else
         return ;
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
