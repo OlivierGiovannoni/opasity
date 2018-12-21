@@ -143,7 +143,6 @@ function listComments()
                 continue ;
             $contact = getContactName($GLOBALS['orderId']);
             echo "<tr><td>" . $rowComment['Commentaire'] . "</td>";
-            echo "<td>" . $rowComment['DernierCom'] . "</td>";
             echo "<td>" . $rowComment['Auteur'] . "</td>";
             echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
 
@@ -205,7 +204,6 @@ if (mysqli_connect_error()) {
     echo "<table>";
     echo "<tr>";
     echo "<th>Commentaire</th>";
-    echo "<th>DernierCom</th>";
     echo "<th>Auteur</th>";
     echo "<th>Date commentaire</th>";
     echo "<th>Nom de l'entreprise</th>";
