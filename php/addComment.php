@@ -145,7 +145,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     } else {
         echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connectionW']->error; 
     }
-    header("Location: /php/allComments.php");
+    header("Location: allComments.php");
 }
 
 if (mysqli_connect_error()) {
@@ -160,13 +160,13 @@ if (mysqli_connect_error()) {
     else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
-        $tmpFile = $_FILES['fileUpload']['tmp_name'];
-        $file = $_FILES['fileUpload']['name'];
-        $file = skip_accents($file);
-        newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
+    $tmpFile = $_FILES['fileUpload']['tmp_name'];
+    $file = $_FILES['fileUpload']['name'];
+    $file = skip_accents($file);
+    newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
 
-        $connectionR->close();
-        $connectionW->close();
+    $connectionR->close();
+    $connectionW->close();
 }
 
 ?>

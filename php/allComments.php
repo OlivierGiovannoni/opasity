@@ -49,7 +49,7 @@ function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone
     // Get file data.
     $htmlFileData = file_get_contents($htmlFileName);
     // Check if order is paid, to choose whether to display the <form> or not.
-    if ($paidStr == "") {
+    /* if ($paidStr == "") { */
         // Uncomment <form> region.
         $htmlFileData = str_replace("<!-- UNPAID", "", $htmlFileData);
         $htmlFileData = str_replace("-->", "", $htmlFileData);
@@ -58,7 +58,7 @@ function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone
         $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
         $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
         $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
-    }
+    /* } */
     echo $htmlFileData;
 }
 

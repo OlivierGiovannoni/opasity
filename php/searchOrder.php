@@ -183,7 +183,6 @@ function findOrder($supportPart, $contractPart, $contractId)
     }
     else
         return ;
-    echo $sqlOrder;
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
