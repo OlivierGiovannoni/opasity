@@ -109,7 +109,7 @@ function isItPaid($orderId)
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement,DernierCom FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
+    $sqlDate = "SELECT Commentaire_id,Commentaire,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Fichier,Reglement FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
     if ($resultDate = $GLOBALS['connectionW']->query($sqlDate)) {
 
         while ($rowDate = mysqli_fetch_array($resultDate)) {
@@ -137,8 +137,10 @@ function findDates($dueDate)
             else
                 echo "<td id=\"isNotPaid\">Non</td>";
             $mail = $rowDate['AdresseMail'];
+            $file = $rowDate['Fichier'];
             echo "<td><a href=\"mailto:$mail\">" . $mail . "</a></td>";
             echo "<td>" . $rowDate['Commentaire'] . "</td>";
+            echo "<td><a href=\"$file\">" . basename($file) . "</a></td>";
             $newDate = date("d/m/Y", strtotime($rowDate['Date']));
             echo "<td>" . $newDate . "</td>";
             $newDate = date("d/m/Y", strtotime($rowDate['Prochaine_relance']));
@@ -182,6 +184,7 @@ if (mysqli_connect_error()) {
         echo "<th>Payé base</th>";
         echo "<th>E-mail</th>";
         echo "<th>Commentaire</th>";
+        echo "<th>Fichier</th>";
         echo "<th>Date commentaire</th>";
         echo "<th>Prochaine relance</th>";
         echo "<th>Supprimer commentaire</th>";
