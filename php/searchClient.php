@@ -7,7 +7,7 @@ function testInput($data) {
     return $data;
 }
 
-$clientName = filter_input(INPUT_POST, "clientName");
+$clientName = filter_input(INPUT_GET, "clientName");
 
 $clientName = testInput($clientName);
 

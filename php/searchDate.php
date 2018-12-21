@@ -7,7 +7,7 @@ function testInput($data) {
     return $data;
 }
 
-$dueDate = filter_input(INPUT_POST, "dueDate");
+$dueDate = filter_input(INPUT_GET, "dueDate");
 
 function credsArr($credsStr)
 {

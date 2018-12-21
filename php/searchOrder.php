@@ -7,7 +7,7 @@ function testInput($data) {
     return $data;
 }
 
-$contractId = filter_input(INPUT_POST, "contractId"); // CODE CONTRAT ex: GI4468
+$contractId = filter_input(INPUT_GET, "contractId"); // CODE CONTRAT ex: GI4468
 
 $contractId = testInput($contractId);
 

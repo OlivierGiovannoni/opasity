@@ -7,8 +7,7 @@ function testInput($data) {
     return $data;
 }
 
-$reviewName = filter_input(INPUT_POST, "reviewName"); // NOM REVUE ex: Ann Mines
-$getPaid = filter_input(INPUT_POST, "paidBool");
+$reviewName = filter_input(INPUT_GET, "reviewName"); // NOM REVUE ex: Ann Mines
 
 $reviewName = testInput($reviewName);
 

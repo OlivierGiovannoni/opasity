@@ -145,6 +145,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     } else {
         echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connectionW']->error; 
     }
+    header("Location: /php/allComments.php");
 }
 
 if (mysqli_connect_error()) {
@@ -159,24 +160,13 @@ if (mysqli_connect_error()) {
     else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
-    if (isset($_COOKIE['author'])) {
-        $connectionR->close();
-        $connectionW->close();
-        $connectionR->close();
-        $connectionW->close();
-
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
         $file = skip_accents($file);
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
-        echo "Le commentaire à été envoyé. Vous pouvez désormais fermer cette page. ";
-        echo "<a  href=\"../index.php\">Retourner au menu</a>";
-    } else {
-    
-        $loginHTML = file_get_contents("../html/login.html");
-        echo "Veuillez vous connecter pour pouvoir utiliser cet outil.";
-        echo $loginHTML;
-    }
+
+        $connectionR->close();
+        $connectionW->close();
 }
 
 ?>
