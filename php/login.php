@@ -37,7 +37,7 @@ $connectionW = new mysqli(
 
 function login($username, $password)
 {
-    $sqlLogin = "SELECT passwordhash FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
+    $sqlLogin = "SELECT passwordhash,superuser FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
     if ($resultLogin = $GLOBALS['connectionW']->query($sqlLogin)) {
         $total = mysqli_num_rows($resultLogin);
         if ($total === 0) {
@@ -51,6 +51,7 @@ function login($username, $password)
             echo "Mot de passe incorrect";
             return ;
         }
+        $superuser = rowLogin['superuser'];
         $now = date("Y-m-d h:i:s");
         $sqlRefresh = "UPDATE webcontrat_utilisateurs SET lastLogin='$now' WHERE username='$username';";
         if ($resultRefresh = $GLOBALS['connectionW']->query($sqlRefresh)) {
@@ -60,6 +61,7 @@ function login($username, $password)
             echo "Query error: ". $sqlRefresh ." // ". $GLOBALS['connection']->error;
         }
         setcookie("author", $username, time() + 3600, "/");
+        setcookie("connection", $superuser, time() + 3600, "/");
         header("Location: ../index.php");
     }
 }
