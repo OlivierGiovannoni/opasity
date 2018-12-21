@@ -10,6 +10,7 @@ function testInput($data) {
 $reviewName = filter_input(INPUT_POST, "reviewName");
 $hiddenId = filter_input(INPUT_POST, "hiddenId");
 $published = filter_input(INPUT_POST, "published");
+$getPaid = filter_input(INPUT_POST, "hiddenPaid");
 
 $reviewName = testInput($reviewName);
 
