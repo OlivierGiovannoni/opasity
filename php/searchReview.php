@@ -48,13 +48,12 @@ function findReview()
             $curr = array('Name' => $currReviewName, 'Id' => $currReviewId, 'Year' => $currReviewYear);
 
             $reviewForm = "<form target=\"_blank\" action=\"searchReviewOrders.php\" method=\"post\">";
-            $getPaidOrders = "<input type=\"hidden\" name=\"hiddenPaid\" value=\"" . $GLOBALS['getPaid'] . "\">";
             $pubHidden = "<input type=\"hidden\" name=\"published\" value=\"" . $published . "\">";
             $reviewHidden = "<input type=\"hidden\" name=\"hiddenId\" value=\"" . $curr['Id'] . "\">";
             $reviewInput = "<input type=\"submit\" name=\"reviewName\" value=\"" . $curr['Name'] . ' ' . $curr['Year'] . "\">";
             $closeForm = "</form>";
 
-            echo "<tr><td>" . $reviewForm . $getPaidOrders . $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
+            echo "<tr><td>" . $reviewForm .  $pubHidden . $reviewHidden . $reviewInput . $closeForm . "</td>";
 
             $newDate = date("d/m/Y", strtotime($rowReview['DateCreation']));
             if ($published == 1)
