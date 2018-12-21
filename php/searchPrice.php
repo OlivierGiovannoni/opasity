@@ -168,9 +168,9 @@ function findOrder($price)
 {
     $price = str_replace("€", "", $price);
     if ($GLOBALS['getPaid'] == "on")
-        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price ORDER BY DateEmission DESC LIMIT 100;";
     else
-        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price AND Reglement='' ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price AND Reglement='' ORDER BY DateEmission DESC LIMIT 100;";
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
