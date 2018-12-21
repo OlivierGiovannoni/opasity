@@ -145,7 +145,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     } else {
         echo "Query error: ". $sqlNewComment ." // ". $GLOBALS['connectionW']->error; 
     }
-    header("Location: allComments.php");
+    header("Location: ../index.php");
 }
 
 if (mysqli_connect_error()) {

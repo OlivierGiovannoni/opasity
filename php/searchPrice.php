@@ -7,12 +7,10 @@ function testInput($data) {
     return $data;
 }
 
-$price = filter_input(INPUT_GET, "price");
+$price = filter_input(INPUT_POST, "price");
+$getPaid = filter_input(INPUT_POST, "hiddenPaid");
 
-$contractId = testInput($contractId);
-
-if (strlen($contractId) === 4)
-    $contractPart = $contractId;
+$price = testInput($price);
 
 function credsArr($credsStr)
 {
@@ -169,8 +167,10 @@ function findReview($infoId)
 function findOrder($price)
 {
     $price = str_replace("€", "", $price);
-    $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price ORDER BY DateEmission DESC;";
-    //$sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price AND Reglement='' ORDER BY DateEmission DESC;";
+    if ($GLOBALS['getPaid'] == "on")
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price ORDER BY DateEmission DESC;";
+    else
+        $sqlOrder = "SELECT DateEmission,Commande,Reglement FROM webcontrat_contrat WHERE PrixHT=$price AND Reglement='' ORDER BY DateEmission DESC;";
     if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
 
         while ($rowOrder = mysqli_fetch_array($resultOrder)) {
@@ -214,11 +214,21 @@ if (mysqli_connect_error()) {
 } else {
     $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("{type}", "contrat", $style);
-    $style = str_replace("{query}", $contractId, $style);
+    $style = str_replace("{type}", "montant", $style);
+    $style = str_replace("{query}", $price, $style);
+
+    $showPaid = file_get_contents("../html/showPaid.html");
+
+    $currFile = basename(__FILE__);
+    $showPaid = str_replace("{action.php}", $currFile, $showPaid);
+    $showPaid = str_replace("{method}", "post", $showPaid);
+    $showPaid = str_replace("{price}", $price, $showPaid);
+    $showPaid = str_replace("{getPaid}", ($getPaid == "on" ? "" : "on"), $showPaid);
+    $showPaid = str_replace("{btnText}", ($getPaid == "on" ? "Afficher tout les non-reglés" : "Afficher tout les contrats"), $showPaid);
 
     echo $style;
     echo "<h1>Contrats trouvés:</h1>";
+    echo $showPaid;
     echo "<table>";
     echo "<tr>";
     echo "<th>Contrat</th>";

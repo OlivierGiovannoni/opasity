@@ -243,6 +243,7 @@ if (mysqli_connect_error()) {
 
     $currFile = basename(__FILE__);
     $showPaid = str_replace("{action.php}", $currFile, $showPaid);
+    $showPaid = str_replace("{method}", "post", $showPaid);
     $showPaid = str_replace("{reviewName}", $reviewName, $showPaid);
     $showPaid = str_replace("{hiddenId}", $hiddenId, $showPaid);
     $showPaid = str_replace("{published}", $published, $showPaid);
