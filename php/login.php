@@ -60,7 +60,7 @@ function login($username, $password)
             echo "Query error: ". $sqlRefresh ." // ". $GLOBALS['connection']->error;
         }
         setcookie("author", $username, time() + 3600, "/");
-        header("Location: ../index.php"); //FFS
+        header("Location: ../index.php");
     }
 }
 

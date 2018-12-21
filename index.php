@@ -131,7 +131,6 @@ function findDates($dueDate)
             echo "<td>" . $commentForm . $paidBaseHidden . $idHidden . $idShortHidden . $commentInput . $closeForm . "</td>";
 
             $final = findReview($orderId);
-            echo "<td>" . $rowDate['DernierCom'] . "</td>";
             getOrderDetails($orderId, $orderIdShort, $final);
             if ($rowDate['Reglement'] == "R")
                 echo "<td id=\"isPaid\">Oui</td>";
@@ -177,7 +176,6 @@ if (mysqli_connect_error()) {
         echo "<table>";
         echo "<tr>";
         echo "<th>Contrat</th>";
-        echo "<th>DernierCom</th>";
         echo "<th>Revue</th>";
         echo "<th>Prix HT</th>";
         echo "<th>Nom de l'entreprise</th>";
