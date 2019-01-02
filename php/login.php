@@ -51,7 +51,7 @@ function login($username, $password)
             echo "Mot de passe incorrect";
             return ;
         }
-        $superuser = rowLogin['superuser'];
+        $superuser = $rowLogin['superuser'];
         $now = date("Y-m-d h:i:s");
         $sqlRefresh = "UPDATE webcontrat_utilisateurs SET lastLogin='$now' WHERE username='$username';";
         if ($resultRefresh = $GLOBALS['connectionW']->query($sqlRefresh)) {
