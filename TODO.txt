@@ -10,7 +10,6 @@ DONE:
 --Mail Column with MAILTO: searchReviewOrders.php and index.php
 --Paid checkbox becomes a button, with validation to avoid mistakes.
 --If 'Prochaine relance' input date is empty and contract is not paid yet, it will be automatically set to 2 weeks from now.
---New color for cancelled orders. REMOVED
 --COMPLETELY REMOVED dark mode.
 --Renamed "Nom du contact" with "Nom de l'entreprise" on main page.
 --Add "Parue" or "Non-parue" in Green or Red on searchReviewOrders.php page.
@@ -30,13 +29,17 @@ DONE:
 --Added "Fichier" column.
 --Displayed only last comment for "relances" per order using "DernierCom" column.
 --Hid orders with negative prices.
---Purged dark mode.
+--PURGED dark mode.
 --Fixed \" on textarea on addComments.php page.
 --Added "Payé base & Payé compta" on every page.
 --Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
 --Added 'Relances du jour' Unpaid AND Date <= TODAY.
 --Automatically filled phone number using "{phone}" on allComments.php
 --Now order can be set to Paid/Unpaid even if there was no comment, using fake comment INSERT.
+--Added comment "Author" when login system is done.
+--Refactored code, added helper functions and moved duplicate functions to helperFunctions.php
+--Added "New File Name" temporarily until autoreplace gets added
+--Changed all POST to GET and now using <a> links instead of hidden forms.
 
 BEFORE TODAY:
 --Invalid data on index.php page ???
@@ -44,31 +47,14 @@ BEFORE TODAY:
 --Auto-upload Dropzone
 --Validated and non-validated "relances", meaning, client has been succesfully reached or not, non-validated push to x days later ?
 
-WAITING:
---Create 'refactor' branch to refactor code and style. Make a generic code generator script with generic form and input generator using Arrays.
---Now showing client orders before phone on searchClient.php.
---Change "Paru sur" button to <a> if data is in cookies.
-
-URGENT:
---Use COOKIES instead of smuggling HIDDEN DATA.
---Change POST to GET to use <a> elements instead of <form> elements with hidden <input>s. Mixed with COOKIES.
---Refactor code.
+TODO:
+--SUPERUSER
+--OCR
+--Increment filenames on allComments.php if 2 filenames are same. fileX.y to fileX1.y if already exists. NOW NOW
+--Filter EMPTY orders without comments on reviews that are "Paru".
 --Edit reminder date if clicked on "edit icon" that will be added.
---Edit comment by clicking on it, or date, or CSS image button.
+--Edit or delete comment by clicking on it, or date, or CSS image button (2 icons).
 --Login system wih Groups/Profiles/Timeouts and connection logs (timeLogin/timeLogout/username/session_id) (with encrypted passwords obvv) and tasks GENERAL and USER_SPECIFIC.
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
---In addComments.php, re-arrange the iframe size, add dynamic refresh so it's easier to use.
---In addComments.html, re-arranged all the text inputs, textarea, and move comment textarea below input date 'Prochaine relance'.
 --Add "Paru non-reglé" option.
---Add comments on this shitcode that will be refactored.
---Add comment "Author" when login system is done.
---Add comment date and reminder date timestamp HH:MM:SS (h:i:s).
-
-TODO:
 --Clickable date to searchDate.php.
---Replace 'connectionR' and 'connectionW' with 'connection', delete 'credentialsW.txt'.
---Add SURFACE column.
---Date auto + effective date.
---Align the divs on main.html.
---The DOTS ! (PrixHT).
---Add 'Relances du jour' from previous days using DateAuto and DateEffective.

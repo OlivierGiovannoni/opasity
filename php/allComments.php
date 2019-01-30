@@ -1,33 +1,40 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Factures impayées</title>
-  </head>
-  <body>
 <?php
 
-$orderId = filter_input(INPUT_POST, "hiddenId");
-$orderIdShort = filter_input(INPUT_POST, "hiddenIdShort");
-$paidStr = filter_input(INPUT_POST, "hiddenPaid");
-$paidBase = filter_input(INPUT_POST, "hiddenPaidBase");
-$clientId = NULL;
-
-function credsArr($credsStr)
+function listComments($orderId, $orderIdShort)
 {
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
+    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier,DernierCom FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $rowsComment = querySQL($sqlComment, $GLOBALS['connectionW']);
 
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
+    foreach ($rowsComment as $rowComment) {
+
+        if ($rowComment['Commentaire'] == "             ")
+            continue ;
+        $contact = getContactName($orderId);
+        $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
+        $mailHref = generateLink($rowComment['AdresseMail'], $rowComment['AdresseMail']);
+
+        if ($rowComment['Prochaine_relance'] == "1970-01-01" || $rowComment['Prochaine_relance'] == "0000-00-00")
+            $dateNext = "Aucune";
+        else
+            $dateNext = date("d/m/Y", strtotime($rowComment['Prochaine_relance']));
+
+        if ($rowComment['Fichier'] == "NULL")
+            $fileHref = "Aucun";
+        else
+            $fileHref = generateLink($rowComment['Fichier'], basename($rowComment['Fichier']));
+
+        $deleteLink = generateLink("deleteComment.php?id=" . $rowComment['Commentaire_id'], "Supprimer", "_self", "return confirm('Supprimer commentaire ?')"); // Create <a> link to delete comment
+
+        $cells = array($rowComment['Commentaire'], $rowComment['Auteur'], $dateComm, $contact['name'], $mailHref, $rowComment['NumTelephone'], $dateNext, $fileHref, $deleteLink);
+        $cells = generateRow($cells);
+        foreach ($cells as $cell)
+            echo $cell;
     }
-    return ($credsArr);
 }
 
-$credsFile = "../credentials.txt";
-$credentials = credsArr(file_get_contents($credsFile));
+require_once "helperFunctions.php";
+
+$credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(
     $credentials['hostname'],
@@ -35,8 +42,7 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNEXION A LA DB READ
 
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
+$credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(
     $credentialsW['hostname'],
@@ -44,190 +50,64 @@ $connectionW = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNEXION A LA DB WRITE
 
-function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone, $paidStr)
-{
-    // Get file data.
-    $htmlFileData = file_get_contents($htmlFileName);
-    // Check if order is paid, to choose whether to display the <form> or not.
-    /* if ($paidStr == "") { */
-        // Uncomment <form> region.
-        $htmlFileData = str_replace("<!-- UNPAID", "", $htmlFileData);
-        $htmlFileData = str_replace("-->", "", $htmlFileData);
-        // Replace fake variables with real values.
-        $htmlFileData = str_replace("{phone}", $phone, $htmlFileData);
-        $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
-        $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
-        $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
-    /* } */
-    echo $htmlFileData;
-}
-
-function findReview($infoId)
-{
-    $sqlReviewInfo = "SELECT Revue_id FROM webcontrat_info_revue WHERE Info_id='$infoId';";
-    if ($resultReviewInfo = $GLOBALS['connectionR']->query($sqlReviewInfo)) {
-
-        $rowReviewInfo = mysqli_fetch_array($resultReviewInfo);
-        $finalId = $rowReviewInfo['Revue_id'];
-        $sqlReview = "SELECT id,Nom,Annee FROM webcontrat_revue WHERE id='$finalId';";
-        if ($resultReview = $GLOBALS['connectionR']->query($sqlReview)) {
-
-            $rowReview = mysqli_fetch_array($resultReview);
-            $finalName = $rowReview['Nom'];
-            $finalId = $rowReview['id'];
-            $finalYear = $rowReview['Annee'];
-            $final = array('Name' => $finalName, 'Id' => $finalId, 'Year' => $finalYear);
-            return ($final);
-        } else {
-            echo "Query error: ". $sqlReview ." // ". $GLOBALS['connectionR']->error;
-        }
-    } else {
-        echo "Query error: ". $sqlReviewInfo ." // ". $GLOBALS['connectionR']->error;
-
-    }
-}
-
-function getPhoneNumber($orderId, $clientId)
-{
-    $sqlComment = "SELECT NumTelephone FROM webcontrat_commentaire WHERE Commande='$orderId' AND DernierCom=1 ORDER BY Commentaire_id DESC;";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-
-        $rowComment = mysqli_fetch_array($resultComment);
-
-        if ($rowComment['NumTelephone'] == "") {
-            $sqlPhone = "SELECT Tel FROM webcontrat_client WHERE id='$clientId' ORDER BY id DESC;";
-            if ($resultPhone = $GLOBALS['connectionR']->query($sqlPhone)) {
-                $rowPhone = mysqli_fetch_array($resultPhone);
-                return ($rowPhone['Tel']);
-            } else {
-                echo "Query error: ". $sqlPhone ." // ". $GLOBALS['connectionR']->error;
-            }
-        }
-        return ($rowComment['NumTelephone']);
-    } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
-    }
-}
-
-function getContactName($orderId)
-{
-    $sqlContactId = "SELECT Client_id,PrixHT FROM webcontrat_contrat WHERE Commande='$orderId' ORDER BY DateEmission DESC;";
-    if ($resultContactId = $GLOBALS['connectionR']->query($sqlContactId)) {
-
-        $rowContactId = mysqli_fetch_array($resultContactId);
-        $contactId = $rowContactId['Client_id'];
-        $sqlContactName = "SELECT NomContact1,NomSociete FROM webcontrat_client WHERE id='$contactId' ORDER BY DateCreation DESC;";
-        if ($resultContactName = $GLOBALS['connectionR']->query($sqlContactName)) {
-
-            $rowContactName = mysqli_fetch_array($resultContactName);
-            $contactName = $rowContactName['NomSociete'];
-            return (array('id' => $contactId, 'name' => $contactName, 'price' => $rowContactId['PrixHT']));
-        } else {
-            echo "Query error: ". $sqlContactName ." // ". $GLOBALS['connectionR']->error;
-        }
-    } else {
-        echo "Query error: ". $sqlContactId ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
-
-function listComments()
-{
-    $orderIdShort = $GLOBALS['orderIdShort'];
-    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier,DernierCom FROM webcontrat_commentaire WHERE Commande_courte='$orderIdShort' ORDER BY Commentaire_id DESC;";
-    if ($resultComment = $GLOBALS['connectionW']->query($sqlComment)) {
-
-        while ($rowComment = mysqli_fetch_array($resultComment)) {
-
-            if ($rowComment['Commentaire'] == "             ")
-                continue ;
-            $contact = getContactName($GLOBALS['orderId']);
-            echo "<tr><td>" . $rowComment['Commentaire'] . "</td>";
-            echo "<td>" . $rowComment['Auteur'] . "</td>";
-            echo "<td>" . date("d/m/Y", strtotime($rowComment['Date'])) . "</td>";
-
-            echo "<td>" . $contact['name'] . "</td>";
-            $mailHref = "<a href=\"mailto:" . $rowComment['AdresseMail'] . "\">" . $rowComment['AdresseMail'] . "</a>";
-            echo "<td>" . $mailHref . "</td>";
-            echo "<td>" . $rowComment['NumTelephone'] . "</td>";
-
-            if ($rowComment['Prochaine_relance'] == "1970-01-01" || $rowComment['Prochaine_relance'] == "0000-00-00")
-                $newDate = "Aucune";
-            else
-                $newDate = date("d/m/Y", strtotime($rowComment['Prochaine_relance']));
-            echo "<td>" . $newDate . "</td>";
-            $fileHref = "<a href=" . $rowComment['Fichier'] . ">" . basename($rowComment['Fichier']) . "</a>";
-            if ($rowComment['Fichier'] == "NULL")
-                echo "<td>Aucun</td>";
-            else
-                echo "<td>" . $fileHref . "</td>";
-
-            
-            $deleteForm = "<form action=\"deleteComment.php\" method=\"post\">";
-            $deleteId = "<input type=\"hidden\" name=\"commId\" value=\"" . $rowComment['Commentaire_id'] . "\">";
-            $deleteSub = "<input type=\"submit\" value=\"Supprimer\" name=\"delConfirm\" onclick=\"return confirm('Supprimer le commentaire?');\"><br>";
-            $closeForm = "</form>";
-
-            echo "<td>" . $deleteForm . $deleteId . $deleteSub . $closeForm . "</td></tr>";
-
-        }
-    } else {
-        echo "Query error: ". $sqlComment ." // ". $GLOBALS['connectionW']->error;
-    }
-    $GLOBALS['connectionR']->close();
-    $GLOBALS['connectionW']->close();
-}
+$orderId = filter_input(INPUT_GET, "id");
+$orderIdShort = getOrderIdShort($orderId);
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
     $style = file_get_contents("../html/allComments.html");
-
     $style = str_replace("{order}", $orderIdShort, $style);
-
     echo $style;
 
+    
     $charsetR = mysqli_set_charset($connectionR, "utf8");
     $charsetW = mysqli_set_charset($connectionW, "utf8");
-
-    $client = getContactName($orderId);
-    echo "<h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1>";
-    $revue = findReview($orderId);
-
-    echo "<h2 " . ($paidStr == "R" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidStr == "R" ? "Contrat reglé compta" : "Contrat non-reglé compta") . "</h2>";
-    echo "<h2 " . ($paidBase == "R" ? "style=color:#008800" : "style=color:#FF0000") . ">" . ($paidBase == "R" ? "Contrat reglé base" : "Contrat non-reglé base") . "</h2>";
-    echo "<h2>Paru sur: " . $revue['Name'] . "</h2>";
-    echo "<h2>Client: " . $client['name'] . " (" . $client['id'] . ")</h2>";
-
-    /* echo "<iframe name=\"commentFrame\" id=\"commentFrame\" srcdoc=\""; */
-    echo "<table>";
-    echo "<tr>";
-    echo "<th>Commentaire</th>";
-    echo "<th>Auteur</th>";
-    echo "<th>Date commentaire</th>";
-    echo "<th>Nom de l'entreprise</th>";
-    echo "<th>E-mail</th>";
-    echo "<th>Téléphone</th>";
-    echo "<th>Prochaine relance</th>";
-    echo "<th>Fichier</th>";
-    echo "<th>Supprimer commentaire</th>";
-    echo "</tr>";
 
     if ($charsetR === FALSE)
         die("MySQL SET CHARSET error: ". $connectionR->error);
     else if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
 
-    $phone = getPhoneNumber($orderId, $client['id']);
-    listComments();
-    addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $client['id'], $phone, $paidStr);
+    $client = getContactName($orderId);
+    echo "<h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1>";
+    $review = findReview($orderId);
+
+    $paid = isItPaid($orderId);
+    $colorCompta = ($paid['compta'] === "R" ? "#008800" : "#FF0000");
+    $textCompta = ($paid['compta'] === "R" ? "Contrat reglé compta" : "Contrat non-reglé compta");
+    $colorBase = ($paid['base'] === "R" ? "#008800" : "#FF0000");
+    $textBase = ($paid['base'] === "R" ? "Contrat reglé base" : "Contrat non-reglé base");
+    $h2style = "style=\"color:";
+
+    $reviewName = $review['Name'] . " " . $review['Year'];
+    $reviewLink = generateLink("searchReviewOrders.php?id=" . $review['Id'], $reviewName);
+    $companyLink = generateLink("searchClientOrders.php?id=" . $client['id'], $client['name']);
+
+    echo "<h2 " . $h2style . $colorCompta . "\">" . $textCompta . "</h2>";
+    echo "<h2 " . $h2style . $colorBase . "\">" . $textBase . "</h2>";
+    echo "<h2>Paru sur: " . $reviewLink . "</h2>";
+    echo "<h2>Client: " . $companyLink . "</h2>";
+
+    echo "<table>";
+
+    $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Supprimer commentaire");
+    $cells = generateRow($cells, true);
+    foreach ($cells as $cell)
+        echo $cell;
+
+
+    $phone = getPhoneNumber($orderId, $client['id']); // For the $form phone placeholder, takes existing phone value.
+    listComments($orderId, $orderIdShort);
+    $form = addUnpaidForm("../html/addComment.html", $orderId, $orderIdShort, $client['id'], $phone, $paid['compta']);
+    echo $form;
 
     echo "</table><br><br><br>";
-    /* echo "</iframe>"; */
     echo "</html>";
+
+    $connectionR->close();
+    $connectionW->close();
 }
 
 ?>
-</body>
-</html>

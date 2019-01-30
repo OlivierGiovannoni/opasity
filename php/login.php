@@ -1,40 +1,5 @@
 <?php
 
-function testInput($data) {
-    $data = trim($data);
-    $data = stripslashes($data);
-    $data = htmlspecialchars($data);
-    return $data;
-}
-
-$username = filter_input(INPUT_POST, "username");
-$password = filter_input(INPUT_POST, "password");
-
-$username = testInput($username);
-$password = testInput($password);
-
-function credsArr($credsStr)
-{
-    $credsArr = array();
-    $linesArr = explode(";", $credsStr);
-    $linesArr = explode("\n", $linesArr[0]);
-    foreach ($linesArr as $index => $line) {
-
-        $valueSplit = explode(":", $line);
-        $credsArr[$valueSplit[0]] = $valueSplit[1];
-    }
-    return ($credsArr);
-}
-
-$credsFileW = "../credentialsW.txt";
-$credentialsW = credsArr(file_get_contents($credsFileW));
-
-$connectionW = new mysqli(
-    $credentialsW['hostname'],
-    $credentialsW['username'],
-    $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
-
 function login($username, $password)
 {
     $sqlLogin = "SELECT passwordhash,superuser FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
@@ -60,12 +25,33 @@ function login($username, $password)
         } else {
             echo "Query error: ". $sqlRefresh ." // ". $GLOBALS['connection']->error;
         }
-        setcookie("author", $username, time() + 3600, "/");
-        setcookie("connection", $superuser, time() + 3600, "/");
+        setcookie("author", $username, time() + 10800, "/");
+        setcookie("connection", $superuser, time() + 10800, "/");
         header("Location: ../index.php");
     }
 }
 
-login($username, $password);
+require_once "helperFunctions.php";
 
+$credentialsW = getCredentials("../credentialsW.txt");
+
+$connectionW = new mysqli(
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB WRITE
+
+$username = filter_input(INPUT_POST, "username");
+$password = filter_input(INPUT_POST, "password");
+
+$username = sanitizeInput($username);
+$password = sanitizeInput($password);
+
+if (mysqli_connect_error()) {
+    die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
+} else {
+
+    login($username, $password);
+    $connectionW->close();
+}
 ?>
