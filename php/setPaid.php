@@ -9,23 +9,23 @@ function setPaid($orderId)
         $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom,Reglement";
         $rowValues = "'             ','dev','$today','$orderId','$orderIdShort','1970-01-01','','','NULL',1,'R'";
         $sqlPaid = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
-        querySQL($sqlPaid, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
+        querySQL($sqlPaid, $GLOBALS['connectionW'], false); // INSERT output doesn't need to be fetched.
     } else {
         $sqlPaid = "UPDATE webcontrat_commentaire SET Reglement='R' WHERE Commande='$orderId';";
-        querySQL($sqlPaid, $GLOBALS['connection'], false); // UPDATE output doesn't need to be fetched.
+        querySQL($sqlPaid, $GLOBALS['connectionW'], false); // UPDATE output doesn't need to be fetched.
     }
     header("Location: commentList.php?id=" . $orderId);
 }
 
 require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentialsW = getCredentials("../credentialsW.txt");
 
-$connection = new mysqli(
-    $credentials['hostname'],
-    $credentials['username'],
-    $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB
+$connectionW = new mysqli(
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNEXION A LA DB
 
 $orderId = filter_input(INPUT_GET, "id");
 
@@ -35,16 +35,16 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
-        $charset = mysqli_set_charset($connection, "utf8");
+        $charsetW = mysqli_set_charset($connectionW, "utf8");
 
-        if ($charset === FALSE)
-            die("MySQL SET CHARSET error: ". $connection->error);
+        if ($charsetW === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionW->error);
 
         setPaid($orderId);
     } else
         displayLogin("Veuillez vous connecter.");
 
-    $connection->close();
+    $connectionW->close();
 }
 
 ?>

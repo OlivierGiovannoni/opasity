@@ -5,7 +5,6 @@
   </head>
   <body>
     <div id="commentDiv">
-      <!-- UNPAID
       <form id="commentForm" enctype="multipart/form-data" charset="UTF-8" method="post" action="../php/commentAdd.php">
 
 	<div>
@@ -40,18 +39,15 @@
 	  <input type="file" name="fileUpload" id="fileUp" class="dropzone" multiple>
 	</div>
       </form>
-      -->
-      <!-- UNPAID
       <div>
-	<form id="paidForm" action="setPaid.php" method="get">
-	  <input type="hidden" name="id" value="{orderId}">
-	  <input type="submit" id="submit" value="Passer à l'état reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
-	</form>
-	<form id="paidForm" action="setUnpaid.php" method="get">
-	  <input type="hidden" name="id" value="{orderId}">
-	  <input type="submit" id="submit" value="Passer à l'état non-reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en non-reglé ?');"><br>
-	</form>
+	<a  href="../php/setPaid.php?id={orderId}">
+	  <img src="../png/check.png" alt="Passer en reglé" width="64" height="64">
+	</a>
+	<a  href="../php/setUnpaid.php?id={orderId}">
+	  <img src="../png/uncheck.png" alt="Passer en non-reglé" width="64" height="64">
+	</a>
       </div>
+
     </div>
-    <iframe height="200"frameborder="0"></iframe>
-    -->
+    <iframe height="250"frameborder="0"></iframe>
+  </body>
