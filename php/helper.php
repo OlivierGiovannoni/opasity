@@ -198,8 +198,12 @@ function isLogged()
         $user = $_COOKIE['author'];
     else
         return (false);
+    if (isset($GLOBALS['connectionR']))
+        $connection = "connectionR";
+    else if (isset($GLOBALS['connectionW']))
+        $connection = "connectionW";
     $sqlCookies = "SELECT username FROM webcontrat_utilisateurs WHERE username='$user';";
-    $rowCookies = numberSQL($sqlCookies, $GLOBALS['connectionW']);
+    $rowCookies = numberSQL($sqlCookies, $GLOBALS[$connection]);
     if ($rowCookies === 0)
         return (false);
     return (true);
