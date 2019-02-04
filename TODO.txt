@@ -18,7 +18,6 @@ DONE:
 --Added client name in h1 on searchClientOrders.php
 --Checked if uploaded file is NULL to avoid creating empty directories.
 --Displayed all "relances" temporarily till DATE bug is fixed.
---Tmp echoed "Le commentaire à été envoyé".
 --Number total of contracts + Total price. (only review)
 --When showing all, button is now "Afficher les non-reglés", else "Afficher tout".
 --Fixed DATE <= Today display bug.
@@ -49,7 +48,7 @@ DONE:
 --Checked if Author in cookies is valid in isLogged() to avoid fake cookies.
 --Added Unique ID before filename on commentAdd.php if 2 filenames are same. fileX.y to uid_fileX.y if already exists.
 --Now superuser can see lastLogin and createdAt for each account
---Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked to it.
+--Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked.
 
 TODO:
 --File for each ORDER not COMMENT.
@@ -58,4 +57,3 @@ TODO:
 --Filter EMPTY orders without comments on reviews that are "Paru".
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
 --Add "Paru non-reglé" option.
---Add "Linked" icon to the LEFT of the comment when there is 
