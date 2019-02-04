@@ -14,9 +14,11 @@ DONE:
 --Renamed "Nom du contact" with "Nom de l'entreprise" on main page.
 --Add "Parue" or "Non-parue" in Green or Red on searchReviewOrders.php page.
 --Sorted orders by ASC order number.
+--Payé button re-creates a request and refreshes page.
 --Added client name in h1 on searchClientOrders.php
 --Checked if uploaded file is NULL to avoid creating empty directories.
 --Displayed all "relances" temporarily till DATE bug is fixed.
+--Tmp echoed "Le commentaire à été envoyé".
 --Number total of contracts + Total price. (only review)
 --When showing all, button is now "Afficher les non-reglés", else "Afficher tout".
 --Fixed DATE <= Today display bug.
