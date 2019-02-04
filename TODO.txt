@@ -45,7 +45,7 @@ DONE:
 --Edit reminder date if clicked on "edit icon" that will be added.
 --Edit or delete comment by clicking on it, or date, or CSS image button (2 icons).
 --Dates are now clickable date and lead to searchDate.php with the corresponding date.
---Checked if Author in cookies is valid in isLogged() to avoid fake cookies.
+--REMOVED check if Author in cookies is valid in isLogged() to avoid fake cookies, causing too much errors.
 --Added Unique ID before filename on commentAdd.php if 2 filenames are same. fileX.y to uid_fileX.y if already exists.
 --Now superuser can see lastLogin and createdAt for each account
 --Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked.
