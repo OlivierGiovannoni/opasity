@@ -2,7 +2,7 @@
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire_id,Commentaire,Auteur,Commande,Commande_courte,Date,Prochaine_relance,AdresseMail,Reglement FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
+    $sqlDate = "SELECT Commentaire_id,Commentaire,Auteur,Commande,Date,Prochaine_relance,AdresseMail,Reglement,Fichier FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
     $rowsDate = querySQL($sqlDate, $GLOBALS['connectionW']);
 
     foreach ($rowsDate as $rowDate) {
@@ -13,10 +13,12 @@ function findDates($dueDate)
         if ($paid['compta'] === "R")
             continue ;
 
-        $orderIdShort = $rowDate['Commande_courte'];
+        $orderIdShort = getOrderIdShort($orderId);
         $comment = $rowDate['Commentaire'];
         $commId = $rowDate['Commentaire_id'];
         $author = $rowDate['Auteur'];
+        $file = $rowDate['Fichier'];
+        $fileShort = basename($file);
         $paidBase = ($paid['base'] === "R" ? "Oui" : "Non");
         $final = findReview($orderId); // Find review details related to the order
         $details = getOrderDetails($orderId); // Get order and client details related to the order
@@ -26,7 +28,6 @@ function findDates($dueDate)
         $reviewLink = $final['Name'] . " " . $final['Year'];
         $reviewLink = generateLink("searchReviewOrders.php?id=" . $final['Id'], $reviewLink); // Generate <a> link with reviewId as id and reviewName Year as text
         $mailtoLink = generateLink("mailto:" . $rowDate['AdresseMail'], $rowDate['AdresseMail']); // Generate <a> mailto link
-
         $dateComm = date("d/m/Y", strtotime($rowDate['Date'])); // Comment date
         $dateNextYMD = $rowDate['Prochaine_relance']; // Next reminder date
         if (isDateValid($dateNextYMD)) {
@@ -36,7 +37,10 @@ function findDates($dueDate)
         }
         else
                $dateNext = "Aucune";
-
+        $attachmentImage = generateImage("../png/attachment.png", $fileShort, 24, 24); // Create attachment icon
+        $attachmentLink = generateLink($file, $attachmentImage); // Create <a> link that leads to attached file
+        if ($file !== "NULL" && $file !== "")
+            $comment = $attachmentLink . " " . $comment;
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24); // Create edit icon
         $editLink = generateLink("commentEdit.php?id=" . $commId, $editImage); // Create <a> link to edit comment
         $deleteImage = generateImage("../png/delete.png", "Supprimer", 24, 24); // Create delete icon

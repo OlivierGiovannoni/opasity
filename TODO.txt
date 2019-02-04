@@ -49,6 +49,7 @@ DONE:
 --Checked if Author in cookies is valid in isLogged() to avoid fake cookies.
 --Added Unique ID before filename on commentAdd.php if 2 filenames are same. fileX.y to uid_fileX.y if already exists.
 --Now superuser can see lastLogin and createdAt for each account
+--Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked to it.
 
 TODO:
 --File for each ORDER not COMMENT.
@@ -57,3 +58,4 @@ TODO:
 --Filter EMPTY orders without comments on reviews that are "Paru".
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
 --Add "Paru non-reglé" option.
+--Add "Linked" icon to the LEFT of the comment when there is 
