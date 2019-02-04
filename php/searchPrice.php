@@ -2,11 +2,11 @@
 
 function findOrders($price, $paidBool)
 {
-    $price = str_replace("€", "", $price);
+    $price = str_replace("€", "", $price) . ".";
     if ($paidBool == 1)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE PrixHT=$price AND Reglement='' ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE PrixHT='$price' AND Reglement='' ORDER BY DateEmission DESC;";
     else
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE PrixHT=$price ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE PrixHT='$price' ORDER BY DateEmission DESC;";
     $rowsOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
 
     foreach ($rowsOrder as $rowOrder) {
@@ -21,7 +21,7 @@ function findOrders($price, $paidBool)
         $phone = getPhoneNumber($orderId, $details['clientId']);
         $comment = selectLastComment($orderId);
 
-        $orderLink = generateLink("allComments.php?id=" . $orderId, $orderIdShort);
+        $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort);
         $reviewLink = generateLink("searchReviewOrders.php?id=" . $final['Id'], $reviewName);
         $companyLink = generateLink("searchClientOrders.php?id=" . $details['clientId'], $details['companyName']);
 
@@ -35,7 +35,7 @@ function findOrders($price, $paidBool)
     }
 }
 
-require_once "helperFunctions.php";
+require_once "helper.php";
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -60,39 +60,53 @@ $price = sanitizeInput($price);
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("{type}", "montant", $style);
-    $style = str_replace("{query}", $price, $style);
+    if (isLogged()) {
 
-    echo $style;
+        $style = file_get_contents("../html/search.html");
 
-    $paidText = ($getPaid == 0 ? "Afficher tout les contrats" : "Afficher tout les contrats non-reglés");
-    $paidBool = ($getPaid == 1 ? 0 : 1);
-    $paidLink = generateLink("searchPrice.php?price=" . $price . "&paid=" . $paidBool, $paidText);
+        $style = str_replace("{type}", "montant", $style);
+        $style = str_replace("{query}", $price, $style);
 
-    echo "<h1>Contrats trouvés:</h1>";
-    echo $paidLink;
-    echo "<table>";
+        echo $style;
 
-    $cells = array("Contrat","Date enregistrement","Revue","Prix HT","Payé compta","Nom de l'entreprise","Nom du contact","Numéro de téléphone","Payé base","Commentaire","Date commentaire");
-    $cells = generateRow($cells, true);
-    foreach ($cells as $cell)
-        echo $cell;
+        if (isAdmin()) {
 
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
-    $charsetW = mysqli_set_charset($connectionW, "utf8");
+            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
+            $adminLink = generateLink("admin.php", $adminImage);
+            echo $adminLink;
+        }
 
-    if ($charsetR === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
-    else if ($charsetW === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionW->error);
+    
+        $paidText = ($getPaid == 0 ? "Afficher tout les contrats" : "Afficher tout les contrats non-reglés");
+        $paidBool = ($getPaid == 1 ? 0 : 1);
+        $paidLink = generateLink("searchPrice.php?price=" . $price . "&paid=" . $paidBool, $paidText, "_self");
 
-    findOrders($price, $paidBool);
+        echo "<h1>Contrats trouvés:</h1>";
+        echo $paidLink;
+        echo "<table>";
 
-    echo "</table><br><br><br>";
-    echo "</body>";
-    echo "</html>";
+        $cells = array("Contrat","Date enregistrement","Revue","Prix HT","Payé compta","Nom de l'entreprise","Nom du contact","Numéro de téléphone","Payé base","Commentaire","Date commentaire");
+        $cells = generateRow($cells, true);
+        foreach ($cells as $cell)
+            echo $cell;
+
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+        $charsetW = mysqli_set_charset($connectionW, "utf8");
+
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+        else if ($charsetW === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionW->error);
+
+        findOrders($price, $paidBool);
+
+        echo "</table><br><br><br>";
+        echo "</body>";
+        echo "</html>";
+
+    } else
+        displayLogin("Veuillez vous connecter.");
 
     $connectionR->close();
     $connectionW->close();

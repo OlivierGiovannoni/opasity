@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/logister.css">
+    <script src="../js/showPass.js"></script>
+    <title>Modification de l'utilisateur: {username}</title>
+  </head>
+  <body>
+    <form action="../php/userEdit.php" method="post">
+      <h1>Modification de l'utilisateur: {username}</h1>
+
+      <input type="hidden" name="userId" value="{userId}">
+
+      <label for="fname">Prénom</label><br>
+      <input type="text" name="fname" id="fname" value="{fname}" required>
+      <br><br>
+
+      <label for="lname">Nom</label><br>
+      <input type="text" name="lname" id="lname" value="{lname}" required>
+      <br><br>
+
+      <label for="email">Email</label><br>
+      <input type="email" name="email" id="email" value="{email}" required>
+      <br><br>
+
+      <label for="username">Nom d'utilisateur</label><br>
+      <input type="text" name="username" id="username" value="{username}" required>
+      <br><br>
+
+      <label for="password">Mot de passe</label><br>
+      <input type="password" name="password" id="password" value="{password}" required>
+      <br><br>
+
+      <label for="showpwd">Afficher mot de passe</label>
+      <input type="checkbox" name="showpwd" id="showpwd" onclick="showPassword()">
+      <br><br>
+
+      <label for="superuser">Super-utilisateur ?</label>
+
+      <input type="checkbox" name="superuser" id="superuser" checked>
+      <br><br>
+
+      <input type="submit" id="submit" value="Modifier">
+      <br>
+      <a href="../php/admin.php">Annuler</a>
+    </form>
+  </body>
+</html>

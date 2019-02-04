@@ -7,8 +7,9 @@ body {
     left: 0;
 }
 
-h1,h2 {
-    text-align:center
+h1, h2 {
+    text-align: center;
+    cursor: pointer;
 }
 
 #mainDiv > div {
@@ -52,6 +53,7 @@ table, th, td {
 }
 
 th, td {
+    text-align: center;
     padding: 3px;
     font-size: 13px;
 }

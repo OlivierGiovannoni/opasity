@@ -14,47 +14,44 @@ DONE:
 --Renamed "Nom du contact" with "Nom de l'entreprise" on main page.
 --Add "Parue" or "Non-parue" in Green or Red on searchReviewOrders.php page.
 --Sorted orders by ASC order number.
---Payé button re-creates a request and refreshes page.
 --Added client name in h1 on searchClientOrders.php
 --Checked if uploaded file is NULL to avoid creating empty directories.
 --Displayed all "relances" temporarily till DATE bug is fixed.
---Tmp echoed "Le commentaire à été envoyé".
 --Number total of contracts + Total price. (only review)
 --When showing all, button is now "Afficher les non-reglés", else "Afficher tout".
 --Fixed DATE <= Today display bug.
---Fixed encoding problem on review name on allComments.php and change btn to lnk or simple txt.
---Moved button "Payé" to the right and RE-ORGANIZE ALL THAT SHIT on allComments.php page. Used divs.
+--Fixed encoding problem on review name on commentList.php and change btn to lnk or simple txt.
+--Moved button "Payé" to the right and RE-ORGANIZE ALL THAT SHIT on commentList.php page. Used divs.
 --Removed #tableSub and disguised Submit buttons.
 --Added "Commentaire" as required field on addComments.html fields.
 --Added "Fichier" column.
 --Displayed only last comment for "relances" per order using "DernierCom" column.
 --Hid orders with negative prices.
 --PURGED dark mode.
---Fixed \" on textarea on addComments.php page.
+--Fixed \" on textarea on commentAdd.php page.
 --Added "Payé base & Payé compta" on every page.
 --Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
 --Added 'Relances du jour' Unpaid AND Date <= TODAY.
---Automatically filled phone number using "{phone}" on allComments.php
+--Automatically filled phone number using "{phone}" on commentList.php
 --Now order can be set to Paid/Unpaid even if there was no comment, using fake comment INSERT.
 --Added comment "Author" when login system is done.
---Refactored code, added helper functions and moved duplicate functions to helperFunctions.php
+--Refactored code, added helper functions and moved duplicate functions to helper.php
 --Added "New File Name" temporarily until autoreplace gets added
 --Changed all POST to GET and now using <a> links instead of hidden forms.
-
-BEFORE TODAY:
---Invalid data on index.php page ???
---File for each ORDER not COMMENT.
---Auto-upload Dropzone
---Validated and non-validated "relances", meaning, client has been succesfully reached or not, non-validated push to x days later ?
-
-TODO:
---SUPERUSER
---OCR
---Increment filenames on allComments.php if 2 filenames are same. fileX.y to fileX1.y if already exists. NOW NOW
---Filter EMPTY orders without comments on reviews that are "Paru".
+--Added admin panel, now checking cookies on every page.
+--Admin can now list/create/edit/delete users.
+--Added possibility for author or admin to edit/delete comment.
 --Edit reminder date if clicked on "edit icon" that will be added.
 --Edit or delete comment by clicking on it, or date, or CSS image button (2 icons).
---Login system wih Groups/Profiles/Timeouts and connection logs (timeLogin/timeLogout/username/session_id) (with encrypted passwords obvv) and tasks GENERAL and USER_SPECIFIC.
+--Dates are now clickable date and lead to searchDate.php with the corresponding date.
+--Checked if Author in cookies is valid in isLogged() to avoid fake cookies.
+--Added Unique ID before filename on commentAdd.php if 2 filenames are same. fileX.y to uid_fileX.y if already exists.
+--Now superuser can see lastLogin and createdAt for each account
+
+TODO:
+--File for each ORDER not COMMENT.
+--Auto-upload Dropzone
+--OCR
+--Filter EMPTY orders without comments on reviews that are "Paru".
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
 --Add "Paru non-reglé" option.
---Clickable date to searchDate.php.

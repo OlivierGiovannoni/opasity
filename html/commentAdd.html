@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html>
   <head>
     <meta charset="utf-8">
     <script src="../js/dropzone.js"></script>
     <link rel="stylesheet" href="../css/dropzone.css">
-    <script>
-      function resizeIframe(obj) {
-      obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px';
-      }
-    </script>
   </head>
   <body>
     <div id="commentDiv">
       <!-- UNPAID
-      <form id="commentForm" target="_parent" enctype="multipart/form-data" charset="UTF-8" method="post" action="addComment.php">
+      <form id="commentForm" enctype="multipart/form-data" charset="UTF-8" method="post" action="../php/commentAdd.php">
 
 	<div>
 	  <label for="numPhone">Numéro de téléphone</label><br>
@@ -35,7 +28,7 @@
 
 	  <br><br>
 
-	  <input type="hidden" name="hiddenId" value="{orderId}">
+	  <input type="hidden" name="orderId" value="{orderId}">
 	  <input type="hidden" name="clientId" value="{clientId}">
 
 	  <input value="Valider" type="submit" id="submit">
@@ -44,23 +37,21 @@
 	  <label for="newFilename">Nouveau nom de fichier</label><br>
 	  <input type="text" name="newFilename" id="newFilename"><br><br>
 	  <label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
-	  <input type="file" name="fileUpload" id="fileUp" class="dropzone">
+	  <input type="file" name="fileUpload" id="fileUp" class="dropzone" multiple>
 	</div>
       </form>
       -->
       <!-- UNPAID
       <div>
-	<form id="paidForm" action="setPaid.php" method="post">
-	  <input type="hidden" name="hiddenId" value="{orderId}">
+	<form id="paidForm" action="setPaid.php" method="get">
+	  <input type="hidden" name="id" value="{orderId}">
 	  <input type="submit" id="submit" value="Passer à l'état reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en reglé ?');"><br>
 	</form>
-	<form id="paidForm" action="setUnpaid.php" method="post">
-	  <input type="hidden" name="hiddenId" value="{orderId}">
+	<form id="paidForm" action="setUnpaid.php" method="get">
+	  <input type="hidden" name="id" value="{orderId}">
 	  <input type="submit" id="submit" value="Passer à l'état non-reglé" name="paidConfirm" onclick="return confirm('Passer ce contrat en non-reglé ?');"><br>
 	</form>
       </div>
     </div>
     <iframe height="200"frameborder="0"></iframe>
     -->
-  </body>
-</html>

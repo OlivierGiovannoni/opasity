@@ -21,7 +21,7 @@ function findReviews($reviewName)
     }
 }
 
-require_once "helperFunctions.php";
+require_once "helper.php";
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -37,30 +37,43 @@ $reviewName = sanitizeInput($reviewName);
 if (mysqli_connect_error()) {
     die("Connection error. Code: ". mysqli_connect_errno() ." Reason: " . mysqli_connect_error());
 } else {
-    $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("{type}", "revue", $style);
-    $style = str_replace("{query}", $reviewName, $style);
+    if (isLogged()) {
 
-    echo $style;
+        $style = file_get_contents("../html/search.html");
 
-    echo "<h1>Revues trouvées:</h1>";
-    echo "<table>";
+        $style = str_replace("{type}", "revue", $style);
+        $style = str_replace("{query}", $reviewName, $style);
 
-    $cells = array("Revue","Parue","Date création");
-    $cells = generateRow($cells, true);
-    foreach ($cells as $cell)
-        echo $cell;
+        echo $style;
 
-    $charset = mysqli_set_charset($connectionR, "utf8");
+        if (isAdmin()) {
 
-    if ($charset === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
+            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
+            $adminLink = generateLink("admin.php", $adminImage);
+            echo $adminLink;
+        }
 
-    findReviews($reviewName);
+        echo "<h1>Revues trouvées:</h1>";
+        echo "<table>";
 
-    echo "</table><br><br><br>";
-    echo "</html>";
+        $cells = array("Revue","Parue","Date création");
+        $cells = generateRow($cells, true);
+        foreach ($cells as $cell)
+            echo $cell;
+
+        $charset = mysqli_set_charset($connectionR, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+
+        findReviews($reviewName);
+
+        echo "</table><br><br><br>";
+        echo "</html>";
+
+    } else
+        displayLogin("Veuillez vous connecter.");
 
     $connectionR->close();
 }

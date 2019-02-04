@@ -11,13 +11,13 @@ function getOrderId($commId)
 function updatePrevious($prevId)
 {
     $sqlComment = "UPDATE webcontrat_commentaire SET DernierCom=1 WHERE Commentaire_id='$prevId';";
-    $rowComment = querySQL($sqlComment, $GLOBALS['connectionW'], false); // UPDATE output doesn't need to be fetched.
+    querySQL($sqlComment, $GLOBALS['connectionW'], false); // UPDATE output doesn't need to be fetched.
 }
 
 function deleteComment($commId)
 {
     $sqlComment = "DELETE FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
-    $rowComment = querySQL($sqlComment, $GLOBALS['connectionW'], false); // DELETE output doesn't need to be fetched.
+    querySQL($sqlComment, $GLOBALS['connectionW'], false); // DELETE output doesn't need to be fetched.
 }
 
 
@@ -41,7 +41,7 @@ function selectPrevious($commId)
     }
 }
 
-require_once "helperFunctions.php";
+require_once "helper.php";
 
 $credentialsW = getCredentials("../credentialsW.txt");
 
@@ -57,7 +57,9 @@ if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
-    $charsetW = mysqli_set_charset($connectionW, "utf8");
+    if (isLogged()) {
+
+        $charsetW = mysqli_set_charset($connectionW, "utf8");
 
     if ($charsetW === FALSE)
         die("MySQL SET CHARSET error: ". $connectionW->error);
@@ -68,7 +70,10 @@ if (mysqli_connect_error()) {
     if ($prevId != -1)
         updatePrevious($prevId);
 
-    header("Location: allComments.php?id=" . $orderId);
+    header("Location: commentList.php?id=" . $orderId);
+
+    } else
+        displayLogin("Veuillez vous connecter.");
 
     $connectionW->close();
 }

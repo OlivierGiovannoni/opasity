@@ -25,7 +25,7 @@ function findOrder($supportPart, $contractPart, $contractId)
         $paidCompta = ($paid['compta'] == "R" ? "Oui" : "Non");
         $paidBase = ($paid['base'] ==  "R" ? "Oui" : "Non");
 
-        $orderLink = generateLink("allComments.php?id=" . $orderId, $orderIdShort);
+        $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort);
         $reviewLink = generateLink("searchReviewOrders.php?id=" . $final['Id'], $final['Name']);
         $companyLink = generateLink("searchClientOrders.php?id=" . $details['clientId'], $details['companyName']);
 
@@ -36,7 +36,7 @@ function findOrder($supportPart, $contractPart, $contractId)
     }
 }
 
-require_once "helperFunctions.php";
+require_once "helper.php";
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -66,33 +66,48 @@ if (strlen($contractId) === 4)
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("{type}", "contrat", $style);
-    $style = str_replace("{query}", $contractId, $style);
+    if (isLogged()) {
 
-    echo $style;
-    echo "<h1>Contrats trouvés:</h1>";
-    echo "<table>";
+        $style = file_get_contents("../html/search.html");
 
-    $cells = array("Contrat","Date enregistrement","Revue","Prix HT","Payé compta","Nom de l'entreprise","Nom du contact","Numéro de téléphone","Payé base","Commentaire","Date commentaire");
-    $cells = generateRow($cells, true);
-    foreach ($cells as $cell)
-        echo $cell;
+        $style = str_replace("{type}", "contrat", $style);
+        $style = str_replace("{query}", $contractId, $style);
 
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
-    $charsetW = mysqli_set_charset($connectionW, "utf8");
+        echo $style;
 
-    if ($charsetR === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
-    else if ($charsetW === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionW->error);
+        if (isAdmin()) {
 
-    findOrder($supportPart, $contractPart, $contractId);
+            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
+            $adminLink = generateLink("admin.php", $adminImage);
+            echo $adminLink;
+        }
 
-    echo "</table><br><br><br>";
-    echo "</body>";
-    echo "</html>";
+        echo "<h1>Contrats trouvés:</h1>";
+        echo "<table>";
+
+        $cells = array("Contrat","Date enregistrement","Revue","Prix HT","Payé compta","Nom de l'entreprise","Nom du contact","Numéro de téléphone","Payé base","Commentaire","Date commentaire");
+        $cells = generateRow($cells, true);
+        foreach ($cells as $cell)
+            echo $cell;
+
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+        $charsetW = mysqli_set_charset($connectionW, "utf8");
+
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+        else if ($charsetW === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionW->error);
+
+        findOrder($supportPart, $contractPart, $contractId);
+
+        echo "</table><br><br><br>";
+        echo "</body>";
+        echo "</html>";
+
+
+    } else
+        displayLogin("Veuillez vous connecter.");
 
     $connectionR->close();
     $connectionW->close();

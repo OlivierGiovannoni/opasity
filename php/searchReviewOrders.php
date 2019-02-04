@@ -3,9 +3,10 @@
 function findOrders($revueId, $paidBool)
 {
     $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$revueId';";
-    $rowOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
-    sort($rowOrder);
-    foreach ($rowOrder as $order) {
+    $rowsOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
+    sort($rowsOrder);
+
+    foreach ($rowsOrder as $order) {
 
         $orderId = $order['Info_id'];
         $orderIdShort =  getOrderIdShort($orderId);
@@ -19,7 +20,7 @@ function findOrders($revueId, $paidBool)
         $phone = getPhoneNumber($orderId, $details['clientId']);
         $comment = selectLastComment($orderId, true);
 
-        $orderLink = generateLink("allComments.php?id=" . $orderId, $orderIdShort);
+        $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort);
         $companyLink = generateLink("searchClientOrders.php?id=" . $details['clientId'], $details['companyName']);
         $mailtoLink = generateLink("mailto:" . $comment['email'], $comment['email']);
 
@@ -34,40 +35,7 @@ function findOrders($revueId, $paidBool)
     }
 }
 
-function getNbOrders($revueId)
-{
-    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$revueId';";
-    if ($resultOrder = $GLOBALS['connectionR']->query($sqlOrder)) {
-
-        $rowsOrder = mysqli_num_rows($resultOrder);
-        return ($rowsOrder);
-    } else {
-        echo "Query error: ". $sqlOrder ." // ". $GLOBALS['connectionR']->error;
-    }
-}
-
-function getUnitPrice($orderId)
-{
-    $sqlPrice = "SELECT PrixHT FROM webcontrat_contrat WHERE Commande='$orderId';";
-    $rowPrice = querySQL($sqlPrice, $GLOBALS['connectionR'], true, true);
-    return ($rowPrice['PrixHT']);
-}
-
-function getTotalPrice($revueId)
-{
-    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$revueId';";
-    $rowOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
-    sort($rowOrder);
-    $totalPrice = 0;
-    foreach ($rowOrder as $order) {
-
-        $orderId = $order['Info_id'];
-        $totalPrice += getUnitPrice($orderId);
-    }
-    return ($totalPrice);
-}
-
-require_once "helperFunctions.php";
+require_once "helper.php";
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -91,47 +59,58 @@ $getPaid = filter_input(INPUT_GET, "paid");
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("{type}", "revue", $style);
+    if (isLogged()) {
 
-    $review = getReviewInfo($reviewId);
-    $reviewName = $review['name'] . " " . $review['year'];
-    $published = $review['published'];
-    $pubColor = ($published == 1 ? "isPub" : "isNotPub");
-    $pubText = ($published == 1 ? "parue" : "non-parue");
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+        $charsetW = mysqli_set_charset($connectionW, "utf8");
 
-    $style = str_replace("{query}", $reviewName, $style);
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+        else if ($charsetW === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionW->error);
 
-    $paidText = ($getPaid == 0 ? "Afficher tout les contrats" : "Afficher tout les contrats non-reglés");
-    $paidBool = ($getPaid == 1 ? 0 : 1);
-    $paidLink = generateLink("searchReviewOrders.php?id=" . $reviewId . "&paid=" . $paidBool, $paidText);
+        $style = file_get_contents("../html/search.html");
+        $style = str_replace("{type}", "revue", $style);
 
-    echo $style;
-    echo "<h1>Contrats dans la revue " . $reviewName . "</h1>";
-    echo "<h2 id=\"" . $pubColor . "\">Revue " . $pubText . "</h2>";
-    echo "<h3>Nombre de contrats: " . getNbOrders($reviewId) . "</h3>";
-    echo "<h3>Chiffre d'affaire total: " . getTotalPrice($reviewId) . "</h3>";
-    echo $paidLink;
-    echo "<table>";
+        $review = getReviewInfo($reviewId);
+        $reviewName = $review['name'] . " " . $review['year'];
+        $published = $review['published'];
+        $pubColor = ($published == 1 ? "isPub" : "isNotPub");
+        $pubText = ($published == 1 ? "parue" : "non-parue");
 
-    $cells = array("Contrat","Date enregistrement","Prix HT","Payé compta","Nom de l'entreprise","Nom du contact","Numéro de téléphone","Payé base","E-mail","Commentaire","Date commentaire","Prochaine relance");
-    $cells = generateRow($cells, true);
-    foreach ($cells as $cell)
-        echo $cell;
+        $style = str_replace("{query}", $reviewName, $style);
 
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
-    $charsetW = mysqli_set_charset($connectionW, "utf8");
+        $paidText = ($getPaid == 0 ? "Afficher tout les contrats" : "Afficher tout les contrats non-reglés");
+        $paidBool = ($getPaid == 1 ? 0 : 1);
+        $paidLink = generateLink("searchReviewOrders.php?id=" . $reviewId . "&paid=" . $paidBool, $paidText, "_self");
 
-    if ($charsetR === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
-    else if ($charsetW === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionW->error);
+        echo $style;
 
-    findOrders($reviewId, $paidBool);
+        if (isAdmin()) {
 
-    echo "</table><br><br><br>";
-    echo "</html>";
+            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
+            $adminLink = generateLink("admin.php", $adminImage);
+            echo $adminLink;
+        }
+
+        echo "<h1>Contrats dans la revue " . $reviewName . "</h1>";
+        echo "<h2 id=\"" . $pubColor . "\">Revue " . $pubText . "</h2>";
+        echo "<h3>Nombre de contrats: " . getNbOrders($reviewId) . "</h3>";
+        echo "<h3>Chiffre d'affaire total: " . getTotalPrice($reviewId) . "</h3>";
+        echo $paidLink;
+        echo "<table>";
+
+        $cells = array("Contrat","Date enregistrement","Prix HT","Payé compta","Nom de l'entreprise","Nom du contact","Numéro de téléphone","Payé base","E-mail","Commentaire","Date commentaire","Prochaine relance");
+        $cells = generateRow($cells, true);
+        foreach ($cells as $cell)
+            echo $cell;
+
+        findOrders($reviewId, $paidBool);
+
+        echo "</table><br><br><br>";
+    } else
+        displayLogin("Veuillez vous connecter.");
 }
 
 ?>

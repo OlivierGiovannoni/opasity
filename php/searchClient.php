@@ -20,7 +20,7 @@ function findClient($clientName)
     }
 }
 
-require_once "helperFunctions.php";
+require_once "helper.php";
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -36,29 +36,43 @@ $clientName = sanitizeInput($clientName);
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
-    $style = file_get_contents("../html/search.html");
 
-    $style = str_replace("{type}", "client", $style);
-    $style = str_replace("{query}", $clientName, $style);
+    if (isLogged()) {
 
-    echo $style;
-    echo "<h1>Clients trouvés:</h1>";
-    echo "<table>";
+        $style = file_get_contents("../html/search.html");
 
-    $cells = array("Nom de l'entreprise","Nom du contact","Numéro de téléphone");
-    $cells = generateRow($cells, true);
-    foreach ($cells as $cell)
-        echo $cell;
+        $style = str_replace("{type}", "client", $style);
+        $style = str_replace("{query}", $clientName, $style);
 
-    $charsetR = mysqli_set_charset($connectionR, "utf8");
+        echo $style;
 
-    if ($charsetR === FALSE)
-        die("MySQL SET CHARSET error: ". $connectionR->error);
+        if (isAdmin()) {
 
-    findClient($clientName);
+            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
+            $adminLink = generateLink("admin.php", $adminImage);
+            echo $adminLink;
+        }
 
-    echo "</table><br><br><br>";
-    echo "</html>";
+        echo "<h1>Clients trouvés:</h1>";
+        echo "<table>";
+
+        $cells = array("Nom de l'entreprise","Nom du contact","Numéro de téléphone");
+        $cells = generateRow($cells, true);
+        foreach ($cells as $cell)
+            echo $cell;
+
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+
+        findClient($clientName);
+
+        echo "</table><br><br><br>";
+        echo "</html>";
+
+    } else
+        displayLogin("Veuillez vous connecter.");
 
     $connectionR->close();
 }

@@ -8,8 +8,9 @@ body {
     left: 0;
 }
 
-h1 {
-    text-align:center
+h1, h2 {
+    text-align: center;
+    cursor: pointer;
 }
 
 table, th, td {

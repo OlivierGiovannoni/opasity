@@ -1,0 +1,58 @@
+<h1>Système de recherche de factures impayées</h1>
+<div id="mainDiv">
+  <div>
+    <h2>Recherche par revue:</h2>
+    <form target="_blank" name="searchReview" id="formReview" action="../php/searchReview.php" method="get">
+
+      <label for="reviewName">Nom de revue:</label><br>
+      <input type="text" name="reviewName" id="reviewName" placeholder="Nom de revue" required><br><br>
+
+      <input type="submit" id="submit" value="Chercher">
+	</form>
+  </div>
+
+  <div>
+    <h2>Recherche par contrat:</h2>
+    <form target="_blank" name="searchContract" id="formOrder" action="../php/searchOrder.php" method="get">
+
+      <label for="contractId">Contrat:</label><br>
+      <input type="text" name="contractId" id="contractId" placeholder="Numéro de contrat" required><br><br>
+
+      <input type="submit" id="submit" value="Chercher">
+    </form>
+  </div>      
+
+  <div>
+    <h2>Recherche par montant:</h2>
+    <form target="_blank" name="searchPrice" id="formOrder" action="../php/searchPrice.php" method="get">
+
+      <label for="price">Montant du contrat:</label><br>
+      <input type="text" name="price" id="price" placeholder="Montant" required><br><br>
+
+      <input type="submit" id="submit" value="Chercher">
+    </form>
+  </div>      
+
+  <div>
+    <h2>Recherche par date de relance:</h2>
+    <form target="_blank" name="searchDate" id="formDate" action="../php/searchDate.php" method="get">
+
+      <label for="reviewName">Date de relance:</label><br>
+      <input type="date" name="dueDate" id="dueDate" placeholder="Date de relance (AAAA-MM-JJ)" required><br><br>
+
+      <input type="submit" id="submit" value="Chercher">
+    </form>
+      </div>
+
+  <div>
+    <h2>Recherche par entreprise:</h2>
+    <form target="_blank" name="searchClient" id="formClient" action="../php/searchClient.php" method="get">
+
+      <label for="clientName">Nom de l'entreprise:</label><br>
+      <input type="text" name="clientName" id="clientName" placeholder="Nom de l'entreprise" required><br><br>
+
+      <input type="submit" id="submit" value="Chercher">
+    </form>
+  </div>
+</div>
+<br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br> <br>
