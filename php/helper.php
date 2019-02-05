@@ -127,9 +127,9 @@ function generateRow($cells, $header = false)
             $paid = substr($cell, 0, 33);
             $unpaid = substr($cell, 0, 37);
             if ($paid === "Le contrat à été passé en pay" && !$header)
-                $open = "<td id=\"isPaid\">";
+                $open = "<td style=\"color:#008800\">";
             else if ($unpaid === "Le contrat à été passé en non-pay" && !$header)
-                $open = "<td id=\"isNotPaid\">";
+                $open = "<td style=\"color:#FF0000\">";
         }
         $cell = $open . $cell . $close;
         array_push($row, $cell);
