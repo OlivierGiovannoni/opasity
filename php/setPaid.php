@@ -1,13 +1,16 @@
 <?php
 
-function setPaid($orderId)
+function setPaid($orderId, $author)
 {
     $today = date("Y-m-d");
     $orderIdShort = getOrderIdShort($orderId);
     $checkEmpty = checkEmpty($orderId);
-    if ($checkEmpty === 0) {
+    if ($checkEmpty) {
+
+        $nowDate = date("d/m/Y");
+        $nowTime = date("H:i:s");
         $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom,Reglement";
-        $rowValues = "'             ','dev','$today','$orderId','$orderIdShort','1970-01-01','','','NULL',1,'R'";
+        $rowValues = "'Le contrat à été passé en payé le $nowDate à $nowTime.','$author','$today','$orderId','$orderIdShort','1970-01-01','','','NULL',1,'R'";
         $sqlPaid = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
         querySQL($sqlPaid, $GLOBALS['connectionW'], false); // INSERT output doesn't need to be fetched.
     } else {
@@ -40,7 +43,7 @@ if (mysqli_connect_error()) {
         if ($charsetW === FALSE)
             die("MySQL SET CHARSET error: ". $connectionW->error);
 
-        setPaid($orderId);
+        setPaid($orderId, $_COOKIE['author']);
     } else
         displayLogin("Veuillez vous connecter.");
 

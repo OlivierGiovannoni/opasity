@@ -49,6 +49,8 @@ DONE:
 --Added Unique ID before filename on commentAdd.php if 2 filenames are same. fileX.y to uid_fileX.y if already exists.
 --Now superuser can see lastLogin and createdAt for each account
 --Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked.
+--Fixed bug where it wouldn't pass contract without comment to paid/unpaid.
+--Removed all helper scripts, added new helper script "empty.php" to be removed once used.
 
 TODO:
 --Repair bolt icon above the array where commentList.php?id= where id is "", move all comments to order they belong

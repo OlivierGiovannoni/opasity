@@ -487,8 +487,10 @@ function getReviewInfo($reviewId)
 function checkEmpty($orderId)
 {
     $sqlComment = "SELECT Commentaire_id FROM webcontrat_commentaire WHERE Commande='$orderId';";
-    $total = querySQL($sqlComment, $GLOBALS['connectionW'], false);
-    return ($total);
+    $total = numberSQL($sqlComment, $GLOBALS['connectionW']);
+    if ($total === 0)
+        return (true);
+    return (false);
 }
 
 /*
