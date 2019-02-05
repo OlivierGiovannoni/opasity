@@ -2,7 +2,8 @@
 
 function findClientOrders($clientId)
 {
-    $sqlOrders = "SELECT Reglement,DateEmission,Commande FROM webcontrat_contrat WHERE Client_id='$clientId' ORDER BY DateEmission DESC LIMIT 100;";
+    $columns = "Reglement,DateEmission,Commande";
+    $sqlOrders = "SELECT $columns FROM webcontrat_contrat WHERE Client_id='$clientId' ORDER BY DateEmission DESC LIMIT 100;";
     $rowsOrders = querySQL($sqlOrders, $GLOBALS['connectionR']);
 
     foreach ($rowsOrders as $rowOrders) {

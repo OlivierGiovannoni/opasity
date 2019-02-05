@@ -23,7 +23,8 @@ function deleteComment($commId)
 
 function selectPrevious($commId)
 {
-    $sqlComment = "SELECT Commande,DernierCom FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
+    $columns = "Commande,DernierCom";
+    $sqlComment = "SELECT $columns FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
     $rowComment = querySQL($sqlComment, $GLOBALS['connectionW'], true, true);
 
     $orderId = $rowComment['Commande'];

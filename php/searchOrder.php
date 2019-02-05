@@ -2,12 +2,13 @@
 
 function findOrder($supportPart, $contractPart, $contractId)
 {
+    $columns = "DateEmission,Commande";
     if (strlen($contractId) === 6)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "______" . $contractPart . "';";
+        $sqlOrder = "SELECT $columns FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "______" . $contractPart . "';";
     else if (strlen($contractId) === 4)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT $columns FROM webcontrat_contrat WHERE Commande LIKE '%" . $contractPart . "' ORDER BY DateEmission DESC;";
     else if (strlen($contractId) === 2)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT $columns FROM webcontrat_contrat WHERE Commande LIKE '__" . $supportPart . "%' ORDER BY DateEmission DESC;";
     else
         return ;
     $rowsOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);

@@ -2,7 +2,8 @@
 
 function findReviews($reviewName)
 {
-    $sqlReview = "SELECT id,Nom,Annee,DateCreation,Paru FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' ORDER BY DateCreation DESC;";
+    $columns = "id,Nom,Annee,DateCreation,Paru";
+    $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' ORDER BY DateCreation DESC;";
     $rowsReview = querySQL($sqlReview, $GLOBALS['connectionR']);
 
     foreach ($rowsReview as $rowReview) {

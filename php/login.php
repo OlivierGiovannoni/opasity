@@ -2,7 +2,8 @@
 
 function login($username, $password)
 {
-    $sqlLogin = "SELECT username,passwordhash,superuser FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
+    $columns = "username,passwordhash,superuser";
+    $sqlLogin = "SELECT $columns FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
     $rowLogin = querySQL($sqlLogin, $GLOBALS['connectionW'], true, true);
     $total = numberSQL($sqlLogin, $GLOBALS['connectionW']);
     if ($total === 0) {

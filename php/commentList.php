@@ -1,8 +1,9 @@
 <?php
 
-function listComments($orderId, $orderIdShort)
+function listComments($orderId)
 {
-    $sqlComment = "SELECT Commentaire_id,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier,DernierCom FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $columns = "Commentaire_id,Commande,Commande_courte,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier,DernierCom";
+    $sqlComment = "SELECT $columns FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     $rowsComment = querySQL($sqlComment, $GLOBALS['connectionW']);
 
     foreach ($rowsComment as $rowComment) {
@@ -12,6 +13,7 @@ function listComments($orderId, $orderIdShort)
             continue ;
 
         $commId = $rowComment['Commentaire_id'];
+        $comment = $rowComment['Commentaire'];
         $contact = getContactName($orderId);
         $author = $rowComment['Auteur'];
         $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
@@ -36,7 +38,13 @@ function listComments($orderId, $orderIdShort)
         $deleteLink = generateLink("commentDelete.php?id=" . $commId, $deleteImage, "_self", "return confirm('Supprimer commentaire ?')");
         $links = $editLink . " " . $deleteLink;
 
-        $cells = array($rowComment['Commentaire'], $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
+        if ($orderId === "") {
+
+            $commOrderId = $rowComment['Commande'];
+            $commOrderIdShort = $rowComment['Commande_courte'];
+            $cells = array($commId, $commOrderId, $commOrderIdShort, $comment, $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
+        } else
+          $cells = array($comment, $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
         if (isAuthor($author) || isAdmin())
             array_push($cells, $links);
         $cells = generateRow($cells);
@@ -113,16 +121,24 @@ if (mysqli_connect_error()) {
 
         echo "<table>";
 
-        $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
+        if ($orderId === "") {
+
+            $cells = array("ID","Commande","Commande courte","Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
+
+            $repairImage = generateImage("../png/repair.png", "Remettre en ordre", 32, 32);
+            $repairLink = generateLink("../commentSort.php", $repairImage, "_self");
+            echo $repairLink;
+        } else
+            $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
-
         $phone = getPhoneNumber($orderId, $client['id']); // For the $form phone placeholder, takes existing phone value.
-        listComments($orderId, $orderIdShort);
         $form = addUnpaidForm("../html/commentAdd.html", $orderId, $orderIdShort, $client['id'], $phone, $paid['compta']);
         echo $form;
+
+        listComments($orderId);
 
         echo "</table><br><br><br>";
         echo "</html>";

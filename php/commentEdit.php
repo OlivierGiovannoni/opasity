@@ -2,7 +2,8 @@
 
 function editForm($commId, $style)
 {
-    $sqlComment = "SELECT NumTelephone,AdresseMail,Commentaire,Prochaine_relance,Commande FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
+    $columns = "NumTelephone,AdresseMail,Commentaire,Prochaine_relance,Commande";
+    $sqlComment = "SELECT $columns FROM webcontrat_commentaire WHERE Commentaire_id='$commId';";
     $rowComment = querySQL($sqlComment, $GLOBALS['connectionW'], true, true);
 
     $phone = $rowComment['NumTelephone'];

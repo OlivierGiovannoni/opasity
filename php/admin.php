@@ -2,7 +2,8 @@
 
 function fetchUsers()
 {
-    $sqlUsers = "SELECT * FROM webcontrat_utilisateurs;";
+    $columns = "id,username,passwordhash,email,fname,lname,created,lastLogin,superuser";
+    $sqlUsers = "SELECT $columns FROM webcontrat_utilisateurs;";
     $rowsUsers = querySQL($sqlUsers, $GLOBALS['connectionW']);
 
     foreach ($rowsUsers as $rowUser) {
@@ -63,7 +64,7 @@ if (mysqli_connect_error()) {
 
         fetchUsers();
 
-        echo "</table>";
+        echo "</table><br><br><br>";
     } else
         header("Location: index.php");
 

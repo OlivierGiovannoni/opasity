@@ -2,7 +2,8 @@
 
 function editForm($userId, $style)
 {
-    $sqlUser = "SELECT email,fname,lname,username,passwordhash,superuser FROM webcontrat_utilisateurs WHERE id='$userId';";
+    $columns = "email,fname,lname,username,passwordhash,superuser";
+    $sqlUser = "SELECT $columns FROM webcontrat_utilisateurs WHERE id='$userId';";
     $rowUser = querySQL($sqlUser, $GLOBALS['connectionW'], true, true);
 
     $email = $rowUser['email'];

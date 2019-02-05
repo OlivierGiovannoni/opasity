@@ -3,7 +3,7 @@
 function setPaid($orderId)
 {
     $today = date("Y-m-d");
-    $orderIdShort = substr($orderId, 2, 2) . substr($orderId, 10, 4);
+    $orderIdShort = getOrderIdShort($orderId);
     $checkEmpty = checkEmpty($orderId);
     if ($checkEmpty === 0) {
         $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom,Reglement";

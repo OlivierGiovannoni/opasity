@@ -2,7 +2,8 @@
 
 function findDates($dueDate)
 {
-    $sqlDate = "SELECT Commentaire_id,Commentaire,Auteur,Commande,Date,Prochaine_relance,AdresseMail,Reglement,Fichier FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
+    $columns = "Commentaire_id,Commentaire,Auteur,Commande,Date,Prochaine_relance,AdresseMail,Reglement,Fichier";
+    $sqlDate = "SELECT $columns FROM webcontrat_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
     $rowsDate = querySQL($sqlDate, $GLOBALS['connectionW']);
 
     foreach ($rowsDate as $rowDate) {

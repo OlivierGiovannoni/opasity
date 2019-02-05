@@ -2,7 +2,8 @@
 
 function findClient($clientName)
 {
-    $sqlClient = "SELECT id,NomSociete,Tel,NomContact1 FROM webcontrat_client WHERE NomSociete LIKE '%$clientName%';";
+    $columns = "id,NomSociete,Tel,NomContact1";
+    $sqlClient = "SELECT $columns FROM webcontrat_client WHERE NomSociete LIKE '%$clientName%';";
     $rowsClient = querySQL($sqlClient, $GLOBALS['connectionR']);
 
     foreach ($rowsClient as $rowClient) {

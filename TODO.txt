@@ -51,6 +51,11 @@ DONE:
 --Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked.
 
 TODO:
+--Repair bolt icon above the array where commentList.php?id= where id is "", move all comments to order they belong
+--Clickable <th> that can be sorted dynamically SORT BY clickedColumn ASC DESC
+--Create review and client links for the next tool
+--Add "MesRevues" and "MesClients" columns to "webcontrat_utilisateurs" where there will be a comma-separated list of review/client IDs usable by the user. (userID 24 has access to 94,113,972 reviews and 7,13,69,88,911 clients.)
+
 --File for each ORDER not COMMENT.
 --Auto-upload Dropzone
 --OCR

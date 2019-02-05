@@ -3,10 +3,11 @@
 function findOrders($price, $paidBool)
 {
     $price = str_replace("€", "", $price) . ".";
+    $columns = "DateEmission,Commande";
     if ($paidBool == 1)
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE PrixHT='$price' AND Reglement='' ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT $columns FROM webcontrat_contrat WHERE PrixHT='$price' AND Reglement='' ORDER BY DateEmission DESC;";
     else
-        $sqlOrder = "SELECT DateEmission,Commande FROM webcontrat_contrat WHERE PrixHT='$price' ORDER BY DateEmission DESC;";
+        $sqlOrder = "SELECT $columns FROM webcontrat_contrat WHERE PrixHT='$price' ORDER BY DateEmission DESC;";
     $rowsOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
 
     foreach ($rowsOrder as $rowOrder) {
