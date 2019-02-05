@@ -115,11 +115,21 @@ function generateRow($cells, $header = false)
         $open = ($header === true ? "<th>" : "<td>");
         $close = ($header === true ? "</th>" : "</td>");
 
-        if ($cell === "Oui" && $header === false) {
+        $statusLength = strlen("Le contrat à été passé");
+        $status = substr($cell, 0, $statusLength);
+
+        if ($cell === "Oui" && !$header)
             $open = "<td id=\"isPaid\">";
-        }
-        else if ($cell === "Non" && $header === false) {
+        else if ($cell === "Non" && !$header)
             $open = "<td id=\"isNotPaid\">";
+        if ($status === "Le contrat à été passé") {
+
+            $paid = substr($cell, 0, 33);
+            $unpaid = substr($cell, 0, 37);
+            if ($paid === "Le contrat à été passé en pay" && !$header)
+                $open = "<td id=\"isPaid\">";
+            else if ($unpaid === "Le contrat à été passé en non-pay" && !$header)
+                $open = "<td id=\"isNotPaid\">";
         }
         $cell = $open . $cell . $close;
         array_push($row, $cell);

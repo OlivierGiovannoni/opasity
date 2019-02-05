@@ -9,9 +9,6 @@ function listComments($orderId)
     foreach ($rowsComment as $rowComment) {
 
         $comment = $rowComment['Commentaire'];
-        if ($comment === "             ")
-            continue ;
-
         $commId = $rowComment['Commentaire_id'];
         $comment = $rowComment['Commentaire'];
         $contact = getContactName($orderId);
@@ -127,7 +124,7 @@ if (mysqli_connect_error()) {
 
             $repairImage = generateImage("../png/repair.png", "Remettre en ordre", 32, 32);
             $repairLink = generateLink("../commentSort.php", $repairImage, "_self");
-            echo $repairLink;
+            //echo $repairLink;
         } else
             $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
         $cells = generateRow($cells, true);
