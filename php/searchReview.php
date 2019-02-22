@@ -30,7 +30,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $reviewName = filter_input(INPUT_GET, "reviewName"); // NOM REVUE ex: Ann Mines
 $reviewName = sanitizeInput($reviewName);
@@ -51,7 +51,7 @@ if (mysqli_connect_error()) {
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("admin.php", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
 
@@ -63,9 +63,9 @@ if (mysqli_connect_error()) {
         foreach ($cells as $cell)
             echo $cell;
 
-        $charset = mysqli_set_charset($connectionR, "utf8");
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
 
-        if ($charset === FALSE)
+        if ($charsetR === FALSE)
             die("MySQL SET CHARSET error: ". $connectionR->error);
 
         findReviews($reviewName);

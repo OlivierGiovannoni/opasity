@@ -34,9 +34,9 @@ function editUser($userId, $fname, $lname, $email, $username, $password, $superu
     $myId = getUserId($self);
 
     if ($myId == $userId)
-        header("Location: logout.php");
+        header("Location: userLogout.php");
     else
-        header("Location: admin.php");
+        header("Location: userList.php");
 }
 
 require_once "helper.php";
@@ -47,7 +47,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $id = filter_input(INPUT_GET, "id");
 

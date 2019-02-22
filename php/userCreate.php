@@ -15,7 +15,7 @@ function userCreate($fname, $lname, $username, $email, $password, $superuser)
     $sqlRegister = "INSERT INTO webcontrat_utilisateurs ($rowNames) VALUES ($rowValues);";
     querySQL($sqlRegister, $GLOBALS['connectionW'], false); // INSERT output doesn't need to be fetched
 
-    header("Location: admin.php");
+    header("Location: userList.php");
 }
 
 require_once "helper.php";
@@ -26,7 +26,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $fname = filter_input(INPUT_POST, "fname");
 $lname = filter_input(INPUT_POST, "lname");

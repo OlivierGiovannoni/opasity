@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/logister.css">
+    <title>Création d'une revue</title>
+  </head>
+  <body>
+    <h1>Création d'une revue</h1>
+    <form action="../php/reviewCreate.php" method="post">
+      <label for="reviewName">Nom de revue</label><br>
+      <input type="text" name="reviewName" id="reviewName" placeholder="Nom de revue" required>
+      <br><br>
+
+      <label for="reviewYear">Année de parution</label><br>
+      <input type="text" name="reviewYear" id="reviewYear" placeholder="Année de parution" required>
+      <br><br>
+
+      <input type="submit" id="submit" value="Créer"><br>
+      <a href="../php/reviewList.php">Annuler</a>
+    </form>
+  </body>
+</html>

@@ -35,9 +35,8 @@ function findDates($dueDate)
 
             $dateNext = date("d/m/Y", strtotime($dateNextYMD));
             $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
-        }
-        else
-               $dateNext = "Aucune";
+        } else
+            $dateNext = "Aucune";
         $attachmentImage = generateImage("../png/attachment.png", $fileShort, 24, 24); // Create attachment icon
         $attachmentLink = generateLink($file, $attachmentImage); // Create <a> link that leads to attached file
         if ($file !== "NULL" && $file !== "")
@@ -66,7 +65,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $credentialsW = getCredentials("../credentialsW.txt");
 
@@ -74,7 +73,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -97,7 +96,7 @@ if (mysqli_connect_error()) {
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("admin.php", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
 

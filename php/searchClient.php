@@ -29,7 +29,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $clientName = filter_input(INPUT_GET, "clientName");
 $clientName = sanitizeInput($clientName);
@@ -50,7 +50,7 @@ if (mysqli_connect_error()) {
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("admin.php", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
 

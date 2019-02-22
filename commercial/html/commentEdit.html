@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <script src="../js/dropzone.js"></script>
+    <link rel="stylesheet" href="../css/dropzone.css">
+    <link rel="stylesheet" href="../css/comment.css">
+    <title>Modification commentaire</title>
+  </head>
+  <body>
+    <div id="commentDiv">
+
+      <form id="commentForm" enctype="multipart/form-data" charset="UTF-8" method="post" action="../php/commentEdit.php">
+
+	<div>
+	  <label for="numPhone">Numéro de téléphone</label><br>
+	  <input type="text" name="numPhone" id="numPhone" value="{phone}">
+	  <br><br>
+	  <label for="emailAddr">Adresse e-mail</label><br>
+	  <input type="email" name="emailAddr" id="emailAddr" value="{email}">
+	  <br><br>
+	</div>
+
+	<div>
+	  <label for="unpaidReason">Commentaire</label><br>
+	  <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason" required>{comment}</textarea>
+
+	  <br><br>
+
+	  <label for="nextDueDate">Prochaine relance</label><br>
+	  <input type="date" name="nextDueDate" id="nextDueDate" value="{nextDue}">
+
+	  <br><br>
+
+	  <input type="hidden" name="orderId" value="{orderId}">
+	  <input type="hidden" name="commentId" value="{commId}">
+
+	  <input value="Valider" type="submit" id="submit">
+	  <br>
+	  <a href="../php/commentList.php?id={orderId}">Annuler</a>
+	</div>
+      </form>
+    </div>
+  </body>
+</html>

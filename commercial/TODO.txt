@@ -1,0 +1,8 @@
+DONE:
+--
+
+TODO:
+--Create review and client links in "webcommercial_revue" and "webcommercial_client" tables (tmp names)
+--Create "dev" and "test" users to check different access rights
+--Create "skerp" superuser to give access rights
+--Add "MesRevues" and "MesClients" columns to "webcommercial_utilisateurs" where there will be a comma-separated list of review/client IDs usable by the user. (userID 24 has access to 94,113,972 reviews and 7,13,69,88,911 clients.)

@@ -42,7 +42,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $credentialsW = getCredentials("../credentialsW.txt");
 
@@ -50,7 +50,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $dueDate = filter_input(INPUT_GET, "dueDate");
 
@@ -72,7 +72,7 @@ if (mysqli_connect_error()) {
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("admin.php", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
 

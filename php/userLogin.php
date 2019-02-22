@@ -34,7 +34,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $username = filter_input(INPUT_POST, "username");
 $password = filter_input(INPUT_POST, "password");

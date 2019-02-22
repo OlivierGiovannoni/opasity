@@ -4,7 +4,7 @@ function deleteUser($userId)
 {
     $sqlUser = "DELETE FROM webcontrat_utilisateurs WHERE id='$userId';";
     querySQL($sqlUser, $GLOBALS['connectionW'], false);
-    header("Location: admin.php");
+    header("Location: userList.php");
 }
 
 require_once "helper.php";
@@ -15,7 +15,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $userId = filter_input(INPUT_GET, "id");
 

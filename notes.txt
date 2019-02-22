@@ -148,6 +148,3 @@ Comment is UPDATEable if clicked on, or edit css imgbutton, re-fill textboxes wi
 
 Once EVERYTHING is DONE, create a 'refactor' branch to ref. shitcode
 -----------------------------------------------------------
-
-Copier systeme creation de contact pour les commerciaux qui doivent appeler des nouveaux clients
-accepté/refusé

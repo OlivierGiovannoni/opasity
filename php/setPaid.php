@@ -27,7 +27,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB
+    $credentialsW['database']); // CONNECT TO DATABASE
 
 $orderId = filter_input(INPUT_GET, "id");
 

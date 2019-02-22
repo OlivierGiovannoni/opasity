@@ -53,14 +53,19 @@ DONE:
 --Removed all helper scripts
 
 TODO:
---Repair bolt icon above the table where commentList.php?id= where id is "", move all comments to order they belong
---Modulable search (check paper)
+--Add "+"  button next to review link if a contract belongs to multiple reviews "searchOrderReviews.php"
+--Add 5 most recent order numbers (links) right next to the phone number	
+--Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
 --Clickable <th> that can be sorted dynamically SORT BY clickedColumn ASC DESC
---Create review and client links for the next tool
---Add "MesRevues" and "MesClients" columns to "webcontrat_utilisateurs" where there will be a comma-separated list of review/client IDs usable by the user. (userID 24 has access to 94,113,972 reviews and 7,13,69,88,911 clients.)
 --File for each ORDER not COMMENT.
 --Auto-upload Dropzone
 --OCR
---Filter EMPTY orders without comments on reviews that are "Paru".
---Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
---Add "Paru non-reglé" option.
+--Comment all .php files like php/index.php and describe helper functions in helper.php
+--Modulable search (check paper):
+----"Paru non-reglé" reviews where the review is "Parue" but has unpaid (compta) orders
+----Filter EMPTY orders without comments on reviews that are "Paru".
+
+OPTIONAL:
+++Checkboxes to enable/disable columns
+++Draggable elements
+++Make it generic, JSON config file does everything, JSON describes starting point, headers, titles, tables, SQL requests, SQL columns, Links, Data to be displayed, sorted, etc.. (generic.json)

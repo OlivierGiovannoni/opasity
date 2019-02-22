@@ -17,10 +17,12 @@ function fetchUsers()
         $created = $rowUser['created'];
         $lastLogin = $rowUser['lastLogin'];
         $superuser = $rowUser['superuser'];
+
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);
         $editLink = generateLink("userEdit.php?id=" . $id, $editImage, "_self");
         $deleteImage = generateImage("../png/delete.png", "Supprimer", 24, 24);
         $deleteLink = generateLink("userDelete.php?id=" . $id, $deleteImage, "_self", "return confirm('Supprimer l\'utilisateur: $username ?')");
+
         $links = $editLink . " " . $deleteLink;
 
         $cells = array($id, $username, $password, $email, $fname, $lname, $created, $lastLogin, $superuser, $links);
@@ -38,7 +40,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());

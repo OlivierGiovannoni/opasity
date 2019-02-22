@@ -14,7 +14,7 @@ function listComments($orderId)
         $contact = getContactName($orderId);
         $author = $rowComment['Auteur'];
         $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
-        $mailtoLink = generateLink($rowComment['AdresseMail'], $rowComment['AdresseMail']);
+        $mailtoLink = generateLink("mailto:" . $rowComment['AdresseMail'], $rowComment['AdresseMail']);
         $dateNextYMD = $rowComment['Prochaine_relance'];
         if (isDateValid($dateNextYMD)) {
 
@@ -35,13 +35,7 @@ function listComments($orderId)
         $deleteLink = generateLink("commentDelete.php?id=" . $commId, $deleteImage, "_self", "return confirm('Supprimer commentaire ?')");
         $links = $editLink . " " . $deleteLink;
 
-        if ($orderId === "") {
-
-            $commOrderId = $rowComment['Commande'];
-            $commOrderIdShort = $rowComment['Commande_courte'];
-            $cells = array($commId, $commOrderId, $commOrderIdShort, $comment, $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
-        } else
-          $cells = array($comment, $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
+        $cells = array($comment, $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
         if (isAuthor($author) || isAdmin())
             array_push($cells, $links);
         $cells = generateRow($cells);
@@ -58,7 +52,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $credentialsW = getCredentials("../credentialsW.txt");
 
@@ -66,7 +60,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $orderId = filter_input(INPUT_GET, "id");
 $orderIdShort = getOrderIdShort($orderId);
@@ -84,7 +78,7 @@ if (mysqli_connect_error()) {
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("admin.php", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
     
@@ -118,21 +112,13 @@ if (mysqli_connect_error()) {
 
         echo "<table>";
 
-        if ($orderId === "") {
-
-            $cells = array("ID","Commande","Commande courte","Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
-
-            $repairImage = generateImage("../png/repair.png", "Remettre en ordre", 32, 32);
-            $repairLink = generateLink("../commentSort.php", $repairImage, "_self");
-            //echo $repairLink;
-        } else
-            $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
+        $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
         $phone = getPhoneNumber($orderId, $client['id']); // For the $form phone placeholder, takes existing phone value.
-        $form = addUnpaidForm("../html/commentAdd.html", $orderId, $orderIdShort, $client['id'], $phone, $paid['compta']);
+        $form = addCommentForm("../html/commentAdd.html", $orderId, $orderIdShort, $client['id'], $phone);
         echo $form;
 
         listComments($orderId);

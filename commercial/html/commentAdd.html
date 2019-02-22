@@ -1,0 +1,53 @@
+  <head>
+    <meta charset="utf-8">
+    <script src="../js/dropzone.js"></script>
+    <link rel="stylesheet" href="../css/dropzone.css">
+  </head>
+  <body>
+    <div id="commentDiv">
+      <form id="commentForm" enctype="multipart/form-data" charset="UTF-8" method="post" action="../php/commentAdd.php">
+
+	<div>
+	  <label for="numPhone">Numéro de téléphone</label><br>
+	  <input type="text" name="numPhone" id="numPhone" value="{phone}">
+	  <br><br>
+	  <label for="emailAddr">Adresse e-mail</label><br>
+	  <input type="email" name="emailAddr" id="emailAddr">
+	  <br><br>
+	</div>
+
+	<div>
+	  <label for="unpaidReason">Commentaire</label><br>
+	  <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason" required></textarea>
+
+	  <br><br>
+
+	  <label for="nextDueDate">Prochaine relance</label><br>
+	  <input type="date" name="nextDueDate" id="nextDueDate">
+
+	  <br><br>
+
+	  <input type="hidden" name="orderId" value="{orderId}">
+	  <input type="hidden" name="clientId" value="{clientId}">
+
+	  <input value="Valider" type="submit" id="submit">
+	</div>
+	<div>
+	  <label for="newFilename">Nouveau nom de fichier</label><br>
+	  <input type="text" name="newFilename" id="newFilename"><br><br>
+	  <label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
+	  <input type="file" name="fileUpload" id="fileUp" class="dropzone" multiple>
+	</div>
+      </form>
+      <div>
+	<a  href="../php/setPaid.php?id={orderId}">
+	  <img src="../png/check.png" alt="Passer en reglé" width="64" height="64">
+	</a>
+	<a  href="../php/setUnpaid.php?id={orderId}">
+	  <img src="../png/uncheck.png" alt="Passer en non-reglé" width="64" height="64">
+	</a>
+      </div>
+
+    </div>
+    <iframe height="250"frameborder="0"></iframe>
+  </body>

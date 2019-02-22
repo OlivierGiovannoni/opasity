@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/search.css">
+    <title>Création d'un client</title>
+  </head>
+  <body>
+    <h1>Création d'un client</h1>
+    <form action="../php/clientCreate.php" method="post">
+      <label for="clientName">Nom du client</label><br>
+      <input type="text" name="clientName" id="clientName" placeholder="Nom du client" required>
+      <br><br>
+
+      
+      <label for="phone">Numéro de téléphone</label><br>
+      <input type="text" name="phone" id="phone" placeholder="Numéro de téléphone">
+      <br><br>
+
+      <label for="address1">Adresse</label><br>
+      <input type="text" name="address1" id="address1" placeholder="Adresse">
+      <br><br>
+
+      <label for="address2">Adresse (2ème ligne)</label><br>
+      <input type="text" name="address2" id="address2" placeholder="Adresse (2ème ligne)">
+      <br><br>
+
+      <label for="zipCode">Code postal</label><br>
+      <input type="text" name="zipCode" id="zipCode" placeholder="Code postal" required>
+      <br><br>
+
+      <label for="city">Ville</label><br>
+      <input type="text" name="city" id="city" placeholder="Ville">
+      <br><br>
+
+      <label for="country">Pays</label><br>
+      <input type="text" name="country" id="country" placeholder="Pays">
+      <br><br>
+
+      <label for="siretCode">SIRET</label><br>
+      <input type="text" name="siretCode" id="siretCode" placeholder="SIRET">
+      <br><br>
+
+      <label for="apeCode">Code APE</label><br>
+      <input type="text" name="apeCode" id="apeCode" placeholder="Code APE">
+      <br><br>
+
+      <input type="submit" id="submit" value="Créer"><br>
+      <a href="../php/clientList.php">Annuler</a>
+    </form>
+  </body>
+</html>

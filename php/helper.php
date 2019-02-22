@@ -4,11 +4,13 @@
 ** ***********************
 ** ** Generic functions **
 ** ***********************
+**
 */
 
 /*
 ** Parameters: String
 ** Return: String
+**
 */
 function sanitizeInput($data) {
 
@@ -21,6 +23,7 @@ function sanitizeInput($data) {
 /*
 ** Parameters: String
 ** Return: Array
+**
 */
 function getCredentials($credsFile)
 {
@@ -39,6 +42,7 @@ function getCredentials($credsFile)
 /*
 ** Parameters: String, Object
 ** Return: Integer
+**
 */
 function numberSQL($query, $connection)
 {
@@ -55,19 +59,19 @@ function numberSQL($query, $connection)
 /*
 ** Parameters: String, Object, Bool, Bool
 ** Return: Array
+**
 */
 function querySQL($query, $connection, $results = true, $first = false)
 {
     $result = $connection->query($query);
-    if ($result && $results === true) {
+    if ($results === true && $result) {
 
         if ($first === false)
             $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
         else
             $rows = mysqli_fetch_array($result, MYSQLI_ASSOC);
         return ($rows);
-    }
-    else if ($result && $results === false)
+    } else if ($results === false && $result)
         return (NULL);
     die("MySQL query error:<br>Query: " . $query . "<br>Error: " . $connection->error . "<br>");
     return (NULL);
@@ -76,16 +80,18 @@ function querySQL($query, $connection, $results = true, $first = false)
 /*
 ** Parameters: String, String, String, String
 ** Return: String
+**
 */
-function generateInput($type, $name, $id, $value)
+function generateInput($type, $name, $value = null, $id = null)
 {
-    $input = "<input type=\"" . $type . "\" name=\"" . $name . "\" id=\"" . $id . "\" value=\"" . $value . "\">";
+    $input = "<input type=\"" . $type . "\" name=\"" . $name . "\" value=\"" . $value . "\" id=\"" . $id . "\">";
     return ($input);
 }
 
 /*
 ** Parameters: String, String, String, Array
 ** Return: Array
+**
 */
 function generateForm($target, $action, $method, $inputs)
 {
@@ -104,6 +110,7 @@ function generateForm($target, $action, $method, $inputs)
 /*
 ** Parameters: Array, Bool
 ** Return: Array
+**
 */
 function generateRow($cells, $header = false)
 {
@@ -118,17 +125,17 @@ function generateRow($cells, $header = false)
         $statusLength = strlen("Le contrat à été passé");
         $status = substr($cell, 0, $statusLength);
 
-        if ($cell === "Oui" && !$header)
+        if ($header === false && $cell === "Oui")
             $open = "<td id=\"isPaid\">";
-        else if ($cell === "Non" && !$header)
+        else if ($header === false && $cell === "Non")
             $open = "<td id=\"isNotPaid\">";
         if ($status === "Le contrat à été passé") {
 
             $paid = substr($cell, 0, 33);
             $unpaid = substr($cell, 0, 37);
-            if ($paid === "Le contrat à été passé en pay" && !$header)
+            if ($header === false && $paid === "Le contrat à été passé en pay")
                 $open = "<td style=\"color:#008800\">";
-            else if ($unpaid === "Le contrat à été passé en non-pay" && !$header)
+            else if ($header === false && $unpaid === "Le contrat à été passé en non-pay")
                 $open = "<td style=\"color:#FF0000\">";
         }
         $cell = $open . $cell . $close;
@@ -142,6 +149,7 @@ function generateRow($cells, $header = false)
 /*
 ** Parameters: Array, Array
 ** Return: Array
+**
 */
 function generateSelect($rows, $value, $text)
 {
@@ -159,6 +167,7 @@ function generateSelect($rows, $value, $text)
 /*
 ** Parameters: String, String, String
 ** Return: String
+**
 */
 function generateLink($href, $text, $target = "_blank", $onclick = null)
 {
@@ -169,16 +178,18 @@ function generateLink($href, $text, $target = "_blank", $onclick = null)
 /*
 ** Parameters: String, String, Integer, Integer
 ** Return: String
+**
 */
 function generateImage($src, $desc, $width = 32, $height = 32)
 {
-    $image = "<img src=\"" . $src . "\" alt=\"" . $desc ."\" width=\"" . $width . "\" height=\"" . $height. "\">";
+    $image = "<img src=\"" . $src . "\" alt=\"" . $desc ."\" title=\"" . $desc ."\" width=\"" . $width . "\" height=\"" . $height. "\">";
     return ($image);
 }
 
 /*
 ** Parameters: String, String
 ** Return: String
+**
 */
 function skipAccents($str, $charset = "utf-8")
 {
@@ -196,11 +207,13 @@ function skipAccents($str, $charset = "utf-8")
 ** ***************************
 ** ** App-specific function **
 ** ***************************
+**
 */
 
 /*
 ** Parameters: Void
 ** Return: Bool
+**
 */
 function isLogged()
 {
@@ -212,6 +225,7 @@ function isLogged()
 /*
 ** Parameters: Void
 ** Return: Bool
+**
 */
 function isAdmin()
 {
@@ -223,6 +237,7 @@ function isAdmin()
 /*
 ** Parameters: String
 ** Return: Bool
+**
 */
 function isAuthor($author)
 {
@@ -233,7 +248,34 @@ function isAuthor($author)
 
 /*
 ** Parameters: String
+** Return: Void
+**
+*/
+function displayLogin($message)
+{
+    $file = "../html/userLogin.html";
+    $loginHTML = file_get_contents($file);
+    echo $message;
+    echo $loginHTML;
+}
+
+/*
+** Parameters: Bool
+** Return: Void
+**
+*/
+function displayRegister($message)
+{
+    $file = "../html/userCreate.html";
+    $registerHTML = file_get_contents($file);
+    echo $message;
+    echo $registerHTML;
+}
+
+/*
+** Parameters: String
 ** Return: String
+**
 */
 function getOrderIdShort($orderId)
 {
@@ -244,6 +286,7 @@ function getOrderIdShort($orderId)
 /*
 ** Parameters: String
 ** Return: String
+**
 */
 function getUserId($username)
 {
@@ -256,6 +299,7 @@ function getUserId($username)
 /*
 ** Parameters: String, String, String
 ** Return: String
+**
 */
 function uploadFile($tmpFile, $fileName, $orderId)
 {
@@ -275,32 +319,9 @@ function uploadFile($tmpFile, $fileName, $orderId)
 }
 
 /*
-** Parameters: Bool
-** Return: Void
-*/
-function displayLogin($message, $root = false)
-{
-    $file = ($root === false ? "../html/login.html" : "html/login.html");
-    $loginHTML = file_get_contents($file);
-    echo $message;
-    echo $loginHTML;
-}
-
-/*
-** Parameters: Bool
-** Return: Void
-*/
-function displayRegister($message)
-{
-    $file = "../html/register.html";
-    $registerHTML = file_get_contents($file);
-    echo $message;
-    echo $registerHTML;
-}
-
-/*
 ** Parameters: String
 ** Return: Array
+**
 */
 function getOrderDetails($orderId)
 {
@@ -326,6 +347,7 @@ function getOrderDetails($orderId)
 /*
 ** Parameters: String
 ** Return: Array
+**
 */
 function findReview($infoId)
 {
@@ -347,6 +369,7 @@ function findReview($infoId)
 /*
 ** Parameters: String
 ** Return: Array
+**
 */
 function isItPaid($orderId)
 {
@@ -363,6 +386,7 @@ function isItPaid($orderId)
 /*
 ** Parameters: String, String
 ** Return: String
+**
 */
 function getPhoneNumber($orderId, $clientId)
 {
@@ -380,6 +404,7 @@ function getPhoneNumber($orderId, $clientId)
 /*
 ** Parameters: String
 ** Return: Array
+**
 */
 function getContactName($orderId)
 {
@@ -398,14 +423,12 @@ function getContactName($orderId)
 /*
 ** Parameters: String, String, String, String, String, String
 ** Return: String
+**
 */
-function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone, $paidStr)
+function addCommentForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone)
 {
     // Get file data.
     $htmlFileData = file_get_contents($htmlFileName);
-    // Check if order is paid, to choose whether to display the <form> or not.
-    /* if ($paidStr == "") { */
-    // Uncomment <form> region.
     $htmlFileData = str_replace("<!-- UNPAID", "", $htmlFileData);
     $htmlFileData = str_replace("-->", "", $htmlFileData);
     // Replace fake variables with real values.
@@ -413,11 +436,11 @@ function addUnpaidForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone
     $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
     $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
     $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
-    /* } */
     return ($htmlFileData);
 }
 
 /*
+**
 **
 **
 */
@@ -432,6 +455,7 @@ function getAuthor($commId)
 /*
 ** Parameters: String, Bool
 ** Return: Array
+**
 */
 function selectLastComment($orderId, $dmy = false)
 {
@@ -458,10 +482,15 @@ function selectLastComment($orderId, $dmy = false)
 /*
 ** Parameters: String
 ** Return: Bool
+**
 */
 function isDateValid($date)
 {
-    if ($date === "1970-01-01" || $date === "0000-00-00")
+    if ($date === "Aucune")
+        return (false);
+    else if ($date === "1970-01-01")
+        return (false);
+    else if ($date === "0000-00-00")
         return (false);
     return (true);
 }
@@ -469,6 +498,7 @@ function isDateValid($date)
 /*
 ** Parameters: String
 ** Return: String
+**
 */
 function getCompanyName($clientId)
 {
@@ -481,6 +511,7 @@ function getCompanyName($clientId)
 /*
 ** Parameters: String
 ** Return: Array
+**
 */
 function getReviewInfo($reviewId)
 {
@@ -493,6 +524,7 @@ function getReviewInfo($reviewId)
 /*
 ** Parameters: String
 ** Return: Integer
+**
 */
 function checkEmpty($orderId)
 {
@@ -506,6 +538,7 @@ function checkEmpty($orderId)
 /*
 ** Parameters: String
 ** Return: Integer
+**
 */
 function getNbOrders($reviewId)
 {
@@ -517,6 +550,7 @@ function getNbOrders($reviewId)
 /*
 ** Parameters: String
 ** Return: Integer
+**
 */
 function getUnitPrice($orderId)
 {
@@ -529,6 +563,7 @@ function getUnitPrice($orderId)
 /*
 ** Parameters: String
 ** Return: Integer
+**
 */
 function getTotalPrice($reviewId)
 {

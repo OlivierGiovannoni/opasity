@@ -8,26 +8,33 @@ function findClientOrders($clientId)
 
     foreach ($rowsOrders as $rowOrders) {
 
-            $orderId = $rowOrders['Commande'];
-            $orderIdShort = getOrderIdShort($orderId);
-            $final = findReview($orderId);
+        $orderId = $rowOrders['Commande'];
+        $orderIdShort = getOrderIdShort($orderId);
+        $final = findReview($orderId);
 
-            $details = getOrderDetails($orderId);
+        $details = getOrderDetails($orderId);
 
-            $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort);
-            $reviewLink = generateLink("searchReviewOrders.php?id=" . $final['Id'], $final['Name']);
-            $paid = isItPaid($orderId);
-            $phone = getPhoneNumber($orderId, $clientId);
-            $comment = selectLastComment($orderId, true);
+        $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort);
+        $reviewLink = generateLink("searchReviewOrders.php?id=" . $final['Id'], $final['Name']);
+        $paid = isItPaid($orderId);
+        $phone = getPhoneNumber($orderId, $clientId);
+        $comment = selectLastComment($orderId);
+        $dateNextYMD = $comment['reminder'];
+        if (isDateValid($dateNextYMD)) {
 
-            $paidCompta = ($paid['compta'] == "R" ? "Oui" : "Non");
-            $paidBase = ($paid['base'] ==  "R" ? "Oui" : "Non");
+            $dateNext = date("d/m/Y", strtotime($dateNextYMD));
+            $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
+        } else
+            $dateNext = "Aucune";
 
-            $cells = array($orderLink, $rowOrders['DateEmission'], $reviewLink, $details['priceRaw'], $paidCompta, $details['contactName'], $phone, $paidBase, $comment['text'], $comment['date'], $comment['reminder']);
-            $cells = generateRow($cells);
-            foreach ($cells as $cell)
-                echo $cell;
-        }
+        $paidCompta = ($paid['compta'] == "R" ? "Oui" : "Non");
+        $paidBase = ($paid['base'] ==  "R" ? "Oui" : "Non");
+
+        $cells = array($orderLink, $rowOrders['DateEmission'], $reviewLink, $details['priceRaw'], $paidCompta, $details['contactName'], $phone, $paidBase, $comment['text'], $comment['date'], $dateNext);
+        $cells = generateRow($cells);
+        foreach ($cells as $cell)
+            echo $cell;
+    }
 }
 
 require_once "helper.php";
@@ -38,7 +45,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNEXION A LA DB READ
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $credentialsW = getCredentials("../credentialsW.txt");
 
@@ -46,7 +53,7 @@ $connectionW = new mysqli(
     $credentialsW['hostname'],
     $credentialsW['username'],
     $credentialsW['password'],
-    $credentialsW['database']); // CONNEXION A LA DB WRITE
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
 $clientId = filter_input(INPUT_GET, "id");
 $clientName = getCompanyName($clientId);
@@ -75,7 +82,7 @@ if (mysqli_connect_error()) {
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("admin.php", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
 
