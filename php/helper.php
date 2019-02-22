@@ -380,6 +380,8 @@ function isItPaid($orderId)
     $rowPaidBase = querySQL($sqlPaidBase, $GLOBALS['connectionW'], true, true);
 
     $paid = array('compta' => $rowPaidCompta['Reglement'], 'base' => $rowPaidBase['Reglement']);
+    if ($paid['compta'] === "R" && $paid['base'] !== "R")
+        $paid['base'] = "R";
     return ($paid);
 }
 
