@@ -2,7 +2,7 @@
 
 function deleteUser($userId)
 {
-    $sqlUser = "DELETE FROM webcommercial_utilisateurs WHERE id='$userId';";
+    $sqlUser = "DELETE FROM webcontrat_utilisateurs WHERE id='$userId';";
     querySQL($sqlUser, $GLOBALS['connection'], false);
     header("Location: userList.php");
 }

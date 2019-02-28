@@ -268,7 +268,7 @@ function displayRegister($message)
 */
 function getUserId($username)
 {
-    $sqlUser = "SELECT id FROM webcommercial_utilisateurs WHERE username='$username';";
+    $sqlUser = "SELECT id FROM webcontrat_utilisateurs WHERE username='$username';";
     $rowUser = querySQL($sqlUser, $GLOBALS['connection'], true, true);
     $userId = $rowUser['id'];
     return ($userId);
@@ -281,7 +281,7 @@ function getUserId($username)
 */
 function getUsername($userId)
 {
-    $sqlUser = "SELECT username FROM webcommercial_utilisateurs WHERE id='$userId';";
+    $sqlUser = "SELECT username FROM webcontrat_utilisateurs WHERE id='$userId';";
     $rowUser = querySQL($sqlUser, $GLOBALS['connection'], true, true);
     $username = $rowUser['username'];
     return ($username);

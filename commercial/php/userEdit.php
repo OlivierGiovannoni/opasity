@@ -3,7 +3,7 @@
 function editForm($userId, $style)
 {
     $columns = "email,fname,lname,username,passwordhash,superuser";
-    $sqlUser = "SELECT $columns FROM webcommercial_utilisateurs WHERE id='$userId';";
+    $sqlUser = "SELECT $columns FROM webcontrat_utilisateurs WHERE id='$userId';";
     $rowUser = querySQL($sqlUser, $GLOBALS['connection'], true, true);
 
     $email = $rowUser['email'];
@@ -27,7 +27,7 @@ function editForm($userId, $style)
 function editUser($userId, $fname, $lname, $email, $username, $password, $superuser)
 {
     $ruleSET = "fname='$fname',lname='$lname',email='$email',username='$username',passwordhash='$password',superuser='$superuser'";
-    $sqlUser = "UPDATE webcommercial_utilisateurs SET $ruleSET WHERE id='$userId';";
+    $sqlUser = "UPDATE webcontrat_utilisateurs SET $ruleSET WHERE id='$userId';";
     $rowUser = querySQL($sqlUser, $GLOBALS['connection'], false);
 
     $self = $_COOKIE['author'];

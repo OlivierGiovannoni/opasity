@@ -3,7 +3,7 @@
 function userAccess($query, $reviewId)
 {
     $columns = "id,username";
-    $sqlUsers = "SELECT $columns FROM webcommercial_utilisateurs WHERE username LIKE '%$query%';";
+    $sqlUsers = "SELECT $columns FROM webcontrat_utilisateurs WHERE username LIKE '%$query%';";
     $rowsUsers = querySQL($sqlUsers, $GLOBALS['connection']);
 
     foreach ($rowsUsers as $rowUser) {

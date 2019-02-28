@@ -3,7 +3,7 @@
 function fetchUsers()
 {
     $columns = "id,username,passwordhash,email,fname,lname,created,lastLogin,superuser";
-    $sqlUsers = "SELECT $columns FROM webcommercial_utilisateurs;";
+    $sqlUsers = "SELECT $columns FROM webcontrat_utilisateurs;";
     $rowsUsers = querySQL($sqlUsers, $GLOBALS['connection']);
 
     foreach ($rowsUsers as $rowUser) {

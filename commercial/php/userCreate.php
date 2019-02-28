@@ -2,7 +2,7 @@
 
 function userCreate($fname, $lname, $username, $email, $password, $superuser)
 {
-    $sqlRegister = "SELECT username FROM webcommercial_utilisateurs WHERE username='$username' OR email='$username';";
+    $sqlRegister = "SELECT username FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
     $total = numberSQL($sqlRegister, $GLOBALS['connection']);
     if ($total !== 0) {
         displayRegister("L'utilisateur $username existe déjà !");
@@ -12,7 +12,7 @@ function userCreate($fname, $lname, $username, $email, $password, $superuser)
     $created = date("Y-m-d H:i:s");
     $rowNames = "username,passwordhash,email,fname,lname,created,lastLogin,superuser";
     $rowValues = "'$username',\"$password\",'$email','$fname','$lname','$created','$created','$superuser'";
-    $sqlRegister = "INSERT INTO webcommercial_utilisateurs ($rowNames) VALUES ($rowValues);";
+    $sqlRegister = "INSERT INTO webcontrat_utilisateurs ($rowNames) VALUES ($rowValues);";
     querySQL($sqlRegister, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched
 
     header("Location: userList.php");

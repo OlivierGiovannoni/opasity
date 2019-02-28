@@ -3,7 +3,7 @@
 function login($username, $password)
 {
     $columns = "username,passwordhash,superuser";
-    $sqlLogin = "SELECT $columns FROM webcommercial_utilisateurs WHERE username='$username' OR email='$username';";
+    $sqlLogin = "SELECT $columns FROM webcontrat_utilisateurs WHERE username='$username' OR email='$username';";
     $rowLogin = querySQL($sqlLogin, $GLOBALS['connection'], true, true);
     $total = numberSQL($sqlLogin, $GLOBALS['connection']);
     if ($total === 0) {
@@ -19,7 +19,7 @@ function login($username, $password)
     $username = $rowLogin['username'];
     $superuser = $rowLogin['superuser'];
     $now = date("Y-m-d H:i:s");
-    $sqlRefresh = "UPDATE webcommercial_utilisateurs SET lastLogin='$now' WHERE username='$username';";
+    $sqlRefresh = "UPDATE webcontrat_utilisateurs SET lastLogin='$now' WHERE username='$username';";
     querySQL($sqlRefresh, $GLOBALS['connection'], false); // UPDATE output doesn't need to be fetched.
     setcookie("author", $username, time() + 14400, "/");
     setcookie("connection", $superuser, time() + 14400, "/");
