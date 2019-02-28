@@ -45,15 +45,13 @@ function listComments($orderId)
 
 require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNECT TO DATABASE READ
-
-$credentials = getCredentials("../credentials.txt");
+    $credentials['database']); // CONNECT TO DATABASE WRITE
 
 $orderId = filter_input(INPUT_GET, "id");
 $orderIdShort = getOrderIdShort($orderId);

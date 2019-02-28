@@ -15,7 +15,7 @@ function deleteClient($clientId, $username)
 
 require "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

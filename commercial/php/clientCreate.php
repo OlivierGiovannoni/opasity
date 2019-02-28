@@ -20,7 +20,7 @@ function createClient($clientName, $address1, $address2, $zip, $city, $country, 
 
 require "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

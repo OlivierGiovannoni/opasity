@@ -11,7 +11,7 @@ function createContact($clientId, $fname, $lname, $phone1, $email1, $phone2, $em
 
 require "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

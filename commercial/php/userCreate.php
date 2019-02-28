@@ -20,7 +20,7 @@ function userCreate($fname, $lname, $username, $email, $password, $superuser)
 
 require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

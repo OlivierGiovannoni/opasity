@@ -35,7 +35,7 @@ function editComment($commId, $orderId, $phone, $email, $nextDue, $comment)
 
 require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

@@ -9,7 +9,7 @@ function deleteUser($userId)
 
 require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],

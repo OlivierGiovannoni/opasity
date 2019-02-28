@@ -41,7 +41,7 @@ function editUser($userId, $fname, $lname, $email, $username, $password, $superu
 
 require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],
