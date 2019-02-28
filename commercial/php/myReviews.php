@@ -2,7 +2,7 @@
 
 function userReviews($userId)
 {
-    $columns = "Nom,Annee,DateAcces";
+    $columns = "Nom,Annee,DateCreation";
     $sqlReviews = "SELECT Revue_id,DateAcces FROM webcommercial_permissions_revue WHERE User_id='$userId' AND Autorisation=1;";
     $rowsIds  = querySQL($sqlReviews, $GLOBALS['connection']);
 

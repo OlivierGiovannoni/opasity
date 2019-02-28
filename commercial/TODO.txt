@@ -7,9 +7,14 @@ DONE:
 --Added link to see "Parue" and "Non-parue" reviews
 
 TODO:
+--Add "+" button to create client everywhere (myClients and userClients)
+--Edit/delete buttons for clients
+--
 --Link/Unlik clients to reviews somehow...... (maybe using webcommercial_client_revue table ?)
 --Image link "+" that links to all reviews linked to client
---Be able to import CSV file, 1st line columns names, next line columns data
+--Be able to import CSV file, 1st line columns names, next line columns data:
+----If SIRET already exists, it means it's another contact, find clientId
+----
 --User1 can see user2's clients if granted, but one-way, user2 cannot see user1's clients if not granted. -> or <->
 --Add edit/delete image links everywhere (client/contact)
 

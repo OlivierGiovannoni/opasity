@@ -3,8 +3,8 @@
 function findReviews($reviewName, $published)
 {
     $columns = "id,Nom,Annee,DateCreation,Paru";
-    if ($published === 0)
-        $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' AND Paru=0 ORDER BY DateCreation DESC;";
+    if ($published == 0)
+        $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' AND Paru='0' ORDER BY DateCreation DESC;";
     else
         $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' ORDER BY DateCreation DESC;";
     $rowsReview = querySQL($sqlReview, $GLOBALS['connectionR']);
