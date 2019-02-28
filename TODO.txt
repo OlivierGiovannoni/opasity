@@ -52,6 +52,9 @@ DONE:
 --Fixed bug where it wouldn't pass contract without comment to paid/unpaid.
 --Removed all helper scripts
 
+EZ:
+--Replace file name href with attachment icon on commentList.php
+
 TODO:
 --Add "+"  button next to review link if a contract belongs to multiple reviews "searchOrderReviews.php"
 --Add 5 most recent order numbers (links) right next to the phone number	
@@ -69,3 +72,4 @@ OPTIONAL:
 ++Checkboxes to enable/disable columns
 ++Draggable elements
 ++Make it generic, JSON config file does everything, JSON describes starting point, headers, titles, tables, SQL requests, SQL columns, Links, Data to be displayed, sorted, etc.. (generic.json)
+++Inserter to read table name, DESCRIBE table, get columns names and properties, and create form to INSERT DELETE UPDATE automatically, myPhpAdmin

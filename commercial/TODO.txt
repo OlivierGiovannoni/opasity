@@ -1,8 +1,17 @@
 DONE:
---
+--Can create clients.
+--Can create contacts that are linked to specific client.
+--Superuser can see a list of user-specific reviews/clients.
+--Added buttons to main page (my reviews/my clients).
+--Can now give user access to review (one by one, no bulk).
 
 TODO:
---Create review and client links in "webcommercial_revue" and "webcommercial_client" tables (tmp names)
---Create "dev" and "test" users to check different access rights
---Create "skerp" superuser to give access rights
---Add "MesRevues" and "MesClients" columns to "webcommercial_utilisateurs" where there will be a comma-separated list of review/client IDs usable by the user. (userID 24 has access to 94,113,972 reviews and 7,13,69,88,911 clients.)
+--Link/Unlik clients to reviews somehow...... (maybe using webcommercial_client_revue table ?)
+--Image link "+" that links to all reviews linked to client
+--Link to see "Parue" and "Non-parue" reviews
+--Be able to import CSV file, 1st line columns names, next line columns data
+--User1 can see user2's clients if granted, but one-way, user2 cannot see user1's clients if not granted. -> or <->
+--Add edit/delete image links everywhere (client/contact)
+
+OPTIONAL:
+++Inserter to read table name, DESCRIBE table, get columns names and properties, and create form to INSERT DELETE UPDATE automatically, myPhpAdmin

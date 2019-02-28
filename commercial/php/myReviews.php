@@ -43,17 +43,14 @@ $connection = new mysqli(
     $credentialsW['password'],
     $credentialsW['database']); // CONNECT TO DATABASE WRITE
 
-$userId = filter_input(INPUT_GET, "id");
-if (!isset($userId))
-    $userId = getUserId($_COOKIE['author']);
-
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
     if (isLogged()) {
 
-        $username = getUsername($userId);
+        $username = $_COOKIE['author'];
+        $userId = getUserId($username);
 
         $style = file_get_contents("../html/search.html");
         $style = str_replace("Recherche {type}: {query}", "Revues de $username", $style);

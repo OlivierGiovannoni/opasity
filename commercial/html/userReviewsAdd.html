@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/search.css">
+    <title>Ajouter les droits</title>
+  </head>
+  <body>
+    <h2>Ajouter un utilisateur sur {reviewName}</h2><br>
+    <form action="../php/userReviewsAdd.php" method="get">
+      <input type="hidden" name="reviewId" value="{reviewId}">
+
+      <label for="username">Nom d'utilisateur</label><br>
+      <input type="text" name="username" id="username" placeholder="Nom d'utilisateur" required><br><br>
+      <input type="submit" value="Chercher">
+    </form>
+    <br><br>

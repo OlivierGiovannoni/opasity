@@ -27,7 +27,7 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     $rowValues = "'$unpaidReason','$author','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
     querySQL($sqlNewComment, $GLOBALS['connectionW'], false); // INSERT output doesn't need to be fetched.
-    //header("Location: commentList.php?id=" . $orderId);
+    header("Location: commentList.php?id=" . $orderId);
 }
 
 require_once "helper.php";
@@ -75,9 +75,6 @@ if (mysqli_connect_error()) {
 
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
-        echo "Lignes de debug a supprimer:";//debug remove
-        echo "<br>";//debug remove
-        print_r($_FILES);//debug remove
         $file = skipAccents($file);
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
     } else

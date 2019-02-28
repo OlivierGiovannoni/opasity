@@ -23,11 +23,12 @@ CREATE TABLE webcommercial_permissions_client ( id INT NOT NULL AUTO_INCREMENT,
 					       	Autorisation TINYINT,
 					       	PRIMARY KEY (id) );
 
-CREATE TABLE webcommercial_commentaire ( Commentaire_id INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE webcommercial_commentaire ( id INT NOT NULL AUTO_INCREMENT,
        	     			         Commentaire VARCHAR(512) NOT NULL,
 					 Auteur VARCHAR(32) NOT NULL,
 					 Date DATE NOT NULL,
 					 Client_id INT NOT NULL,
+					 Revue_id INT NOT NULL,
 					 NomClient VARCHAR(256) NOT NULL,
 					 Prochaine_relance DATE,
 					 Contact_id VARCHAR(4),
@@ -35,7 +36,13 @@ CREATE TABLE webcommercial_commentaire ( Commentaire_id INT NOT NULL AUTO_INCREM
 					 DernierCom TINYINT,
 					 Acceptee TINYINT,
 					 PRIMARY KEY (Commentaire_id) );
-      
+
+CREATE TABLE webcommercial_client_revue ( id INT NOT NULL AUTO_INCREMENT,
+        	     			  Revue_id INT NOT NULL,
+					  Client_id INT NOT NULL,
+					  Groupe_id INT NOT NULL,
+				    	  PRIMARY KEY (id) );
+
 CREATE TABLE webcommercial_client ( id INT NOT NULL AUTO_INCREMENT,
        	     			    DateCreation DATE NOT NULL,
 				    -- TypeClient VARCHAR(2),

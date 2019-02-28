@@ -122,22 +122,11 @@ function generateRow($cells, $header = false)
         $open = ($header === true ? "<th>" : "<td>");
         $close = ($header === true ? "</th>" : "</td>");
 
-        $statusLength = strlen("Le contrat à été passé");
-        $status = substr($cell, 0, $statusLength);
-
         if ($header === false && $cell === "Oui")
             $open = "<td id=\"isPaid\">";
         else if ($header === false && $cell === "Non")
             $open = "<td id=\"isNotPaid\">";
-        if ($status === "Le contrat à été passé") {
 
-            $paid = substr($cell, 0, 33);
-            $unpaid = substr($cell, 0, 37);
-            if ($header === false && $paid === "Le contrat à été passé en pay")
-                $open = "<td style=\"color:#008800\">";
-            else if ($header === false && $unpaid === "Le contrat à été passé en non-pay")
-                $open = "<td style=\"color:#FF0000\">";
-        }
         $cell = $open . $cell . $close;
         array_push($row, $cell);
     }
@@ -182,7 +171,7 @@ function generateLink($href, $text, $target = "_blank", $onclick = null)
 */
 function generateImage($src, $desc, $width = 32, $height = 32)
 {
-    $image = "<img src=\"" . $src . "\" alt=\"" . $desc ."\" title=\"" . $desc ."\" width=\"" . $width . "\" height=\"" . $height. "\">";
+    $image = "<img src=\"" . $src . "\" alt=\"" . $desc ."\" title=\"" . $desc ."\" width=\"" . $width . "\" height=\"" . $height . "\">";
     return ($image);
 }
 
@@ -404,6 +393,21 @@ function getCompanyName($clientId)
     $rowCompany = querySQL($sqlCompany, $GLOBALS['connection'], true, true);
     $companyName = $rowCompany['NomSociete'];
     return ($companyName);
+}
+
+/*
+** Parameters: String
+** Return: String
+**
+*/
+function getReviewName($reviewId)
+{
+    $sqlReview = "SELECT Nom,Annee FROM webcontrat_revue WHERE id='$reviewId'";
+    $rowReview = querySQL($sqlReview, $GLOBALS['connectionR'], true, true);
+    $reviewName = $rowReview['Nom'];
+    $reviewYear = $rowReview['Annee'];
+    $reviewTitle = $reviewName . " " . $reviewYear;
+    return ($reviewTitle);
 }
 
 /*
