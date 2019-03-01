@@ -453,9 +453,9 @@ function getClientContacts($clientId)
 ** Parameters: String
 ** Return: String
 */
-function getContactData($contactId)
+function getContactData($clientId)
 {
-    $sqlClient = "SELECT Nom,Prenom,Fonction,NumTelephone1,AdresseMail1 FROM webcommercial_contact WHERE id='$clientId';";
+    $sqlClient = "SELECT Nom,Prenom,Fonction,NumTelephone1,AdresseMail1 FROM webcommercial_contact WHERE Client_id='$clientId';";
     $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
 
     $lname = $rowClient['Nom'];
