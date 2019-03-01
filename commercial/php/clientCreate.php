@@ -77,6 +77,7 @@ if (mysqli_connect_error()) {
             $style = str_replace("{reviewId}", $id, $style);
             echo $style;
         } else
+            ;
             //createClient($clientName, $phone, $address1, $address2, $zipCode, $city, $country, $siretCode, $apeCode, $author, $reviewId);
     } else
         header("Location: index.php");
