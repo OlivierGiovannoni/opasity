@@ -21,8 +21,8 @@ DONE:
 
 URGENT:
 --edit index.php
+--test comment creation, and client dropdown
 --make phone number required on client creation
---Change SQL requests in commentList.php and commentAdd.php, add clientReviews.php and reviewClients.php links
 --add column to which review is linked specific client
 --search bars myClients.php myReviews.php
 --change clientList to myClients.php where needed

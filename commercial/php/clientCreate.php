@@ -23,7 +23,7 @@ function createClient($clientName, $phone, $address1, $address2, $zip, $city, $c
     $sqlReview = "INSERT INTO webcommercial_client_revue ($rowNames) VALUES ($rowValues);";
     querySQL($sqlReview, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
 
-    header("Location: clientList.php");
+    header("Location: reviewClients.php?reviewId=" . $reviewId);
 }
 
 require "helper.php";

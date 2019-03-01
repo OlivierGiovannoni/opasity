@@ -81,6 +81,11 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
+        $charset = mysqli_set_charset($connection, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+
         $style = file_get_contents("../html/search.html");
         $style = str_replace("Recherche {type}: {query}", "Mes clients", $style);
         echo $style;
