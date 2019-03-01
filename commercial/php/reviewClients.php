@@ -71,7 +71,7 @@ if (mysqli_connect_error()) {
         echo "<table>";
 
         $createImage = generateImage("../png/add.png", "Nouveau client", 24, 24);
-        $createLink = generateLink("../html/clientCreate.php?reviewId=" . $reviewId, $createImage);
+        $createLink = generateLink("../php/clientCreate.php?reviewId=" . $reviewId, $createImage);
         echo $createLink;
 
         $cells = array("Nom du client","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
