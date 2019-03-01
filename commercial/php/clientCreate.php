@@ -69,15 +69,15 @@ if (mysqli_connect_error()) {
 
         $author = $_COOKIE['author'];
 
-        $filled = (isset($clientName) && isset($zipCode));
-        die($filled);
-        if ($filled === false) {
+        $unfilled = isset($id);
+
+        if ($filled === true) {
 
             $style = file_get_contents("../html/clientCreate.html");
             $style = str_replace("{reviewId}", $id, $style);
             echo $style;
         } else
-            ;
+            echo "wouhou";
             //createClient($clientName, $phone, $address1, $address2, $zipCode, $city, $country, $siretCode, $apeCode, $author, $reviewId);
     } else
         header("Location: index.php");
