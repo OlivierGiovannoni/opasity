@@ -37,6 +37,14 @@ function reviewClients($reviewId)
 
 require_once "helper.php";
 
+$credentials = getCredentials("../credentials.txt");
+
+$connectionR = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']); // CONNECT TO DATABASE READ
+
 $credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
