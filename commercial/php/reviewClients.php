@@ -8,7 +8,7 @@ function reviewClients($reviewId)
 
     foreach ($rowsClients as $rowClient) {
 
-        $clientId = $rowClient['id'];
+        $clientId = $rowClient['Client_id'];
         $columns = "DateCreation,NomSociete,Addr1,Addr2,CP,Ville,Pays,TelSociete,SIRET,CodeAPE";
         $sqlClient = "SELECT $columns FROM webcommercial_client WHERE id='$clientId' ORDER BY DateCreation DESC;";
         $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
