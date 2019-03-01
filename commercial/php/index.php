@@ -25,9 +25,9 @@ function findDates($dueDate)
         $details = getOrderDetails($orderId); // Get order and client details related to the order
 
         $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort); // Generate <a> link with orderId as id and orderIdShort as text
-        $companyLink = generateLink("searchClientOrders.php?id=" . $details['clientId'], $details['companyName']); // Generate <a> link with clientId as id and companyName as text
+        $companyLink = generateLink("clientReviews.php?id=" . $details['clientId'], $details['companyName']); // Generate <a> link with clientId as id and companyName as text
         $reviewLink = $final['Name'] . " " . $final['Year'];
-        $reviewLink = generateLink("searchReviewOrders.php?id=" . $final['Id'], $reviewLink); // Generate <a> link with reviewId as id and reviewName Year as text
+        $reviewLink = generateLink("reviewClients.php?id=" . $final['Id'], $reviewLink); // Generate <a> link with reviewId as id and reviewName Year as text
         $mailtoLink = generateLink("mailto:" . $rowDate['AdresseMail'], $rowDate['AdresseMail']); // Generate <a> mailto link
         $dateComm = date("d/m/Y", strtotime($rowDate['Date'])); // Comment date
         $dateNextYMD = $rowDate['Prochaine_relance']; // Next reminder date
@@ -97,7 +97,7 @@ if (mysqli_connect_error()) {
         echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
         echo "<table>";
 
-        $cells = array("Contrat","Revue","PrixHT","Nom de l'entreprise","Accepté","E-mail","Commentaire","Auteur","Date commentaire","Prochaine relance","Interagir");
+        $cells = array("Contrat","Revue","PrixHT","Nom de l'entreprise","Accepté","E-mail","Commentaire","Auteur","Date commentaire","Prochaine relance");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

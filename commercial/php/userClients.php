@@ -24,9 +24,15 @@ function userClients($userId)
         $createdAtYMD = $rowClient['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
-        $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $clientName);
+        /* $commentsLink = generateLink("../commentList.php?clientId=" . $clientId . "&reviewId=" . $reviewId, $clientName); */
 
-        $cells = array($contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+        $reviewsImage = generateImage("../png/review.png", "Revues", 24, 24);
+        $reviewsLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
+
+        $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
+        $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
+
+        $cells = array($clientName, $reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
@@ -62,7 +68,7 @@ if (mysqli_connect_error()) {
         echo "<h2>Liste des clients de: $username</h2>";
         echo "<table>";
 
-        $cells = array("Nom du client","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Interagir");
+        $cells = array("Nom de l'entreprise","Revues","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

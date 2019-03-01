@@ -1,34 +1,30 @@
 <?php
 
-function getLastId($clientId)
+function getLastId($clientId, $reviewId)
 {
-    $sqlComment = "SELECT Commentaire_id FROM webcommercial_commentaire WHERE Client_id='$clientId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id FROM webcommercial_commentaire WHERE Client_id='$clientId' AND Revue_id='$reviewId' ORDER BY Commentaire_id DESC;";
     $rowComment = querySQL($sqlComment, $GLOBALS['connection'], true, true);
     $commentId = $rowComment['Commentaire_id'];
     return ($commentId);
 }
 
-function newComment($clientId, $contactId, $clientName, $nextDueDate, $comment, $tmpFile, $file)
+function newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $tmpFile, $file)
 {
     $today = date("Y-m-d");
 
     if ($nextDueDate == "")
         $nextDueDate = "1970-01-01";
-    if ($phone === "")
-        $phone = getPhoneNumber($orderId, $clientId);
 
-    $lastId = getLastId($clientId);
+    $lastId = getLastId($clientId, $reviewId);
     $sqlNewLast = "UPDATE webcommercial_commentaire SET DernierCom=0 WHERE Commentaire_id='$lastId';";
     querySQL($sqlNewLast, $GLOBALS['connection'], false); // UPDATE output doesn't need to be fetched.
 
     $author = $_COOKIE['author'];
     //$newFile = uploadFile($tmpFile, $file, $orderId);
     $newFile = "NULL";
-    $contact = getContactInfo($contactId);
-    $phone = $contact['phone'];
-    $email = $contact['email'];
-    $rowNames = "Commentaire,Auteur,Date,Client_id,NomClient,Contact_id,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
-    $rowValues = "'$comment','$author','$today','$clientId','$clientName','$contactId','$nextDueDate','$phone','$email','$newFile',1";
+
+    $rowNames = "Commentaire,Auteur,Date,Client_id,Revue_id,Contact_id,Prochaine_relance,Fichier,DernierCom";
+    $rowValues = "'$comment','$author','$today','$clientId','$reviewId','$contactId','$nextDueDate','$newFile',1";
     $sqlNewComment = "INSERT INTO webcommercial_commentaire ($rowNames) VALUES ($rowValues);";
     querySQL($sqlNewComment, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
     header("Location: commentList.php?id=" . $orderId);
@@ -45,8 +41,8 @@ $connection = new mysqli(
     $credentials['database']); // CONNECT TO DATABASE
 
 $clientId = filter_input(INPUT_POST, "clientId");
+$reviewId = filter_input(INPUT_POST, "reviewId");
 $contactId = filter_input(INPUT_POST, "contactId");
-$clientName = filter_input(INPUT_POST, "clientName");
 $nextDueDate = filter_input(INPUT_POST, "nextDueDate");
 $comment = filter_input(INPUT_POST, "comment");
 $newFilename = filter_input(INPUT_POST, "newFilename");

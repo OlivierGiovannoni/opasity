@@ -1,14 +1,15 @@
 <?php
 
-function userClients($userId)
+function reviewClients($reviewId)
 {
-    $columns = "DateCreation,NomSociete,Addr1,Addr2,CP,Ville,Pays,TelSociete,SIRET,CodeAPE";
-    $sqlClients = "SELECT Client_id,DateAcces FROM webcommercial_permissions_client WHERE User_id='$userId' AND Autorisation=1;";
-    $rowsIds  = querySQL($sqlClients, $GLOBALS['connection']);
+    $columns = "Revue_id,Gerant_id";
+    $sqlClients = "SELECT $columns FROM webcommercial_client_revue WHERE Client_id='$clientId';";
+    $rowsClients = querySQL($sqlClients, $GLOBALS['connection']);
 
-    foreach ($rowsIds as $rowId) {
+    foreach ($rowsClients as $rowClient) {
 
-        $clientId = $rowId['Client_id'];
+        $clientId = $rowClient['id'];
+        $columns = "DateCreation,NomSociete,Addr1,Addr2,CP,Ville,Pays,TelSociete,SIRET,CodeAPE";
         $sqlClient = "SELECT $columns FROM webcommercial_client WHERE id='$clientId' ORDER BY DateCreation DESC;";
         $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
 
@@ -24,20 +25,17 @@ function userClients($userId)
         $createdAtYMD = $rowClient['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
-        $reviewsImage = generateImage("../png/review.png", "Revues", 24, 24);
-        $reviewsLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
-
         $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
         $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
 
-        $cells = array($clientName, $reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+        $cells = array($clientName, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
     }
 }
 
-require "helper.php";
+require_once "helper.php";
 
 $credentials = getCredentials("../credentialsW.txt");
 
@@ -47,31 +45,40 @@ $connection = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
+$reviewId = filter_input(INPUT_GET, "reviewId");
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
     if (isLogged()) {
 
-        $username = $_COOKIE['author'];
-        $userId = getUserId($username);
+        $reviewName = getReviewName($reviewId);
 
         $style = file_get_contents("../html/search.html");
-        $style = str_replace("Recherche {type}: {query}", "Mes clients", $style);
+        $style = str_replace("Recherche {type}: {query}", "Clients dans la revue $reviewName", $style);
         echo $style;
 
-        echo "<h2>Mes clients</h2>";
+        echo "<h2>Clients dans la revue $reviewName</h2>";
         echo "<table>";
 
-        $cells = array("Nom de l'entreprise","Revues","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
+        $createImage = generateImage("../png/add.png", "Nouveau client", 24, 24);
+        $createLink = generateLink("../html/clientCreate.php?reviewId=" . $reviewId, $createImage);
+        echo $createLink;
+
+        $cells = array("Nom du client","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
-        userClients($userId);
+        reviewClients($reviewId);
+
+        echo "</table><br><br><br>";
     } else
         header("Location: index.php");
+
     $connection->close();
 }
+
 
 ?>

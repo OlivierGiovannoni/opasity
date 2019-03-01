@@ -151,10 +151,10 @@ function generateRow($cells, $header = false)
 ** Return: Array
 **
 */
-function generateSelect($rows, $value, $text)
+function generateSelect($name, $rows, $value, $text)
 {
     $options = array();
-    array_push($options, "<select>");
+    array_push($options, "<select name=\"$name\">");
     foreach ($rows as $row) {
 
         $option = "<option value\"" . $row[$value] . "\">" . $row[$text] . "</option>";
@@ -172,6 +172,17 @@ function generateSelect($rows, $value, $text)
 function generateLink($href, $text, $target = "_blank", $onclick = null)
 {
     $link = "<a href=\"" . $href . "\" target=\"" . $target . "\" onclick=\"" . $onclick . "\">" . $text . "</a>";
+    return ($link);
+}
+
+/*
+** Parameters: String, String, String
+** Return: String
+**
+*/
+function generateHiddenLink($href, $text, $target = "_blank", $onclick = null)
+{
+    $link = "<a id=\"hiddenLink\" href=\"" . $href . "\" target=\"" . $target . "\" onclick=\"" . $onclick . "\">" . $text . "</a>";
     return ($link);
 }
 

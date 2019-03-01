@@ -5,16 +5,33 @@ DONE:
 --Added buttons to main page (my reviews/my clients).
 --Can now give user access to review (one by one, no bulk).
 --Added link to see "Parue" and "Non-parue" reviews
+--Changed "Nom du client" to "Nom de l'entreprise" in myClients.php
+--Now INSERTing phone number per client/company in clientCreate.php
+--Now client and contact names are UPPERCASE
+--Added "Paru" column and filter link myReviews.php
+--Removed "+" button to create client (myClients and userClients)
+--Renamed and replaced searchReview.php to reviewSearch.php, replaced searchClientOrders.php with clientReviews.php
+--Created reviewClients.php and added "+" button only in reviewClients.php
+--Created clientReviews.php
+--Added sort by published link on userReviews.php and "Parue" column
+--Removed useless "Interagir" columns
+--Moved contacts link to "Contacts" column with icon in myClients.php and userClients.php and reviewClients.php
+--Now there is a link to clientReviews.php and reviewClients.php in myReviews.php, userReviews.php, myClients.php, userClients.php
+
+URGENT:
+--Link to comments $commentsLink in myClients.php userClients.php and reviewClients.php
+--Change SQL requests in commentList.php and commentAdd.php, add clientReviews.php and reviewClients.php links
+--add column to which review is linked specific client
+--search bars myClients.php myReviews.php
+--change clientList to myClients.php where needed
 
 TODO:
---Add "+" button to create client everywhere (myClients and userClients)
 --Edit/delete buttons for clients
---
 --Link/Unlik clients to reviews somehow...... (maybe using webcommercial_client_revue table ?)
 --Image link "+" that links to all reviews linked to client
 --Be able to import CSV file, 1st line columns names, next line columns data:
-----If SIRET already exists, it means it's another contact, find clientId
-----
+----CSV line contains information about the CLIENT and the CONTACT
+----If SIRET already exists, it means it's another contact. SELECT clientId linked to SIRET and create the contact.
 --User1 can see user2's clients if granted, but one-way, user2 cannot see user1's clients if not granted. -> or <->
 --Add edit/delete image links everywhere (client/contact)
 

@@ -2,6 +2,6 @@
 .*~
 #*
 .#*
+*.csv
 credentials*.txt
 php/files/
-sql/

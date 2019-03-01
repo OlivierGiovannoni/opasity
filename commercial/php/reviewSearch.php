@@ -63,7 +63,7 @@ if (mysqli_connect_error()) {
         echo "<table>";
 
         $published = ($pub == 1 ? 0 : 1);
-        $href = "searchReview.php?reviewName=" . $reviewName . "&pub=" . $published;
+        $href = "reviewSearch.php?reviewName=" . $reviewName . "&pub=" . $published;
         $text = ($pub == 1 ? "Afficher revues non-parues" : "Afficher toutes les revues");
         $link = generateLink($href, $text, "_self");
         echo $link;

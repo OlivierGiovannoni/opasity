@@ -1,14 +1,16 @@
 <?php
 
-function userReviews($userId, $published)
+function clientReviews($clientId, $published)
 {
-    $columns = "Nom,Paru,Annee,DateCreation";
-    $sqlReviews = "SELECT Revue_id,DateAcces FROM webcommercial_permissions_revue WHERE User_id='$userId' AND Autorisation=1;";
-    $rowsIds  = querySQL($sqlReviews, $GLOBALS['connection']);
+    $columns = "Revue_id,Gerant_id";
+    $sqlReviews = "SELECT $columns FROM webcommercial_client_revue WHERE Client_id='$clientId';";
+    $rowsReviews = querySQL($sqlReviews, $GLOBALS['connection']);
 
-    foreach ($rowsIds as $rowId) {
+    foreach ($rowsReviews as $rowReview) {
 
-        $reviewId = $rowId['Revue_id'];
+        $reviewId = $rowReview['id'];
+
+        $columns = "Nom,Paru,Annee,DateCreation";
         if ($published == 0)
             $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE id='$reviewId' AND Paru='0' ORDER BY DateCreation DESC;";
         else
@@ -22,33 +24,25 @@ function userReviews($userId, $published)
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
         $reviewTitle = $reviewName . " " . $reviewYear;
 
-        $reviewLink = generateLink("reviewClients.php?reviewId=" . $reviewId, $reviewTitle);
-
-        $cells = array($reviewLink, $published, $createdAt);
+        $cells = array($reviewTitle, $published, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
+
     }
 }
 
-require "helper.php";
+require_once "helper.php";
 
-$credentials = getCredentials("../credentials.txt");
+$credentials = getCredentials("../credentialsW.txt");
 
-$connectionR = new mysqli(
+$connection = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNECT TO DATABASE READ
+    $credentials['database']); // CONNECT TO DATABASE WRITE
 
-$credentialsW = getCredentials("../credentialsW.txt");
-
-$connection = new mysqli(
-    $credentialsW['hostname'],
-    $credentialsW['username'],
-    $credentialsW['password'],
-    $credentialsW['database']); // CONNECT TO DATABASE WRITE
-
+$clientId = filter_input(INPUT_GET, "clientId");
 $pub = filter_input(INPUT_GET, "pub");
 
 if (mysqli_connect_error()) {
@@ -57,18 +51,17 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
-        $username = $_COOKIE['author'];
-        $userId = getUserId($username);
+        $clientName = getClientName($clientId);
 
         $style = file_get_contents("../html/search.html");
-        $style = str_replace("Recherche {type}: {query}", "Revues de $username", $style);
+        $style = str_replace("Recherche {type}: {query}", "Revues incluant $clientName", $style);
         echo $style;
 
-        echo "<h2>Liste des revues de: $username</h2>";
+        echo "<h2>Revues incluant $clientName</h2>";
         echo "<table>";
 
         $published = ($pub == 1 ? 0 : 1);
-        $href = "myReviews.php?pub=" . $published;
+        $href = "clientReviews.php?clientId=" . $clientId . "&pub=" . $published;
         $text = ($pub == 1 ? "Afficher revues non-parues" : "Afficher toutes les revues");
         $link = generateLink($href, $text, "_self");
         echo $link;
@@ -78,11 +71,14 @@ if (mysqli_connect_error()) {
         foreach ($cells as $cell)
             echo $cell;
 
-        userReviews($userId, $pub);
+        clientReviews($clientId, $pub);
+
+        echo "</table><br><br><br>";
     } else
         header("Location: index.php");
-    $connectionR->close();
+
     $connection->close();
 }
+
 
 ?>

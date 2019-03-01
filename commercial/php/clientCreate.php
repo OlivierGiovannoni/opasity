@@ -1,20 +1,28 @@
 <?php
 
-function createClient($clientName, $address1, $address2, $zip, $city, $country, $siretCode, $apeCode, $author)
+function createClient($clientName, $phone, $address1, $address2, $zip, $city, $country, $siretCode, $apeCode, $author, $reviewId)
 {
     $createdAt = date("Y-m-d");
-    $rowNames = "NomSociete,Addr1,Addr2,CP,Ville,Pays,SIRET,CodeAPE,DateCreation,Createur";
-    $rowValues = "'$clientName','$address1','$address2','$zip','$city','$country','$siretCode','$apeCode','$createdAt','$author'";
+    $rowNames = "NomSociete,TelSociete,Addr1,Addr2,CP,Ville,Pays,SIRET,CodeAPE,DateCreation,Createur";
+    $rowValues = "'$clientName','$phone','$address1','$address2','$zip','$city','$country','$siretCode','$apeCode','$createdAt','$author'";
     $sqlReview = "INSERT INTO webcommercial_client ($rowNames) VALUES ($rowValues);";
     querySQL($sqlReview, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
+
     $sqlLast = "SELECT LAST_INSERT_ID();";
     $rowLast = querySQL($sqlLast, $GLOBALS['connection'], true, true);
     $lastId = $rowLast['LAST_INSERT_ID()'];
+
     $userId = getUserId($author);
     $rowNames = "Client_id,User_id,DateAcces,Autorisation";
     $rowValues = "'$lastId','$userId','$createdAt',1";
     $sqlPerm = "INSERT INTO webcommercial_permissions_client ($rowNames) VALUES ($rowValues);";
     querySQL($sqlPerm, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
+
+    $rowNames = "Client_id,Revue_id";
+    $rowValues = "'$lastId','$reviewId'";
+    $sqlReview = "INSERT INTO webcommercial_client_revue ($rowNames) VALUES ($rowValues);";
+    querySQL($sqlReview, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
+
     header("Location: clientList.php");
 }
 
@@ -28,6 +36,9 @@ $connection = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
+$id = filter_input(INPUT_GET, "reviewId");
+
+$reviewId = filter_input(INPUT_POST, "reviewId");
 $clientName = filter_input(INPUT_POST, "clientName");
 $address1 = filter_input(INPUT_POST, "address1");
 $address2 = filter_input(INPUT_POST, "address2");
@@ -48,6 +59,8 @@ $phone = sanitizeInput($phone);
 $siretCode = sanitizeInput($siretCode);
 $apeCode = sanitizeInput($apeCode);
 
+$clientName = strtoupper($clientName);
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
@@ -55,7 +68,16 @@ if (mysqli_connect_error()) {
     if (isLogged()) {
 
         $author = $_COOKIE['author'];
-        createClient($clientName, $address1, $address2, $zipCode, $city, $country, $siretCode, $apeCode, $author);
+
+        $filled = isset($clientName) && isset($zipCode);
+
+        if ($filled === false) {
+
+            $style = file_get_contents("../html/clientCreate.html");
+            $style = str_replace("{reviewId}", $id, $style);
+            echo $style;
+        } else
+            createClient($clientName, $phone, $address1, $address2, $zipCode, $city, $country, $siretCode, $apeCode, $author, $reviewId);
     } else
         header("Location: index.php");
 

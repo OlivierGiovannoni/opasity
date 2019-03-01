@@ -38,6 +38,9 @@ $phone2 = sanitizeInput($phone2);
 $email2 = sanitizeInput($email2);
 $jobTitle = sanitizeInput($jobTitle);
 
+$fname = strtoupper($fname);
+$lname = strtoupper($lname);
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {

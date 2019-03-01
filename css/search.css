@@ -50,3 +50,9 @@ th, td {
     border-radius: 8px;
     cursor: pointer;
 }
+
+#hiddenLink {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}

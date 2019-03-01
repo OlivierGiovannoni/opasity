@@ -140,13 +140,13 @@ function generateRow($cells, $header = false)
 ** Return: Array
 **
 */
-function generateSelect($rows, $value, $text)
+function generateSelect($name, $rows, $value, $text1, $text2)
 {
     $options = array();
-    array_push($options, "<select>");
+    array_push($options, "<select name=\"$name\">");
     foreach ($rows as $row) {
 
-        $option = "<option value\"" . $row[$value] . "\">" . $row[$text] . "</option>";
+        $option = "<option value\"" . $row[$value] . "\">" . $row[$text1] . " " . $row[$text2] . "</option>";
         array_push($options, $option);
     }
     array_push($options, "</select>");
@@ -161,6 +161,17 @@ function generateSelect($rows, $value, $text)
 function generateLink($href, $text, $target = "_blank", $onclick = null)
 {
     $link = "<a href=\"" . $href . "\" target=\"" . $target . "\" onclick=\"" . $onclick . "\">" . $text . "</a>";
+    return ($link);
+}
+
+/*
+** Parameters: String, String, String
+** Return: String
+**
+*/
+function generateHiddenLink($href, $text, $target = "_blank", $onclick = null)
+{
+    $link = "<a id=\"hiddenLink\" href=\"" . $href . "\" target=\"" . $target . "\" onclick=\"" . $onclick . "\">" . $text . "</a>";
     return ($link);
 }
 
@@ -310,19 +321,21 @@ function uploadFile($tmpFile, $fileName, $orderId)
 }
 
 /*
-** Parameters: String, String, String, String, String, String
+** Parameters: String, String, String
 ** Return: String
 **
 */
-function addCommentForm($htmlFileName, $orderId, $orderIdShort, $clientId, $phone)
+function addCommentForm($htmlFileName, $clientId, $reviewId)
 {
     // Get file data.
     $htmlFileData = file_get_contents($htmlFileName);
     // Replace fake variables with real values.
-    $htmlFileData = str_replace("{phone}", $phone, $htmlFileData);
-    $htmlFileData = str_replace("{orderId}", $orderId, $htmlFileData);
-    $htmlFileData = str_replace("{orderIdShort}", $orderIdShort, $htmlFileData);
+    $contacts = getClientContacts($clientId);
+    $selectContact = generateSelect("clientId", $contacts, "id","Nom","Prenom");
+    $select = implode($selectContact);
+    $htmlFileData = str_replace("<!--select-->", $select, $htmlFileData);
     $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
+    $htmlFileData = str_replace("{reviewId}", $reviewId, $htmlFileData);
     return ($htmlFileData);
 }
 
@@ -387,19 +400,6 @@ function isDateValid($date)
 ** Return: String
 **
 */
-function getCompanyName($clientId)
-{
-    $sqlCompany = "SELECT NomSociete FROM webcommercial_client WHERE id='$clientId'";
-    $rowCompany = querySQL($sqlCompany, $GLOBALS['connection'], true, true);
-    $companyName = $rowCompany['NomSociete'];
-    return ($companyName);
-}
-
-/*
-** Parameters: String
-** Return: String
-**
-*/
 function getReviewName($reviewId)
 {
     $sqlReview = "SELECT Nom,Annee FROM webcontrat_revue WHERE id='$reviewId'";
@@ -434,6 +434,38 @@ function getClientName($clientId)
     $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
     $clientName = $rowClient['NomSociete'];
     return ($clientName);
+}
+
+
+/*
+** Parameters: String
+** Return: Array
+*/
+function getClientContacts($clientId)
+{
+    $columns = "id,Nom,Prenom,Fonction";
+    $sqlContacts = "SELECT $columns FROM webcommercial_contact WHERE Client_id='$clientId' ORDER BY id DESC;";
+    $rowsContacts = querySQL($sqlContacts, $GLOBALS['connection']);
+    return ($rowsContacts);
+}
+
+/*
+** Parameters: String
+** Return: String
+*/
+function getContactData($contactId)
+{
+    $sqlClient = "SELECT Nom,Prenom,Fonction,NumTelephone1,AdresseMail1 FROM webcommercial_contact WHERE id='$clientId';";
+    $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
+
+    $lname = $rowClient['Nom'];
+    $fname = $rowClient['Prenom'];
+    $title = $rowClient['Fonction'];
+    $email = $rowClient['AdresseMail1'];
+    $phone = $rowClient['NumTelephone1'];
+
+    $contactData = array('lname' => $lname, 'fname' => $fname, 'job' => $title, 'email' => $email, 'phone' => $phone);
+    return ($contactData);
 }
 
 ?>

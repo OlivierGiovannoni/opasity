@@ -16,7 +16,7 @@ function fetchUsers()
         $lname = $rowUser['lname'];
         $created = $rowUser['created'];
         $lastLogin = $rowUser['lastLogin'];
-        $superuser = $rowUser['superuser'];
+        $superuser = ($rowUser['superuser'] == 1 ? "Oui" : "Non");
 
         $reviewsImage = generateImage("../png/review.png", "Revues", 24, 24);
         $reviewsLink = generateLink("userReviews.php?id=" . $id, $reviewsImage);
@@ -65,7 +65,7 @@ if (mysqli_connect_error()) {
         $createLink = generateLink("../html/userCreate.html", $createImage);
         echo $createLink;
 
-        $cells = array("ID","Nom d'utilisateur","Mot de passe","Email","Prénom","Nom","Crée le","Dernière connexion","Accès","Superuser","Interagir");
+        $cells = array("ID","Nom d'utilisateur","Mot de passe","Email","Prénom","Nom","Crée le","Dernière connexion","Accès","Superuser", "Interagir");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

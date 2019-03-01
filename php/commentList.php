@@ -2,7 +2,7 @@
 
 function listComments($orderId)
 {
-    $columns = "Commentaire_id,Commande,Commande_courte,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier,DernierCom";
+    $columns = "Commentaire_id,Commande,Commande_courte,Commentaire,Auteur,Date,AdresseMail,NumTelephone,Prochaine_relance,Fichier";
     $sqlComment = "SELECT $columns FROM webcontrat_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
     $rowsComment = querySQL($sqlComment, $GLOBALS['connectionW']);
 
@@ -26,8 +26,11 @@ function listComments($orderId)
 
         if ($rowComment['Fichier'] == "NULL")
             $fileLink = "Aucun";
-        else
-            $fileLink = generateLink($rowComment['Fichier'], basename($rowComment['Fichier']));
+        else {
+
+            $fileImage = generateImage("../png/attachment.png", basename($rowComment['Fichier']));
+            $fileLink = generateLink($rowComment['Fichier'], $fileImage);
+        }
 
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);
         $editLink = generateLink("commentEdit.php?id=" . $commId, $editImage);

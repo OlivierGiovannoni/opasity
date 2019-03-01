@@ -62,3 +62,9 @@ textarea {
     width: 100%;
     border: 0px;
 }
+
+#hiddenLink {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}

@@ -61,3 +61,9 @@ input[type=text],[type=submit],[type=email] {
     border-radius: 8px;
     cursor: pointer;
 }
+
+#hiddenLink {
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+}

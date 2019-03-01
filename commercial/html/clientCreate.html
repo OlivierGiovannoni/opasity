@@ -8,6 +8,9 @@
   <body>
     <h1>Création d'un client</h1>
     <form action="../php/clientCreate.php" method="post">
+
+      <input type="hidden" name="reviewId" value="{reviewId}">
+
       <label for="clientName">Nom du client</label><br>
       <input type="text" name="clientName" id="clientName" placeholder="Nom du client" required>
       <br><br>

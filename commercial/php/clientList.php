@@ -93,9 +93,9 @@ if (mysqli_connect_error()) {
         echo $createLink;
 
         if (isAdmin())
-            $cells = array("Nom du client","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Crée par","Interagir");
+            $cells = array("Nom du client","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Crée par");
         else
-            $cells = array("Nom du client","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Interagir");
+            $cells = array("Nom du client","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

@@ -8,11 +8,8 @@
       <form id="commentForm" enctype="multipart/form-data" charset="UTF-8" method="post" action="../php/commentAdd.php">
 
 	<div>
-	  <label for="numPhone">Numéro de téléphone</label><br>
-	  <input type="text" name="numPhone" id="numPhone" value="{phone}">
-	  <br><br>
-	  <label for="emailAddr">Adresse e-mail</label><br>
-	  <input type="email" name="emailAddr" id="emailAddr">
+	  <label for="selectContact">Contact</label><br>
+	  <!--select-->
 	  <br><br>
 	</div>
 
@@ -27,27 +24,25 @@
 
 	  <br><br>
 
-	  <input type="hidden" name="orderId" value="{orderId}">
 	  <input type="hidden" name="clientId" value="{clientId}">
+	  <input type="hidden" name="reviewId" value="{reviewId}">
 
-	  <input value="Valider" type="submit" id="submit">
 	</div>
 	<div>
-	  <label for="newFilename">Nouveau nom de fichier</label><br>
-	  <input type="text" name="newFilename" id="newFilename"><br><br>
-	  <label for="fileUp">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
-	  <input type="file" name="fileUpload" id="fileUp" class="dropzone" multiple>
+	  <label for="fileUpload">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
+	  <input type="file" name="fileUpload" id="fileUpload" class="dropzone" multiple><br><br>
+	  <input type="submit" id="submit" value="Valider">
 	</div>
       </form>
-      <div>
-	<a  href="../php/setPaid.php?id={orderId}">
-	  <img src="../png/check.png" alt="Passer en reglé" width="64" height="64">
-	</a>
-	<a  href="../php/setUnpaid.php?id={orderId}">
-	  <img src="../png/uncheck.png" alt="Passer en non-reglé" width="64" height="64">
-	</a>
-      </div>
+      <!-- <div> -->
+      <!-- 	<a  href="../php/setPaid.php?id={orderId}"> -->
+      <!-- 	  <img src="../png/check.png" alt="Passer en reglé" title="Passer en reglé" width="64" height="64"> -->
+      <!-- 	</a> -->
+      <!-- 	<a  href="../php/setUnpaid.php?id={orderId}"> -->
+      <!-- 	  <img src="../png/uncheck.png" alt="Passer en non-reglé" title="Passer en non-reglé" width="64" height="64"> -->
+      <!-- 	</a> -->
+      <!-- </div> -->
 
     </div>
-    <iframe height="250"frameborder="0"></iframe>
+    <iframe height="200"frameborder="0"></iframe>
   </body>

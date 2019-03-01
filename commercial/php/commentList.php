@@ -1,32 +1,40 @@
 <?php
 
-function listComments($orderId)
+function listComments($clientId, $reviewId)
 {
-    $columns = "Commentaire_id,Commentaire,Auteur,Date,Client_id,Contact_id,NomClient,Prochaine_relance,Fichier,DernierCom";
-    $sqlComment = "SELECT $columns FROM webcommercial_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $columns = "Commentaire_id,Commentaire,Auteur,Date,Client_id,Revue_id,Contact_id,Prochaine_relance,Fichier";
+    $sqlComment = "SELECT $columns FROM webcommercial_commentaire WHERE Client_id='$clientId' AND Revue_id='$reviewId' ORDER BY Commentaire_id DESC;";
     $rowsComment = querySQL($sqlComment, $GLOBALS['connection']);
 
     foreach ($rowsComment as $rowComment) {
 
-        $comment = $rowComment['Commentaire'];
         $commId = $rowComment['Commentaire_id'];
         $comment = $rowComment['Commentaire'];
         $contact = getContactName($orderId);
         $author = $rowComment['Auteur'];
         $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
-        $mailtoLink = generateLink($rowComment['AdresseMail'], $rowComment['AdresseMail']);
+        $contactId = $rowComment['Contact_id'];
+        $contact = getContactData($contactId);
+        $contactMail = $contact['email'];
+        $phone = $contact['phone'];
+        $contactName = $contact['lname'] . " " . $contact['fname'];
+        $jobTitle = $contact['job'];
+
+        $mailtoLink = generateLink($rowComment['AdresseMail'], $contactMail);
         $dateNextYMD = $rowComment['Prochaine_relance'];
         if (isDateValid($dateNextYMD)) {
 
             $dateNext = date("d/m/Y", strtotime($dateNextYMD));
-            $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
+            //$dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext); //link not ready
         } else
             $dateNext = "Aucune";
 
         if ($rowComment['Fichier'] == "NULL")
             $fileLink = "Aucun";
-        else
-            $fileLink = generateLink($rowComment['Fichier'], basename($rowComment['Fichier']));
+        else {
+            $fileImage = generateImage("../png/attachment.png", basename($rowComment['Fichier']));
+            $fileLink = generateLink($rowComment['Fichier'], $fileImage);
+        }
 
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);
         $editLink = generateLink("commentEdit.php?id=" . $commId, $editImage);
@@ -34,7 +42,7 @@ function listComments($orderId)
         $deleteLink = generateLink("commentDelete.php?id=" . $commId, $deleteImage, "_self", "return confirm('Supprimer commentaire ?')");
         $links = $editLink . " " . $deleteLink;
 
-        $cells = array($comment, $author, $dateComm, $contact['name'], $mailtoLink, $rowComment['NumTelephone'], $dateNext, $fileLink);
+        $cells = array($comment, $author, $dateComm, $contactName, $jobTitle, $mailtoLink, $phone, $dateNext, $fileLink);
         if (isAuthor($author) || isAdmin())
             array_push($cells, $links);
         $cells = generateRow($cells);
@@ -53,8 +61,8 @@ $connection = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
-$orderId = filter_input(INPUT_GET, "id");
-$orderIdShort = getOrderIdShort($orderId);
+$clientId = filter_input(INPUT_GET, "clientId");
+$reviewId = filter_input(INPUT_GET, "reviewId");
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -62,8 +70,11 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
+        $clientName = getClientName($clientId);
+        $reviewName = getReviewName($reviewId);
+
         $style = file_get_contents("../html/commentList.html");
-        $style = str_replace("{order}", $orderIdShort, $style);
+        $style = str_replace("{client}", $clientName, $style);
         echo $style;
 
         if (isAdmin()) {
@@ -78,38 +89,23 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        $client = getContactName($orderId);
-        echo "<h1>Contrat : " . $orderIdShort . " Montant : " . $client['price'] . "</h1>";
-        $review = findReview($orderId);
+        $companyLink = generateLink("clientReviews.php?id=" . $clientId, $clientName);
+        $reviewLink = generateLink("reviewClients.php?id=" . $reviewId, $reviewName);
 
-        $paid = isItPaid($orderId);
-        $colorCompta = ($paid['compta'] === "R" ? "#008800" : "#FF0000");
-        $textCompta = ($paid['compta'] === "R" ? "Contrat reglé compta" : "Contrat non-reglé compta");
-        $colorBase = ($paid['base'] === "R" ? "#008800" : "#FF0000");
-        $textBase = ($paid['base'] === "R" ? "Contrat reglé base" : "Contrat non-reglé base");
-        $h2style = "style=\"color:";
-
-        $reviewName = $review['Name'] . " " . $review['Year'];
-        $reviewLink = generateLink("searchReviewOrders.php?id=" . $review['Id'], $reviewName);
-        $companyLink = generateLink("searchClientOrders.php?id=" . $client['id'], $client['name']);
-
-        echo "<h2 " . $h2style . $colorCompta . "\">" . $textCompta . "</h2>";
-        echo "<h2 " . $h2style . $colorBase . "\">" . $textBase . "</h2>";
-        echo "<h2>Paru sur: " . $reviewLink . "</h2>";
         echo "<h2>Client: " . $companyLink . "</h2>";
+        echo "<h2>Revue: " . $reviewLink . "</h2>";
 
         echo "<table>";
 
-        $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");
+        $cells = array("Commentaire","Auteur","Date commentaire","Nom du contact","Fonction","E-mail","Téléphone","Prochaine relance","Fichier");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
-        $phone = getPhoneNumber($orderId, $client['id']); // For the $form phone placeholder, takes existing phone value.
-        $form = addCommentForm("../html/commentAdd.html", $orderId, $orderIdShort, $client['id'], $phone);
+        $form = addCommentForm("../html/commentAdd.html", $clientId, $reviewId);
         echo $form;
 
-        listComments($orderId);
+        listComments($clientId, $reviewId);
 
         echo "</table><br><br><br>";
         echo "</html>";

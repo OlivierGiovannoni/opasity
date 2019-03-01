@@ -29,7 +29,6 @@ CREATE TABLE webcommercial_commentaire ( id INT NOT NULL AUTO_INCREMENT,
 					 Date DATE NOT NULL,
 					 Client_id INT NOT NULL,
 					 Revue_id INT NOT NULL,
-					 NomClient VARCHAR(256) NOT NULL,
 					 Prochaine_relance DATE,
 					 Contact_id VARCHAR(4),
 					 Fichier VARCHAR(128),
@@ -37,10 +36,16 @@ CREATE TABLE webcommercial_commentaire ( id INT NOT NULL AUTO_INCREMENT,
 					 Acceptee TINYINT,
 					 PRIMARY KEY (Commentaire_id) );
 
+CREATE TABLE webcommercial_multiacces ( id INT NOT NULL AUTO_INCREMENT,
+       	     			      	User_id INT NOT NULL,
+					Acces_id INT NOT NULL,
+					DateAcces DATE NOT NULL,
+					PRIMARY KEY (id) );
+
 CREATE TABLE webcommercial_client_revue ( id INT NOT NULL AUTO_INCREMENT,
         	     			  Revue_id INT NOT NULL,
 					  Client_id INT NOT NULL,
-					  Groupe_id INT NOT NULL,
+					  Gerant_id INT,
 				    	  PRIMARY KEY (id) );
 
 CREATE TABLE webcommercial_client ( id INT NOT NULL AUTO_INCREMENT,

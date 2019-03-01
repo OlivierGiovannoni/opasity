@@ -75,6 +75,7 @@ if (mysqli_connect_error()) {
 
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
+        $file = sanitizeInput($file);
         $file = skipAccents($file);
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
     } else
