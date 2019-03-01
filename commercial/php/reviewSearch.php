@@ -45,6 +45,11 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+
         $style = file_get_contents("../html/search.html");
 
         $style = str_replace("{type}", "revue", $style);

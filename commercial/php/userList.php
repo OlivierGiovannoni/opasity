@@ -54,6 +54,11 @@ if (mysqli_connect_error()) {
 
     if (isLogged() && isAdmin()) {
 
+        $charset = mysqli_set_charset($connection, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+
         $style = file_get_contents("../html/search.html");
         $style = str_replace("Recherche {type}: {query}", "Admin", $style);
         echo $style;
