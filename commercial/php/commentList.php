@@ -10,7 +10,6 @@ function listComments($clientId, $reviewId)
 
         $commId = $rowComment['Commentaire_id'];
         $comment = $rowComment['Commentaire'];
-        $contact = getContactName($orderId);
         $author = $rowComment['Auteur'];
         $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
         $contactId = $rowComment['Contact_id'];
