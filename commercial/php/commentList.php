@@ -93,8 +93,9 @@ if (mysqli_connect_error()) {
         }
     
         $charset = mysqli_set_charset($connection, "utf8");
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
 
-        if ($charset === FALSE)
+        if ($charset === FALSE || $charsetR === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
         $companyLink = generateLink("clientReviews.php?id=" . $clientId, $clientName);

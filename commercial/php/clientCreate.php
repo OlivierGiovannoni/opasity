@@ -59,14 +59,18 @@ $phone = sanitizeInput($phone);
 $siretCode = sanitizeInput($siretCode);
 $apeCode = sanitizeInput($apeCode);
 
-$clientName = mb_strtoupper($clientName);
-
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
     if (isLogged()) {
 
+        $charset = mysqli_set_charset($connection, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+
+        $clientName = mb_strtoupper($clientName);
         $author = $_COOKIE['author'];
 
         $unfilled = isset($id);
