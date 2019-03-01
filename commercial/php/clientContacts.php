@@ -41,6 +41,11 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
+        $charset = mysqli_set_charset($connection, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+
         $clientName = getClientName($clientId);
 
         $style = file_get_contents("../html/search.html");
