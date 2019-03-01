@@ -71,14 +71,13 @@ if (mysqli_connect_error()) {
 
         $unfilled = isset($id);
 
-        if ($filled === true) {
+        if ($unfilled === true) {
 
             $style = file_get_contents("../html/clientCreate.html");
             $style = str_replace("{reviewId}", $id, $style);
             echo $style;
         } else
-            echo "wouhou";
-            //createClient($clientName, $phone, $address1, $address2, $zipCode, $city, $country, $siretCode, $apeCode, $author, $reviewId);
+            createClient($clientName, $phone, $address1, $address2, $zipCode, $city, $country, $siretCode, $apeCode, $author, $reviewId);
     } else
         header("Location: index.php");
 
