@@ -2,8 +2,8 @@
 
 function reviewClients($reviewId)
 {
-    $columns = "Revue_id,Gerant_id";
-    $sqlClients = "SELECT $columns FROM webcommercial_client_revue WHERE Client_id='$clientId';";
+    $columns = "Client_id";
+    $sqlClients = "SELECT $columns FROM webcommercial_client_revue WHERE Revue_id='$reviewId';";
     $rowsClients = querySQL($sqlClients, $GLOBALS['connection']);
 
     foreach ($rowsClients as $rowClient) {

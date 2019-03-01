@@ -2,13 +2,13 @@
 
 function clientReviews($clientId, $published)
 {
-    $columns = "Revue_id,Gerant_id";
+    $columns = "Revue_id";
     $sqlReviews = "SELECT $columns FROM webcommercial_client_revue WHERE Client_id='$clientId';";
     $rowsReviews = querySQL($sqlReviews, $GLOBALS['connection']);
 
     foreach ($rowsReviews as $rowReview) {
 
-        $reviewId = $rowReview['id'];
+        $reviewId = $rowReview['Revue_id'];
 
         $columns = "Nom,Paru,Annee,DateCreation";
         if ($published == 0)
