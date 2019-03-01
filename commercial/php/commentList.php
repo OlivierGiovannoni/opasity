@@ -13,13 +13,13 @@ function listComments($clientId, $reviewId)
         $author = $rowComment['Auteur'];
         $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
         $contactId = $rowComment['Contact_id'];
-        $contact = getContactData($contactId);
+        $contact = getContactData($clientId);
         $contactMail = $contact['email'];
         $phone = $contact['phone'];
         $contactName = $contact['lname'] . " " . $contact['fname'];
         $jobTitle = $contact['job'];
 
-        $mailtoLink = generateLink($rowComment['AdresseMail'], $contactMail);
+        $mailtoLink = generateLink($contactMail, $contactMail);
         $dateNextYMD = $rowComment['Prochaine_relance'];
         if (isDateValid($dateNextYMD)) {
 
