@@ -86,6 +86,7 @@ if (mysqli_connect_error()) {
         header("Location: index.php");
 
     $connection->close();
+    $connectionR->close();
 }
 
 

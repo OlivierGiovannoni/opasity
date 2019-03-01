@@ -87,8 +87,9 @@ if (mysqli_connect_error()) {
 
     } else
         header("Location: index.php");
-    $connectionR->close();
+
     $connection->close();
+    $connectionR->close();
 }
 
 ?>

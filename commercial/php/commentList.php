@@ -121,6 +121,7 @@ if (mysqli_connect_error()) {
         displayLogin("Veuillez vous connecter.");
 
     $connection->close();
+    $connectionR->close();
 }
 
 ?>
