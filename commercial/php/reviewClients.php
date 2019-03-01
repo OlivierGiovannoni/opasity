@@ -25,10 +25,12 @@ function reviewClients($reviewId)
         $createdAtYMD = $rowClient['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
+        $clientLink = generateLink("commentList.php?clientId=" . $clientId . "&reviewId=" . $reviewId, $clientName);
+
         $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
         $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
 
-        $cells = array($clientName, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+        $cells = array($clientLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;

@@ -24,6 +24,8 @@ function clientReviews($clientId, $published)
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
         $reviewTitle = $reviewName . " " . $reviewYear;
 
+        $reviewLink = generateLink("commentList.php?clientId=" . $clientId . "&reviewId=" . $reviewId, $reviewTitle);
+
         $cells = array($reviewTitle, $published, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)

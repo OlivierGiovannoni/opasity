@@ -59,7 +59,7 @@ $phone = sanitizeInput($phone);
 $siretCode = sanitizeInput($siretCode);
 $apeCode = sanitizeInput($apeCode);
 
-$clientName = strtoupper($clientName);
+$clientName = mb_strtoupper($clientName);
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());

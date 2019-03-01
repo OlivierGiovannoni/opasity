@@ -30,7 +30,7 @@ function userClients($userId)
         $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
         $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
 
-        $cells = array($clientName, $reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+        $cells = array($reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
@@ -63,7 +63,7 @@ if (mysqli_connect_error()) {
         echo "<h2>Mes clients</h2>";
         echo "<table>";
 
-        $cells = array("Nom de l'entreprise","Revues","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
+        $cells = array("Nom de l'entreprise","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
