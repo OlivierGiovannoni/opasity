@@ -28,7 +28,7 @@ function listComments($orderId)
             $fileLink = "Aucun";
         else {
 
-            $fileImage = generateImage("../png/attachment.png", basename($rowComment['Fichier']));
+            $fileImage = generateImage("../png/attachment.png", basename($rowComment['Fichier']), 24, 24);
             $fileLink = generateLink($rowComment['Fichier'], $fileImage);
         }
 
