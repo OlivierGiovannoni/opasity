@@ -59,6 +59,8 @@ $phone = sanitizeInput($phone);
 $siretCode = sanitizeInput($siretCode);
 $apeCode = sanitizeInput($apeCode);
 
+$clientName = mb_strtoupper($clientName, "UTF-8");
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
@@ -70,7 +72,6 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        $clientName = mb_strtoupper($clientName);
         $author = $_COOKIE['author'];
 
         $unfilled = isset($id);

@@ -38,6 +38,9 @@ $phone2 = sanitizeInput($phone2);
 $email2 = sanitizeInput($email2);
 $jobTitle = sanitizeInput($jobTitle);
 
+$fname = mb_strtoupper($fname, "UTF-8");
+$lname = mb_strtoupper($lname, "UTF-8");
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
@@ -48,9 +51,6 @@ if (mysqli_connect_error()) {
 
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
-
-        $fname = mb_strtoupper($fname);
-        $lname = mb_strtoupper($lname);
 
         $style = file_get_contents("../html/contactCreate.html");
         $style = str_replace("{clientId}", $id, $style);
