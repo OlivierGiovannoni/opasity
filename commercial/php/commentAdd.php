@@ -27,7 +27,8 @@ function newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $t
     $rowValues = "'$comment','$author','$today','$clientId','$reviewId','$contactId','$nextDueDate','$newFile',1";
     $sqlNewComment = "INSERT INTO webcommercial_commentaire ($rowNames) VALUES ($rowValues);";
     querySQL($sqlNewComment, $GLOBALS['connection'], false); // INSERT output doesn't need to be fetched.
-    header("Location: commentList.php?id=" . $orderId);
+
+    header("Location: commentList.php?clientId=" . $clientId . "&reviewId=" . $reviewId);
 }
 
 require_once "helper.php";
