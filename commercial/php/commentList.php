@@ -78,6 +78,14 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
+        $charset = mysqli_set_charset($connection, "utf8");
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+
         $clientName = getClientName($clientId);
         $reviewName = getReviewName($reviewId);
 
