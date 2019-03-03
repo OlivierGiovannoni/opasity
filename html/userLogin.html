@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/logister.css">
+    <script src="../js/showPass.js"></script>
+    <title>Connexion</title>
+  </head>
+  <body>
+    <a href="../index.html">Changer d'outil</a>
+    <h2>Connexion</h2>
+    <form action="../php/userLogin.php" method="post">
+      <label for="username">Nom d'utilisateur ou email</label><br>
+      <input type="text" name="username" id="username" placeholder="Nom d'utilisateur ou email" required><br><br>
+
+      <label for="password">Mot de passe</label><br>
+      <input type="password" name="password" id="password" placeholder="Mot de passe" required><br><br>
+
+      <label for="showpwd">Afficher mot de passe</label>
+      <input type="checkbox" name="showpwd" id="showpwd" onclick="showPassword()">
+      <br><br>
+
+      <input type="submit" id="submit" value="Se connecter">
+    </form>
+  </body>
+</html>
