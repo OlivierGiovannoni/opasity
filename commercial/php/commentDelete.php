@@ -1,11 +1,16 @@
 <?php
 
-function getOrderId($commId)
+function getIds($commId)
 {
-    $sqlComment = "SELECT Commande FROM webcommercial_commentaire WHERE Commentaire_id='$commId';";
-    $rowComment = querySQL($sqlComment, $GLOBALS['connection'], true, true);
-    $orderId = $rowComment['Commande'];
-    return ($orderId);
+    $columns = "Client_id,Revue_id";
+    $sqlIds = "SELECT $columns FROM webcommercial_commentaire WHERE Commentaire_id='$commId';";
+    $rowIds = querySQL($sqlIds, $GLOBALS['connection'], true, true);
+
+    $clientId = $rowIds['Client_id'];
+    $reviewId = $rowIds['Revue_id'];
+
+    $ids = array('client' => $clientId, 'review' => $reviewId);
+    return ($ids);
 }
 
 function updatePrevious($prevId)
@@ -23,15 +28,16 @@ function deleteComment($commId)
 
 function selectPrevious($commId)
 {
-    $columns = "Commande,DernierCom";
+    $columns = "Client_id,Revue_id,DernierCom";
     $sqlComment = "SELECT $columns FROM webcommercial_commentaire WHERE Commentaire_id='$commId';";
     $rowComment = querySQL($sqlComment, $GLOBALS['connection'], true, true);
 
-    $orderId = $rowComment['Commande'];
+    $clientId = $rowComment['Client_id'];
+    $reviewId = $rowComment['Revue_id'];
     $last = $rowComment['DernierCom'];
     if ($last != 1)
         return (-1);
-    $sqlComment = "SELECT Commentaire_id FROM webcommercial_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
+    $sqlComment = "SELECT Commentaire_id FROM webcommercial_commentaire WHERE Client_id='$clientId' AND Revue_id='$reviewId' ORDER BY Commentaire_id DESC;";
     if ($resultComment = $GLOBALS['connection']->query($sqlComment)) {
 
         $rowComment = mysqli_fetch_array($resultComment);
@@ -65,13 +71,16 @@ if (mysqli_connect_error()) {
     if ($charset === FALSE)
         die("MySQL SET CHARSET error: ". $connection->error);
 
-    $orderId = getOrderId($commId);
+    $ids = getIds($commId);
+    $clientId = $ids['client'];
+    $reviewId = $ids['review'];
+
     $prevId = selectPrevious($commId);
     deleteComment($commId);
     if ($prevId != -1)
         updatePrevious($prevId);
 
-    header("Location: commentList.php?id=" . $orderId);
+    header("Location: commentList.php?clientId=" . $clientId . "&reviewId=" . $reviewId);
 
     } else
         displayLogin("Veuillez vous connecter.");

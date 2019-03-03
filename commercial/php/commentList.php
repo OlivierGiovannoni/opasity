@@ -105,15 +105,15 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE || $charsetR === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        $companyLink = generateLink("clientReviews.php?id=" . $clientId, $clientName);
-        $reviewLink = generateLink("reviewClients.php?id=" . $reviewId, $reviewName);
+        $companyLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
+        $reviewLink = generateLink("reviewClients.php?reviewId=" . $reviewId, $reviewName);
 
         echo "<h2>Client: " . $companyLink . "</h2>";
         echo "<h2>Revue: " . $reviewLink . "</h2>";
 
         echo "<table>";
 
-        $cells = array("Commentaire","Auteur","Date commentaire","Nom du contact","Fonction","E-mail","Téléphone","Prochaine relance","Fichier");
+        $cells = array("Commentaire","Auteur","Date commentaire","Nom du contact","Fonction","E-mail","Téléphone","Prochaine relance","Fichier", "Interagir");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

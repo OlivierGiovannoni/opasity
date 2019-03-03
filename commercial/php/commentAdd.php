@@ -22,7 +22,6 @@ function newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $t
     $author = $_COOKIE['author'];
     //$newFile = uploadFile($tmpFile, $file, $orderId);
     $newFile = "NULL";
-
     $rowNames = "Commentaire,Auteur,Date,Client_id,Revue_id,Contact_id,Prochaine_relance,Fichier,DernierCom";
     $rowValues = "'$comment','$author','$today','$clientId','$reviewId','$contactId','$nextDueDate','$newFile',1";
     $sqlNewComment = "INSERT INTO webcommercial_commentaire ($rowNames) VALUES ($rowValues);";
@@ -45,7 +44,7 @@ $clientId = filter_input(INPUT_POST, "clientId");
 $reviewId = filter_input(INPUT_POST, "reviewId");
 $contactId = filter_input(INPUT_POST, "contactId");
 $nextDueDate = filter_input(INPUT_POST, "nextDueDate");
-$comment = filter_input(INPUT_POST, "comment");
+$comment = filter_input(INPUT_POST, "unpaidReason");
 $newFilename = filter_input(INPUT_POST, "newFilename");
 
 $comment = sanitizeInput($comment);
@@ -63,8 +62,10 @@ if (mysqli_connect_error()) {
 
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
+        $file = sanitizeInput($file);
         $file = skipAccents($file);
-        newComment($clientId, $contactId, $clientName, $nextDueDate, $comment, $tmpFile, $file);
+
+        newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $tmpFile, $file);
     } else
         displayLogin("Veuillez vous connecter.");
 
