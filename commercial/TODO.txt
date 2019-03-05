@@ -19,12 +19,12 @@ DONE:
 --Now there is a link to clientReviews.php and reviewClients.php in myReviews.php, userReviews.php, myClients.php, userClients.php
 --Added link to comments $commentsLink in reviewClients.php and reviewClients.php
 --Can now PARTIALLY create comments with contact select dropdown
+--Edited index.php
+--Fixed SQL query bugs for comment creation
+--Added column to which review is linked specific client on index.php
 
 URGENT:
---edit index.php
---Fix SQL query bugs for comment creation
 --make phone number required on client creation
---add column to which review is linked specific client
 --search bars myClients.php myReviews.php
 --change clientList to myClients.php where needed
 

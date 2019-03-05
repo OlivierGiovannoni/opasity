@@ -13,15 +13,6 @@
       <form id="commentForm" enctype="multipart/form-data" charset="UTF-8" method="post" action="../php/commentEdit.php">
 
 	<div>
-	  <label for="numPhone">Numéro de téléphone</label><br>
-	  <input type="text" name="numPhone" id="numPhone" value="{phone}">
-	  <br><br>
-	  <label for="emailAddr">Adresse e-mail</label><br>
-	  <input type="email" name="emailAddr" id="emailAddr" value="{email}">
-	  <br><br>
-	</div>
-
-	<div>
 	  <label for="unpaidReason">Commentaire</label><br>
 	  <textarea rows="6" cols="66" name="unpaidReason" id="unpaidReason" required>{comment}</textarea>
 
@@ -32,12 +23,13 @@
 
 	  <br><br>
 
-	  <input type="hidden" name="orderId" value="{orderId}">
 	  <input type="hidden" name="commentId" value="{commId}">
+	  <input type="hidden" name="clientId" value="{clientId}">
+	  <input type="hidden" name="reviewId" value="{reviewId}">
 
 	  <input value="Valider" type="submit" id="submit">
 	  <br>
-	  <a href="../php/commentList.php?id={orderId}">Annuler</a>
+	  <a href="../php/commentList.php?clientId={clientId}&reviewId={reviewId}">Annuler</a>
 	</div>
       </form>
     </div>

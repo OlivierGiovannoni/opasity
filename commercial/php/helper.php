@@ -146,7 +146,7 @@ function generateSelect($name, $rows, $value, $text1, $text2)
     array_push($options, "<select name=\"$name\">");
     foreach ($rows as $row) {
 
-        $option = "<option value\"" . $row[$value] . "\">" . $row[$text1] . " " . $row[$text2] . "</option>";
+        $option = "<option value=\"" . $row[$value] . "\">" . $row[$text1] . " " . $row[$text2] . "</option>";
         array_push($options, $option);
     }
     array_push($options, "</select>");
@@ -331,7 +331,7 @@ function addCommentForm($htmlFileName, $clientId, $reviewId)
     $htmlFileData = file_get_contents($htmlFileName);
     // Replace fake variables with real values.
     $contacts = getClientContacts($clientId);
-    $selectContact = generateSelect("clientId", $contacts, "id","Nom","Prenom");
+    $selectContact = generateSelect("contactId", $contacts, "id","Nom","Prenom");
     $select = implode($selectContact);
     $htmlFileData = str_replace("<!--select-->", $select, $htmlFileData);
     $htmlFileData = str_replace("{clientId}", $clientId, $htmlFileData);
@@ -350,33 +350,6 @@ function getAuthor($commId)
     $rowAuthor = querySQL($sqlAuthor, $GLOBALS['connection'], true, true);
     $author = $rowAuthor['Auteur'];
     return ($author);
-}
-
-/*
-** Parameters: String, Bool
-** Return: Array
-**
-*/
-function selectLastComment($orderId, $dmy = false)
-{
-    $sqlComment = "SELECT Date,Commentaire,Prochaine_relance,AdresseMail FROM webcommercial_commentaire WHERE Commande='$orderId' ORDER BY Commentaire_id DESC;";
-    $rowComment = querySQL($sqlComment, $GLOBALS['connection'], true, true);
-
-    $text = $rowComment['Commentaire'];
-    $date = $rowComment['Date'];
-    $reminder = $rowComment['Prochaine_relance'];
-
-    if ($date == NULL)
-        $date = "Aucune";
-    if ($reminder == NULL)
-        $reminder = "Aucune";
-    else if ($dmy === true) {
-
-        $date = date("d/m/Y", strtotime($date));
-        $reminder = date("d/m/Y", strtotime($reminder));
-    }
-    $comment = array('text' => $text, 'date' => $date, 'reminder' => $reminder, 'email' => $rowComment['AdresseMail']);
-    return ($comment);
 }
 
 /*
@@ -453,9 +426,10 @@ function getClientContacts($clientId)
 ** Parameters: String
 ** Return: String
 */
-function getContactData($clientId)
+function getContactData($contactId)
 {
-    $sqlClient = "SELECT Nom,Prenom,Fonction,NumTelephone1,AdresseMail1 FROM webcommercial_contact WHERE Client_id='$clientId';";
+    $sqlClient = "SELECT Nom,Prenom,Fonction,NumTelephone1,AdresseMail1 FROM webcommercial_contact WHERE 
+id='$contactId';";
     $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
 
     $lname = $rowClient['Nom'];

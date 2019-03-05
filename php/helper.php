@@ -157,7 +157,7 @@ function generateSelect($name, $rows, $value, $text)
     array_push($options, "<select name=\"$name\">");
     foreach ($rows as $row) {
 
-        $option = "<option value\"" . $row[$value] . "\">" . $row[$text] . "</option>";
+        $option = "<option value=\"" . $row[$value] . "\">" . $row[$text] . "</option>";
         array_push($options, $option);
     }
     array_push($options, "</select>");

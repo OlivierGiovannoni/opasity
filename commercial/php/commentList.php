@@ -13,7 +13,7 @@ function listComments($clientId, $reviewId)
         $author = $rowComment['Auteur'];
         $dateComm = date("d/m/Y", strtotime($rowComment['Date']));
         $contactId = $rowComment['Contact_id'];
-        $contact = getContactData($clientId);
+        $contact = getContactData($contactId);
         $contactMail = $contact['email'];
         $phone = $contact['phone'];
         $contactName = $contact['lname'] . " " . $contact['fname'];

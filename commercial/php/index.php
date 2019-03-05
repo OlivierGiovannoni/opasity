@@ -2,52 +2,56 @@
 
 function findDates($dueDate)
 {
-    $columns = "Commentaire_id,Commentaire,Auteur,Date,Client_id,Contact_id,NomClient,Prochaine_relance,Acceptee,Fichier";
+    $columns = "Commentaire_id,Commentaire,Auteur,Date,Client_id,Revue_id,Contact_id,Prochaine_relance,Acceptee,Fichier";
     $sqlDate = "SELECT $columns FROM webcommercial_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
     $rowsDate = querySQL($sqlDate, $GLOBALS['connection']);
 
     foreach ($rowsDate as $rowDate) {
 
-        $orderId = $rowDate['Commande'];
-        $paid = isItPaid($orderId);
-
-        if ($paid['compta'] === "R")
-            continue ;
-
-        $orderIdShort = getOrderIdShort($orderId);
-        $comment = $rowDate['Commentaire'];
+        $clientId = $rowDate['Client_id'];
+        $reviewId = $rowDate['Revue_id'];
+        $contactId = $rowDate['Contact_id'];
         $commId = $rowDate['Commentaire_id'];
+        $comment = $rowDate['Commentaire'];
         $author = $rowDate['Auteur'];
-        $file = $rowDate['Fichier'];
-        $fileShort = basename($file);
-        $paidBase = ($paid['base'] === "R" ? "Oui" : "Non");
-        $final = findReview($orderId); // Find review details related to the order
-        $details = getOrderDetails($orderId); // Get order and client details related to the order
 
-        $orderLink = generateLink("commentList.php?id=" . $orderId, $orderIdShort); // Generate <a> link with orderId as id and orderIdShort as text
-        $companyLink = generateLink("clientReviews.php?id=" . $details['clientId'], $details['companyName']); // Generate <a> link with clientId as id and companyName as text
-        $reviewLink = $final['Name'] . " " . $final['Year'];
-        $reviewLink = generateLink("reviewClients.php?id=" . $final['Id'], $reviewLink); // Generate <a> link with reviewId as id and reviewName Year as text
-        $mailtoLink = generateLink("mailto:" . $rowDate['AdresseMail'], $rowDate['AdresseMail']); // Generate <a> mailto link
-        $dateComm = date("d/m/Y", strtotime($rowDate['Date'])); // Comment date
-        $dateNextYMD = $rowDate['Prochaine_relance']; // Next reminder date
+        $clientName = getClientName($clientId);
+        $clientLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
+
+        $reviewTitle = getReviewName($reviewId);
+        $reviewLink = generateLink("reviewClients.php?reviewId=" . $reviewId, $reviewTitle);
+
+        $dateComm = date("d/m/Y", strtotime($rowDate['Date']));
+
+        $contact = getContactData($contactId);
+        $contactMail = $contact['email'];
+        $phone = $contact['phone'];
+        $contactName = $contact['lname'] . " " . $contact['fname'];
+        $jobTitle = $contact['job'];
+
+        $mailtoLink = generateLink($contactMail, $contactMail);
+        $dateNextYMD = $rowDate['Prochaine_relance'];
         if (isDateValid($dateNextYMD)) {
 
             $dateNext = date("d/m/Y", strtotime($dateNextYMD));
-            $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
+            //$dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext); //link not ready
         } else
             $dateNext = "Aucune";
-        $attachmentImage = generateImage("../png/attachment.png", $fileShort, 24, 24); // Create attachment icon
-        $attachmentLink = generateLink($file, $attachmentImage); // Create <a> link that leads to attached file
-        if ($file !== "NULL" && $file !== "")
-            $comment = $attachmentLink . " " . $comment;
-        $editImage = generateImage("../png/edit.png", "Modifier", 24, 24); // Create edit icon
-        $editLink = generateLink("commentEdit.php?id=" . $commId, $editImage); // Create <a> link to edit comment
-        $deleteImage = generateImage("../png/delete.png", "Supprimer", 24, 24); // Create delete icon
-        $deleteLink = generateLink("commentDelete.php?id=" . $commId, $deleteImage, "_self", "return confirm('Supprimer commentaire ?')"); // Create <a> link to delete comment
+
+        if ($rowDate['Fichier'] == "NULL")
+            $fileLink = "Aucun";
+        else {
+            $fileImage = generateImage("../png/attachment.png", basename($rowDate['Fichier']), 24, 24);
+            $fileLink = generateLink($rowDate['Fichier'], $fileImage);
+        }
+
+        $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);
+        $editLink = generateLink("commentEdit.php?id=" . $commId, $editImage);
+        $deleteImage = generateImage("../png/delete.png", "Supprimer", 24, 24);
+        $deleteLink = generateLink("commentDelete.php?id=" . $commId, $deleteImage, "_self", "return confirm('Supprimer commentaire ?')");
         $links = $editLink . " " . $deleteLink;
 
-        $cells = array($orderLink, $reviewLink, $details['priceRaw'], $companyLink, $paidBase, $mailtoLink, $comment, $author, $dateComm, $dateNext);
+        $cells = array($clientLink, $reviewLink, $contactName, $jobTitle, $phone, $mailtoLink, $comment, $dateComm, $dateNext);
         if (isAuthor($author) || isAdmin()) // If user is Author or Admin
             array_push($cells, $links); // Display edit/delete links
         $cells = generateRow($cells);
@@ -59,13 +63,21 @@ function findDates($dueDate)
 
 require_once "helper.php";
 
+$credentials = getCredentials("../credentials.txt");
+
+$connectionR = new mysqli(
+    $credentials['hostname'],
+    $credentials['username'],
+    $credentials['password'],
+    $credentials['database']); // CONNECT TO DATABASE READ
+
 $credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNECT TO DATABASE
+    $credentials['database']); // CONNECT TO DATABASE WRITE
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -74,9 +86,12 @@ if (mysqli_connect_error()) {
     if (isLogged()) {
 
         $charset = mysqli_set_charset($connection, "utf8");
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
 
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
 
         $indexHTML = file_get_contents("../html/index.html");
         echo $indexHTML;
@@ -97,7 +112,7 @@ if (mysqli_connect_error()) {
         echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
         echo "<table>";
 
-        $cells = array("Contrat","Revue","PrixHT","Nom de l'entreprise","Accepté","E-mail","Commentaire","Auteur","Date commentaire","Prochaine relance");
+        $cells = array("Nom de l'entreprise","Revue","Nom du contact","Fonction","Téléphone","E-mail","Commentaire","Date commentaire","Prochaine relance","Interagir");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
@@ -109,6 +124,7 @@ if (mysqli_connect_error()) {
         displayLogin("Veuillez vous connecter.");
 
     $connection->close();
+    $connectionR->close();
 }
 
 ?>
