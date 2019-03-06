@@ -154,7 +154,7 @@ function generateSelect($name, $rows, $value, $text1, $text2)
 }
 
 /*
-** Parameters: String, String, String
+** Parameters: String, String, String, String
 ** Return: String
 **
 */
@@ -165,7 +165,18 @@ function generateLink($href, $text, $target = "_blank", $onclick = null)
 }
 
 /*
-** Parameters: String, String, String
+** Parameters: String, String
+** Return: String
+**
+*/
+function generateDownloadLink($href, $text)
+{
+    $link = "<a href=\"" . $href . "\" download>" . $text . "</a>";
+    return ($link);
+}
+
+/*
+** Parameters: String, String, String, String
 ** Return: String
 **
 */
@@ -255,7 +266,7 @@ function displayLogin($message)
 {
     $file = "../html/userLogin.html";
     $loginHTML = file_get_contents($file);
-    echo $message;
+    $loginHTML = str_replace("{message}", $message, $loginHTML);
     echo $loginHTML;
 }
 
@@ -268,7 +279,7 @@ function displayRegister($message)
 {
     $file = "../html/userCreate.html";
     $registerHTML = file_get_contents($file);
-    echo $message;
+    $registerHTML = str_replace("{message}", $message, $loginHTML);
     echo $registerHTML;
 }
 
