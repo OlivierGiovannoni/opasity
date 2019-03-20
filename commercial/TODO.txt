@@ -22,13 +22,17 @@ DONE:
 --Edited index.php
 --Fixed SQL query bugs for comment creation
 --Added column to which review is linked specific client on index.php
+--Added "*" to required fields in html/create{Client/Contact}.html
+--Phone number is now required on client creation
 
 URGENT:
---make phone number required on client creation
 --search bars myClients.php myReviews.php
---change clientList to myClients.php where needed
 
 TODO:
+--Force charset for every connection on all files
+--Comments filtered by author
+--User can access an other user's panel
+--Change COOKIES to SESSION, (only store sessionStart timestamp in cookies)
 --Edit/delete buttons for clients
 --Link/Unlik clients to reviews somehow...... (maybe using webcommercial_client_revue table ?)
 --Image link "+" that links to all reviews linked to client

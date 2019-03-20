@@ -7,17 +7,18 @@
   </head>
   <body>
     <h1>Création d'un client</h1>
+    <h3>Les champs avec * sont obligatoires</h3>
     <form action="../php/clientCreate.php" method="post">
 
       <input type="hidden" name="reviewId" value="{reviewId}">
 
-      <label for="clientName">Nom du client</label><br>
+      <label for="clientName">Nom du client *</label><br>
       <input type="text" name="clientName" id="clientName" placeholder="Nom du client" required>
       <br><br>
 
       
-      <label for="phone">Numéro de téléphone</label><br>
-      <input type="text" name="phone" id="phone" placeholder="Numéro de téléphone">
+      <label for="phone">Numéro de téléphone *</label><br>
+      <input type="text" name="phone" id="phone" placeholder="Numéro de téléphone" required>
       <br><br>
 
       <label for="address1">Adresse</label><br>
@@ -28,7 +29,7 @@
       <input type="text" name="address2" id="address2" placeholder="Adresse (2ème ligne)">
       <br><br>
 
-      <label for="zipCode">Code postal</label><br>
+      <label for="zipCode">Code postal *</label><br>
       <input type="text" name="zipCode" id="zipCode" placeholder="Code postal" required>
       <br><br>
 

@@ -8,12 +8,16 @@ function findDates($dueDate)
 
     foreach ($rowsDate as $rowDate) {
 
+        $author = $rowDate['Auteur'];
+
+        if (!isAuthor($author))
+            continue ;
+
         $clientId = $rowDate['Client_id'];
         $reviewId = $rowDate['Revue_id'];
         $contactId = $rowDate['Contact_id'];
         $commId = $rowDate['Commentaire_id'];
         $comment = $rowDate['Commentaire'];
-        $author = $rowDate['Auteur'];
 
         $clientName = getClientName($clientId);
         $clientLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
@@ -51,9 +55,7 @@ function findDates($dueDate)
         $deleteLink = generateLink("commentDelete.php?id=" . $commId, $deleteImage, "_self", "return confirm('Supprimer commentaire ?')");
         $links = $editLink . " " . $deleteLink;
 
-        $cells = array($clientLink, $reviewLink, $contactName, $jobTitle, $phone, $mailtoLink, $comment, $dateComm, $dateNext);
-        if (isAuthor($author) || isAdmin()) // If user is Author or Admin
-            array_push($cells, $links); // Display edit/delete links
+        $cells = array($clientLink, $reviewLink, $contactName, $jobTitle, $phone, $mailtoLink, $comment, $dateComm, $dateNext, $links);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
