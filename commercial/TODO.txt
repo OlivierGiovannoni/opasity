@@ -1,40 +1,10 @@
-DONE:
---Can create clients.
---Can create contacts that are linked to specific client.
---Superuser can see a list of user-specific reviews/clients.
---Added buttons to main page (my reviews/my clients).
---Can now give user access to review (one by one, no bulk).
---Added link to see "Parue" and "Non-parue" reviews
---Changed "Nom du client" to "Nom de l'entreprise" in myClients.php
---Now INSERTing phone number per client/company in clientCreate.php
---Now client and contact names are UPPERCASE
---Added "Paru" column and filter link myReviews.php
---Removed "+" button to create client (myClients and userClients)
---Renamed and replaced searchReview.php to reviewSearch.php, replaced searchClientOrders.php with clientReviews.php
---Created reviewClients.php and added "+" button only in reviewClients.php
---Created clientReviews.php
---Added sort by published link on userReviews.php and "Parue" column
---Removed useless "Interagir" columns
---Moved contacts link to "Contacts" column with icon in myClients.php and userClients.php and reviewClients.php
---Now there is a link to clientReviews.php and reviewClients.php in myReviews.php, userReviews.php, myClients.php, userClients.php
---Added link to comments $commentsLink in reviewClients.php and reviewClients.php
---Can now PARTIALLY create comments with contact select dropdown
---Edited index.php
---Fixed SQL query bugs for comment creation
---Added column to which review is linked specific client on index.php
---Added "*" to required fields in html/create{Client/Contact}.html
---Phone number is now required on client creation
-
-URGENT:
---search bars myClients.php myReviews.php
-
 TODO:
+--Be able to import already existing client to another review using reviewImportClient.php page
 --Force charset for every connection on all files
 --Comments filtered by author
+--Search bars myClients.php myReviews.php
 --User can access an other user's panel
---Change COOKIES to SESSION, (only store sessionStart timestamp in cookies)
 --Edit/delete buttons for clients
---Link/Unlik clients to reviews somehow...... (maybe using webcommercial_client_revue table ?)
 --Image link "+" that links to all reviews linked to client
 --Be able to import CSV file, 1st line columns names, next line columns data:
 ----CSV line contains information about the CLIENT and the CONTACT
@@ -42,5 +12,28 @@ TODO:
 --User1 can see user2's clients if granted, but one-way, user2 cannot see user1's clients if not granted. -> or <->
 --Add edit/delete image links everywhere (client/contact)
 
-OPTIONAL:
-++Inserter to read table name, DESCRIBE table, get columns names and properties, and create form to INSERT DELETE UPDATE automatically, myPhpAdmin
+DONE:
+--Changed COOKIES to SESSION
+--Added column to which review is linked specific client on index.php
+--Added "*" to required fields in html/create{Client/Contact}.html
+--Phone number is now required on client creation
+--Can now create comments with contact select dropdown
+--Added link to comments $commentsLink in reviewClients.php and reviewClients.php
+--Now there is a link to clientReviews.php and reviewClients.php in myReviews.php, userReviews.php, myClients.php, userClients.php
+--Moved contacts link to "Contacts" column with icon in myClients.php and userClients.php and reviewClients.php
+--Removed useless "Interagir" columns
+--Added sort by published link on userReviews.php and "Parue" column
+--Created clientReviews.php
+--Created reviewClients.php and added "+" button only in reviewClients.php
+--Renamed and replaced searchReview.php to reviewSearch.php, replaced searchClientOrders.php with clientReviews.php
+--Removed "+" button to create client (myClients and userClients)
+--Added "Paru" column and filter link myReviews.php
+--Now client and contact names are UPPERCASE
+--Now INSERTing phone number per client/company in clientCreate.php
+--Changed "Nom du client" to "Nom de l'entreprise" in myClients.php
+--Added link to see "Parue" and "Non-parue" reviews
+--Can now give user access to review (one by one, no bulk).
+--Added buttons to main page (my reviews/my clients).
+--Superuser can see a list of user-specific reviews/clients.
+--Can create contacts that are linked to specific client.
+--Can create clients.

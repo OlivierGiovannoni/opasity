@@ -1,58 +1,3 @@
-DONE:
---Empty error message on index.php if table is empty, removed.
---Liste Nouv. comments, removed.
---Request too long because of splitEvery() function, deleted.
---Added an icon that redirects to index.php.
---Added a few lines breaks below the </table> so we can clearly see the end.
---Added "Prochaine relance" column next to "Date commentaire"
---Changed text size smaller in td.
---Remove "Nom du contact" and "numéro de telephone" in index.php and searchClient.php (each).
---Mail Column with MAILTO: searchReviewOrders.php and index.php
---Paid checkbox becomes a button, with validation to avoid mistakes.
---If 'Prochaine relance' input date is empty and contract is not paid yet, it will be automatically set to 2 weeks from now.
---COMPLETELY REMOVED dark mode.
---Renamed "Nom du contact" with "Nom de l'entreprise" on main page.
---Add "Parue" or "Non-parue" in Green or Red on searchReviewOrders.php page.
---Sorted orders by ASC order number.
---Payé button re-creates a request and refreshes page.
---Added client name in h1 on searchClientOrders.php
---Checked if uploaded file is NULL to avoid creating empty directories.
---Displayed all "relances" temporarily till DATE bug is fixed.
---Number total of contracts + Total price. (only review)
---When showing all, button is now "Afficher les non-reglés", else "Afficher tout".
---Fixed DATE <= Today display bug.
---Fixed encoding problem on review name on commentList.php and change btn to lnk or simple txt.
---Moved button "Payé" to the right and RE-ORGANIZE ALL THAT SHIT on commentList.php page. Used divs.
---Removed #tableSub and disguised Submit buttons.
---Added "Commentaire" as required field on addComments.html fields.
---Added "Fichier" column.
---Displayed only last comment for "relances" per order using "DernierCom" column.
---Hid orders with negative prices.
---PURGED dark mode.
---Fixed \" on textarea on commentAdd.php page.
---Added "Payé base & Payé compta" on every page.
---Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
---Added 'Relances du jour' Unpaid AND Date <= TODAY.
---Automatically filled phone number using "{phone}" on commentList.php
---Now order can be set to Paid/Unpaid even if there was no comment, using fake comment INSERT.
---Added comment "Author" when login system is done.
---Refactored code, added helper functions and moved duplicate functions to helper.php
---Added "New File Name" temporarily until autoreplace gets added
---Changed all POST to GET and now using <a> links instead of hidden forms.
---Added admin panel, now checking cookies on every page.
---Admin can now list/create/edit/delete users.
---Added possibility for author or admin to edit/delete comment.
---Edit reminder date if clicked on "edit icon" that will be added.
---Edit or delete comment by clicking on it, or date, or CSS image button (2 icons).
---Dates are now clickable date and lead to searchDate.php with the corresponding date.
---REMOVED check if Author in cookies is valid in isLogged() to avoid fake cookies, causing too much errors.
---Added Unique ID before filename on commentAdd.php if 2 filenames are same. file.x to uid_file.x if already exists.
---Now superuser can see lastLogin and createdAt for each account
---Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked.
---Fixed bug where it wouldn't pass contract without comment to paid/unpaid.
---Removed all helper scripts
---Replaced file name href with attachment icon on commentList.php
-
 TODO:
 --Add "+"  button next to review link if a contract belongs to multiple reviews "searchOrderReviews.php"
 --Add 5 most recent order numbers (links) right next to the phone number	
@@ -71,3 +16,58 @@ OPTIONAL:
 ++Draggable elements
 ++Make it generic, JSON config file does everything, JSON describes starting point, headers, titles, tables, SQL requests, SQL columns, Links, Data to be displayed, sorted, etc.. (generic.json)
 ++Inserter to read table name, DESCRIBE table, get columns names and properties, and create form to INSERT DELETE UPDATE automatically, myPhpAdmin
+
+DONE:
+--Changed COOKIES to SESSION.
+--Replaced file name href with attachment icon on commentList.php.
+--Removed all helper scripts.
+--Fixed bug where it wouldn't pass contract without comment to paid/unpaid.
+--Added "Attachment" icon in the "Commentaire" field on index.php if the comment has a file linked.
+--Now superuser can see lastLogin and createdAt for each account.
+--Added Unique ID before filename on commentAdd.php if 2 filenames are same. file.x to uid_file.x if already exists.
+--REMOVED check if Author in cookies is valid in isLogged() to avoid fake cookies, causing too much errors.
+--Dates are now clickable date and lead to searchDate.php with the corresponding date.
+--Edit or delete comment by clicking on it, or date, or CSS image button (2 icons).
+--Edit reminder date if clicked on "edit icon" that will be added.
+--Added possibility for author or admin to edit/delete comment.
+--Admin can now list/create/edit/delete users.
+--Added admin panel, now checking cookies on every page.
+--Changed all POST to GET and now using <a> links instead of hidden forms.
+--Added "New File Name" temporarily until autoreplace gets added
+--Refactored code, added helper functions and moved duplicate functions to helper.php
+--Added comment "Author" when login system is done.
+--Now order can be set to Paid/Unpaid even if there was no comment, using fake comment INSERT.
+--Automatically filled phone number using "{phone}" on commentList.php
+--Added 'Relances du jour' Unpaid AND Date <= TODAY.
+--Moved the "Paid" checkbox to the order list and make it show the paid orders dynamically.
+--Added "Payé base & Payé compta" on every page.
+--Fixed \" on textarea on commentAdd.php page.
+--PURGED dark mode.
+--Hid orders with negative prices.
+--Displayed only last comment for "relances" per order using "DernierCom" column.
+--Added "Fichier" column.
+--Added "Commentaire" as required field on addComments.html fields.
+--Removed #tableSub and disguised Submit buttons.
+--Moved button "Payé" to the right and RE-ORGANIZE ALL THAT SHIT on commentList.php page. Used divs.
+--Fixed encoding problem on review name on commentList.php and change btn to lnk or simple txt.
+--Fixed DATE <= Today display bug.
+--When showing all, button is now "Afficher les non-reglés", else "Afficher tout".
+--Number total of contracts + Total price. (only review)
+--Displayed all "relances" temporarily till DATE bug is fixed.
+--Checked if uploaded file is NULL to avoid creating empty directories.
+--Added client name in h1 on searchClientOrders.php
+--Payé button re-creates a request and refreshes page.
+--Sorted orders by ASC order number.
+--Add "Parue" or "Non-parue" in Green or Red on searchReviewOrders.php page.
+--Renamed "Nom du contact" with "Nom de l'entreprise" on main page.
+--If 'Prochaine relance' input date is empty and contract is not paid yet, it will be automatically set to 2 weeks from now.
+--Paid checkbox becomes a button, with validation to avoid mistakes.
+--Mail Column with MAILTO: searchReviewOrders.php and index.php
+--Remove "Nom du contact" and "numéro de telephone" in index.php and searchClient.php (each).
+--Changed text size smaller in td.
+--Added "Prochaine relance" column next to "Date commentaire"
+--Added a few lines breaks below the </table> so we can clearly see the end.
+--Added an icon that redirects to index.php.
+--Request too long because of splitEvery() function, deleted.
+--Liste Nouv. comments, removed.
+--Empty error message on index.php if table is empty, removed.

@@ -228,9 +228,13 @@ function skipAccents($str, $charset = "utf-8")
 */
 function isLogged()
 {
-    if (!isset($_COOKIE['author']))
-        return (false);
-    return (true);
+    session_start();
+    $now = time();
+    if (isset($_SESSION['author']) && $_SESSION['expires'] > $now)
+        return (true);
+    session_unset();
+    session_destroy();
+    return (false);
 }
 
 /*
@@ -240,7 +244,7 @@ function isLogged()
 */
 function isAdmin()
 {
-    if (isset($_COOKIE['connection']) && $_COOKIE['connection'] == 1)
+    if (isset($_SESSION['superuser']) && $_SESSION['superuser'] == 1)
         return (true);
     return (false);
 }
@@ -252,7 +256,7 @@ function isAdmin()
 */
 function isAuthor($author)
 {
-    if ($author === $_COOKIE['author'])
+    if ($author === $_SESSION['author'])
         return (true);
     return (false);
 }

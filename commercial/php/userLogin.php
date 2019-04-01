@@ -21,8 +21,10 @@ function login($username, $password)
     $now = date("Y-m-d H:i:s");
     $sqlRefresh = "UPDATE webcontrat_utilisateurs SET lastLogin='$now' WHERE username='$username';";
     querySQL($sqlRefresh, $GLOBALS['connection'], false); // UPDATE output doesn't need to be fetched.
-    setcookie("author", $username, time() + 14400, "/");
-    setcookie("connection", $superuser, time() + 14400, "/");
+    session_start();
+    $_SESSION['author'] =  $username;
+    $_SESSION['superuser'] = $superuser;
+    $_SESSION['expires'] = time() + 14400;
     header("Location: index.php");
 }
 

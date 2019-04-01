@@ -2,8 +2,9 @@
 
 function logout()
 {
-    setcookie("author", null, 0, "/");
-    setcookie("connection", null, 0, "/");
+    session_start();
+    session_unset();
+    session_destroy();
     header("Location: index.php");
 }
 

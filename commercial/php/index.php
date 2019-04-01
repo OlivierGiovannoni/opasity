@@ -111,7 +111,7 @@ if (mysqli_connect_error()) {
         $today = date("Y-m-d");
         $newDate = date("d/m/Y", strtotime($today));
 
-        echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
+        echo "<h1>Clients à relancer le " . $newDate . ":</h1>";
         echo "<table>";
 
         $cells = array("Nom de l'entreprise","Revue","Nom du contact","Fonction","Téléphone","E-mail","Commentaire","Date commentaire","Prochaine relance","Interagir");
