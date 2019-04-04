@@ -30,7 +30,7 @@ function editUser($userId, $fname, $lname, $email, $username, $password, $superu
     $sqlUser = "UPDATE webcontrat_utilisateurs SET $ruleSET WHERE id='$userId';";
     $rowUser = querySQL($sqlUser, $GLOBALS['connectionW'], false);
 
-    $self = $_COOKIE['author'];
+    $self = $_SESSION['author'];
     $myId = getUserId($self);
 
     if ($myId == $userId)

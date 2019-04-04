@@ -21,8 +21,10 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
     $sqlNewLast = "UPDATE webcontrat_commentaire SET DernierCom=0 WHERE Commentaire_id='$lastId';";
     querySQL($sqlNewLast, $GLOBALS['connectionW'], false); // UPDATE output doesn't need to be fetched.
 
-    $author = $_COOKIE['author'];
+    $author = $_SESSION['author'];
     $newFile = uploadFile($tmpFile, $file, $orderId);
+    $newFile = sanitizeInput($newFile, true);
+
     $rowNames = "Commentaire,Auteur,Date,Commande,Commande_courte,Prochaine_relance,NumTelephone,AdresseMail,Fichier,DernierCom";
     $rowValues = "'$unpaidReason','$author','$today','$orderId','$orderIdShort','$nextDueDate','$phone','$email','$newFile',1";
     $sqlNewComment = "INSERT INTO webcontrat_commentaire ($rowNames) VALUES ($rowValues);";
@@ -75,8 +77,8 @@ if (mysqli_connect_error()) {
 
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
-        $file = sanitizeInput($file);
         $file = skipAccents($file);
+
         newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpaidReason, $clientId, $tmpFile, $file);
     } else
         displayLogin("Veuillez vous connecter.");

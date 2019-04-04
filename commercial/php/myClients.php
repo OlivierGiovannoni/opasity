@@ -58,7 +58,7 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        $username = $_COOKIE['author'];
+        $username = $_SESSION['author'];
         $userId = getUserId($username);
 
         $style = file_get_contents("../html/search.html");

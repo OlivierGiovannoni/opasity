@@ -53,7 +53,7 @@ $connection = new mysqli(
 
 $userId = filter_input(INPUT_GET, "id");
 if (!isset($userId))
-    $userId = getUserId($_COOKIE['author']);
+    $userId = getUserId($_SESSION['author']);
 $pub = filter_input(INPUT_GET, "pub");
 
 if (mysqli_connect_error()) {

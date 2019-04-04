@@ -105,7 +105,7 @@ if (mysqli_connect_error()) {
         foreach ($cells as $cell)
             echo $cell;
 
-        fetchClients($_COOKIE['author']);
+        fetchClients($_SESSION['author']);
 
         echo "</table><br><br><br>";
     } else

@@ -42,7 +42,7 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        setAccepted($orderId, $_COOKIE['author']);
+        setAccepted($orderId, $_SESSION['author']);
     } else
         displayLogin("Veuillez vous connecter.");
 

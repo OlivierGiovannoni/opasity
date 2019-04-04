@@ -49,7 +49,7 @@ $connection = new mysqli(
 
 $userId = filter_input(INPUT_GET, "id");
 if (!isset($userId))
-    $userId = getUserId($_COOKIE['author']);
+    $userId = getUserId($_SESSION['author']);
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());

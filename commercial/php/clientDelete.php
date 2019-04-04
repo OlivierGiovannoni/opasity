@@ -30,7 +30,7 @@ if (mysqli_connect_error()) {
 } else {
 
     if (isLogged())
-        deleteClient($clientId, $_COOKIE['author']);
+        deleteClient($clientId, $_SESSION['author']);
     else
         header("Location: index.php");
 

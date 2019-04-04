@@ -12,11 +12,12 @@
 ** Return: String
 **
 */
-function sanitizeInput($data) {
+function sanitizeInput($data, $file = false) {
 
     $data = trim($data);
     $data = addslashes($data);
-    $data = htmlspecialchars($data);
+    if ($file === false)
+        $data = htmlspecialchars($data);
     return ($data);
 }
 
@@ -318,9 +319,9 @@ function getUsername($userId)
 ** Return: String
 **
 */
-function uploadFile($tmpFile, $fileName, $orderId)
+function uploadFile($tmpFile, $fileName, $clientId, $reviewId)
 {
-    $fileDirectory = "files/" . $orderId . "/";
+    $fileDirectory = "files/" . $reviewId . "_" . $clientId . "/";
 
     $uniqueId = uniqid();
 	$newFile = $fileDirectory . $uniqueId . "_" . $fileName;

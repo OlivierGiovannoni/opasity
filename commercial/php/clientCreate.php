@@ -72,7 +72,7 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        $author = $_COOKIE['author'];
+        $author = $_SESSION['author'];
 
         $unfilled = isset($id);
 

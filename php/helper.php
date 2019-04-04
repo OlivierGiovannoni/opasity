@@ -12,11 +12,12 @@
 ** Return: String
 **
 */
-function sanitizeInput($data) {
+function sanitizeInput($data, $file = false) {
 
     $data = trim($data);
     $data = addslashes($data);
-    $data = htmlspecialchars($data);
+    if ($file === false)
+        $data = htmlspecialchars($data);
     return ($data);
 }
 

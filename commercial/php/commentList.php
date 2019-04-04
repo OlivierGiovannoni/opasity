@@ -28,11 +28,14 @@ function listComments($clientId, $reviewId)
         } else
             $dateNext = "Aucune";
 
-        if ($rowComment['Fichier'] == "NULL")
+        if ($rowComment['Fichier'] == NULL)
             $fileLink = "Aucun";
         else {
-            $fileImage = generateImage("../png/attachment.png", basename($rowComment['Fichier']), 24, 24);
-            $fileLink = generateLink($rowComment['Fichier'], $fileImage);
+
+            $file = sanitizeInput($rowComment['Fichier']);
+            $file = stripslashes($file);
+            $fileImage = generateImage("../png/attachment.png", basename($file), 24, 24);
+            $fileLink = generateLink($file, $fileImage);
         }
 
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);

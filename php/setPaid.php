@@ -43,7 +43,7 @@ if (mysqli_connect_error()) {
         if ($charsetW === FALSE)
             die("MySQL SET CHARSET error: ". $connectionW->error);
 
-        setPaid($orderId, $_COOKIE['author']);
+        setPaid($orderId, $_SESSION['author']);
     } else
         displayLogin("Veuillez vous connecter.");
 

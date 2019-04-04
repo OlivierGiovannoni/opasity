@@ -19,9 +19,10 @@ function newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $t
     $sqlNewLast = "UPDATE webcommercial_commentaire SET DernierCom=0 WHERE Commentaire_id='$lastId';";
     querySQL($sqlNewLast, $GLOBALS['connection'], false); // UPDATE output doesn't need to be fetched.
 
-    $author = $_COOKIE['author'];
-    //$newFile = uploadFile($tmpFile, $file, $orderId);
-    $newFile = "NULL";
+    $author = $_SESSION['author'];
+    $newFile = uploadFile($tmpFile, $file, $clientId, $reviewId);
+    $newFile = sanitizeInput($newFile, true);
+
     $rowNames = "Commentaire,Auteur,Date,Client_id,Revue_id,Contact_id,Prochaine_relance,Fichier,DernierCom";
     $rowValues = "'$comment','$author','$today','$clientId','$reviewId','$contactId','$nextDueDate','$newFile',1";
     $sqlNewComment = "INSERT INTO webcommercial_commentaire ($rowNames) VALUES ($rowValues);";
@@ -62,7 +63,6 @@ if (mysqli_connect_error()) {
 
         $tmpFile = $_FILES['fileUpload']['tmp_name'];
         $file = $_FILES['fileUpload']['name'];
-        $file = sanitizeInput($file);
         $file = skipAccents($file);
 
         newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $tmpFile, $file);
