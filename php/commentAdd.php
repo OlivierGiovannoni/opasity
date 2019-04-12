@@ -34,6 +34,8 @@ function newComment($orderId, $orderIdShort, $phone, $email, $nextDueDate, $unpa
 
 require_once "helper.php";
 
+session_start();
+
 $credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(

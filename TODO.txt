@@ -1,4 +1,5 @@
 TODO:
+--File script, to display files in directory, displayFiles.php?dir= also takes scanned receipts
 --Add "+"  button next to review link if a contract belongs to multiple reviews "searchOrderReviews.php"
 --Add 5 most recent order numbers (links) right next to the phone number	
 --Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..

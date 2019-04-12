@@ -9,7 +9,9 @@ function createContact($clientId, $fname, $lname, $phone1, $email1, $phone2, $em
     header("Location: clientContacts.php?id=" . $clientId);
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentialsW.txt");
 

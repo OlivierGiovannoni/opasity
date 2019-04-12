@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Recherche {type}: {query}</title>
+    <link rel="stylesheet" href="../css/search.css">
+  </head>
+  <body>
+    <a  href="../php/userLogout.php">
+      <img src="../png/logout.png" alt="Se déconnecter" width="32" height="32">
+    </a>
+    <a  href="../php/index.php">
+      <img src="../png/home.png" alt="Retourner au menu" width="32" height="32">
+    </a>
+    <h2>Clients contenant mot-cle: {query}</h2>
+    <form action="../php/clientImport.php" method="get">
+      <label for="clientName">Rechercher client:</label>
+      <input type="text" id="clientName" name="name">
+
+      <input type="submit" value="Chercher">
+    </form>
+    <br>

@@ -13,7 +13,9 @@ function deleteClient($clientId, $username)
     header("Location: clientList.php");
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentialsW.txt");
 

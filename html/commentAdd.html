@@ -10,10 +10,17 @@
 	<div>
 	  <label for="numPhone">Numéro de téléphone</label><br>
 	  <input type="text" name="numPhone" id="numPhone" value="{phone}">
+
 	  <br><br>
+
 	  <label for="emailAddr">Adresse e-mail</label><br>
 	  <input type="email" name="emailAddr" id="emailAddr">
+
 	  <br><br>
+
+	  <label for="nextDueDate">Prochaine relance</label><br>
+	  <input type="date" name="nextDueDate" id="nextDueDate">
+
 	</div>
 
 	<div>
@@ -22,19 +29,20 @@
 
 	  <br><br>
 
-	  <label for="nextDueDate">Prochaine relance</label><br>
-	  <input type="date" name="nextDueDate" id="nextDueDate">
-
-	  <br><br>
+	  <input type="submit" id="submit" value="Valider">
 
 	  <input type="hidden" name="orderId" value="{orderId}">
 	  <input type="hidden" name="clientId" value="{clientId}">
 
 	</div>
 	<div>
+	  Test ne pas prendre en compte
+	  <iframe height="300" width="300" src="searchReview.php" frameborder="1"></iframe>
+	</div>
+	<div>
 	  <label for="fileUpload">Mettre un fichier en ligne (vous pouvez glisser/déposer)</label><br>
-	  <input type="file" name="fileUpload" id="fileUpload" class="dropzone" multiple><br><br>
-	  <input type="submit" id="submit" value="Valider">
+	  <input type="file" name="fileUpload" id="fileUpload" class="dropzone" multiple><br>
+	  <br.
 	</div>
       </form>
       <div>
@@ -47,5 +55,6 @@
       </div>
 
     </div>
-    <iframe height="200"frameborder="0"></iframe>
+    <iframe height="20" frameborder="0"></iframe>
   </body>
+  

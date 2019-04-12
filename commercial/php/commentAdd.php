@@ -33,6 +33,8 @@ function newComment($clientId, $reviewId, $contactId, $nextDueDate, $comment, $t
 
 require_once "helper.php";
 
+session_start();
+
 $credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(

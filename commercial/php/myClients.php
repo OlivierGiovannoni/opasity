@@ -37,7 +37,9 @@ function userClients($userId)
     }
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentialsW.txt");
 

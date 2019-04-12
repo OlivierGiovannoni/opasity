@@ -30,11 +30,12 @@ function clientReviews($clientId, $published)
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
-
     }
 }
 
 require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -42,7 +43,7 @@ $connectionR = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNECT TO DATABASE WRITE
+    $credentials['database']); // CONNECT TO DATABASE READ
 
 $credentials = getCredentials("../credentialsW.txt");
 
@@ -60,6 +61,14 @@ if (mysqli_connect_error()) {
 } else {
 
     if (isLogged()) {
+
+        $charset = mysqli_set_charset($connection, "utf8");
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+        else if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
 
         $clientName = getClientName($clientId);
 

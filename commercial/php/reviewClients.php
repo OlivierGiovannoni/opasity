@@ -39,6 +39,8 @@ function reviewClients($reviewId)
 
 require_once "helper.php";
 
+session_start();
+
 $credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(
@@ -56,6 +58,7 @@ $connection = new mysqli(
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
 $reviewId = filter_input(INPUT_GET, "reviewId");
+$_SESSION['reviewId'] = $reviewId;
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -81,8 +84,11 @@ if (mysqli_connect_error()) {
         echo "<table>";
 
         $createImage = generateImage("../png/add.png", "Nouveau client", 24, 24);
-        $createLink = generateLink("../php/clientCreate.php?reviewId=" . $reviewId, $createImage);
+        $createLink = generateLink("clientCreate.php?reviewId=" . $reviewId, $createImage);
         echo $createLink;
+
+        $importLink = generateLink("../html/searchbar.html", "Importer client existant");
+        echo $importLink;
 
         $cells = array("Nom du client","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
         $cells = generateRow($cells, true);

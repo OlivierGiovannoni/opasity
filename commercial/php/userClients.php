@@ -24,7 +24,6 @@ function userClients($userId)
         $createdAtYMD = $rowClient['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
-        $reviewsImage = generateImage("../png/review.png", "Revues", 24, 24);
         $reviewsLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
 
         $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
@@ -37,7 +36,9 @@ function userClients($userId)
     }
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentialsW.txt");
 

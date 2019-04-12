@@ -31,7 +31,9 @@ function userReviews($userId, $published)
     }
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentials.txt");
 

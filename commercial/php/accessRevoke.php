@@ -8,7 +8,9 @@ function revokeAccess($userId, $reviewId, $query)
     header("Location: $location");
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentialsW = getCredentials("../credentialsW.txt");
 

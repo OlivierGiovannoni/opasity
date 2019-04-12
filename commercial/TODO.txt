@@ -1,6 +1,4 @@
 TODO:
---Be able to import already existing client to another review using reviewImportClient.php page
---Force charset for every connection on all files
 --Comments filtered by author
 --Search bars myClients.php myReviews.php
 --User can access an other user's panel
@@ -13,6 +11,8 @@ TODO:
 --Add edit/delete image links everywhere (client/contact)
 
 DONE:
+--Ability to import already existing client to another review using clientImport.php page
+--Forced charset for every connection on all files
 --Changed COOKIES to SESSION
 --Added column to which review is linked specific client on index.php
 --Added "*" to required fields in html/create{Client/Contact}.html

@@ -26,7 +26,9 @@ function createClient($clientName, $phone, $address1, $address2, $zip, $city, $c
     header("Location: reviewClients.php?reviewId=" . $reviewId);
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentialsW.txt");
 
