@@ -49,8 +49,8 @@ $connection = new mysqli(
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
 $userId = filter_input(INPUT_GET, "id");
-if (!isset($userId))
-    $userId = getUserId($_SESSION['author']);
+/* if (!isset($userId)) */
+/*     $userId = getUserId($_SESSION['author']); */
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -60,9 +60,11 @@ if (mysqli_connect_error()) {
 
         $username = getUsername($userId);
 
-        $style = file_get_contents("../html/search.html");
-        $style = str_replace("Recherche {type}: {query}", "Clients de $username", $style);
-        echo $style;
+        $input = file_get_contents("../html/clientSearch.html");
+        $input = str_replace("{query}", "", $input);
+        $input = str_replace("{replace}", "false", $input);
+        $input = str_replace("{userId}", $userId, $input);
+        echo $input;
 
         echo "<h2>Liste des clients de: $username</h2>";
         echo "<table>";

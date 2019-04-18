@@ -63,9 +63,10 @@ if (mysqli_connect_error()) {
         $username = $_SESSION['author'];
         $userId = getUserId($username);
 
-        $style = file_get_contents("../html/search.html");
-        $style = str_replace("Recherche {type}: {query}", "Mes clients", $style);
-        echo $style;
+        $input = file_get_contents("../html/clientSearch.html");
+        $input = str_replace("{query}", "", $input);
+        $input = str_replace("{replace}", "false", $input);
+        echo $input;
 
         echo "<h2>Mes clients</h2>";
         echo "<table>";

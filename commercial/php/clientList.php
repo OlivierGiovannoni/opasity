@@ -95,10 +95,6 @@ if (mysqli_connect_error()) {
         echo "<h2>Liste des clients</h2>";
         echo "<table>";
 
-        $createImage = generateImage("../png/add.png", "Nouveau client", 24, 24);
-        $createLink = generateLink("../html/clientCreate.html", $createImage);
-        echo $createLink;
-
         if (isAdmin())
             $cells = array("Nom du client","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Crée par");
         else

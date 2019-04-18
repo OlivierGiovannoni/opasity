@@ -87,7 +87,7 @@ if (mysqli_connect_error()) {
         $createLink = generateLink("clientCreate.php?reviewId=" . $reviewId, $createImage);
         echo $createLink;
 
-        $importLink = generateLink("../html/searchbar.html", "Importer client existant");
+        $importLink = generateLink("../html/clientSearch.html", "Importer client existant");
         echo $importLink;
 
         $cells = array("Nom du client","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
