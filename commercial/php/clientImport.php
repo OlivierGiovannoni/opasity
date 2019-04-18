@@ -29,7 +29,7 @@ $connection = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
-$reviewId = filter_input(INPUT_GET, "reviewId");
+$reviewId = $_SESSION['reviewId'];
 $clientId = filter_input(INPUT_GET, "clientId");
 
 if (mysqli_connect_error()) {

@@ -11,14 +11,13 @@ function userReviews($userId, $published)
         $reviewId = $rowId['Revue_id'];
 
         $columns = "Nom,Paru,Annee,DateCreation";
-        if ($published == 0)
-            $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE id='$reviewId' AND Paru='0' ORDER BY DateCreation DESC;";
-        else
-            $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE id='$reviewId' ORDER BY DateCreation DESC;";
+        $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE id='$reviewId' ORDER BY DateCreation DESC;";
         $rowReview = querySQL($sqlReview, $GLOBALS['connectionR'], true, true);
 
+        if ($published == 0 && $rowReview['Paru'] == 1)
+            continue ;
         $reviewName = $rowReview['Nom'];
-        $published = ($rowReview['Paru'] == 1 ? "Oui" : "Non");
+        $publishedTxt = ($rowReview['Paru'] == 1 ? "Oui" : "Non");
         $reviewYear = $rowReview['Annee'];
         $createdAtYMD = $rowReview['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
@@ -26,7 +25,7 @@ function userReviews($userId, $published)
 
         $reviewLink = generateLink("reviewClients.php?reviewId=" . $reviewId, $reviewTitle);
 
-        $cells = array($reviewLink, $published, $createdAt);
+        $cells = array($reviewLink, $publishedTxt, $createdAt);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;

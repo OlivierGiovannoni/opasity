@@ -1,6 +1,6 @@
 <?php
 
-function searchClients($name, $userId, $reviewId, $replace)
+function searchClients($name, $userId, $replace)
 {
     $columns = "DateCreation,NomSociete,Addr1,Addr2,CP,Ville,Pays,TelSociete,SIRET,CodeAPE";
     $sqlClients = "SELECT Client_id,DateAcces FROM webcommercial_permissions_client WHERE User_id='$userId' AND Autorisation=1;";
@@ -34,7 +34,7 @@ function searchClients($name, $userId, $reviewId, $replace)
             $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
             $importImage = generateImage("../png/add.png", "Importer", 24, 24);
-            $importLink = generateLink("clientImport.php?clientId=" . $clientId . "&reviewId=" . $reviewId, $importImage);
+            $importLink = generateLink("clientImport.php?clientId=" . $clientId, $importImage);
 
             $reviewsLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
 
@@ -80,8 +80,6 @@ if (mysqli_connect_error()) {
         if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
 
-        $reviewId = $_SESSION['reviewId'];
-
         if ($userId === "{userId}") {
 
             $username = $_SESSION['author'];
@@ -106,7 +104,7 @@ if (mysqli_connect_error()) {
         foreach ($cells as $cell)
             echo $cell;
 
-        searchClients($query, $userId, $reviewId, $replace);
+        searchClients($query, $userId, $replace);
     } else
         header("Location: index.php");
     $connection->close();
