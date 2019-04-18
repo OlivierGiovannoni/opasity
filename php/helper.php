@@ -240,12 +240,12 @@ function skipAccents($str, $charset = "utf-8")
 */
 function isLogged()
 {
-    session_start();
+    //session_start();
     $now = time();
     if (isset($_SESSION['author']) && $_SESSION['expires'] > $now)
         return (true);
-    session_unset();
-    session_destroy();
+    //session_unset();
+    //session_destroy();
     return (false);
 }
 

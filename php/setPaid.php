@@ -22,6 +22,8 @@ function setPaid($orderId, $author)
 
 require_once "helper.php";
 
+session_start();
+
 $credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(

@@ -1,27 +1,61 @@
 <?php
 
-function findClient($clientName)
+function searchClients($name, $userId, $reviewId, $replace)
 {
-    $columns = "id,NomSociete,Tel,NomContact1";
-    $sqlClient = "SELECT $columns FROM webcommercial_client WHERE NomSociete LIKE '%$clientName%';";
-    $rowsClient = querySQL($sqlClient, $GLOBALS['connection']);
+    $columns = "DateCreation,NomSociete,Addr1,Addr2,CP,Ville,Pays,TelSociete,SIRET,CodeAPE";
+    $sqlClients = "SELECT Client_id,DateAcces FROM webcommercial_permissions_client WHERE User_id='$userId' AND Autorisation=1;";
+    $rowsIds  = querySQL($sqlClients, $GLOBALS['connection']);
 
-    foreach ($rowsClient as $rowClient) {
+    foreach ($rowsIds as $rowId) {
 
-        $companyName = $rowClient['NomSociete'];
-        $clientId = $rowClient['id'];
-        $companyLink = generateLink("searchClientOrders.php?id=" . $clientId, $companyName);
-        $contactName = $rowClient['NomContact1'];
-        $phone = $rowClient['Tel'];
+        $clientId = $rowId['Client_id'];
+        $sqlClient = "SELECT $columns FROM webcommercial_client WHERE id='$clientId' ORDER BY DateCreation DESC;";
+        $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
 
-        $cells = array($companyLink, $contactName, $phone);
-        $cells = generateRow($cells);
-        foreach ($cells as $cell)
-            echo $cell;
+        $clientName = $rowClient['NomSociete'];
+        $clientNameChk = skipAccents($clientName);
+
+        if ($name === "")
+            $cludes = TRUE;
+        else
+            $cludes = stristr($clientNameChk, $name);
+
+        if ($cludes !== FALSE) {
+
+            $address1 = $rowClient['Addr1'];
+            $address2 = $rowClient['Addr2'];
+            $zipCode = $rowClient['CP'];
+            $city = $rowClient['Ville'];
+            $country = $rowClient['Pays'];
+            $phone = $rowClient['TelSociete'];
+            $siretCode = $rowClient['SIRET'];
+            $apeCode = $rowClient['CodeAPE'];
+            $createdAtYMD = $rowClient['DateCreation'];
+            $createdAt = date("d/m/Y", strtotime($createdAtYMD));
+
+            $importImage = generateImage("../png/add.png", "Importer", 24, 24);
+            $importLink = generateLink("clientImport.php?clientId=" . $clientId . "&reviewId=" . $reviewId, $importImage);
+
+            $reviewsLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
+
+            $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
+            $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
+
+            if ($replace === "false")
+                $cells = array($reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+            else
+                $cells = array($importLink, $reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+            $cells = generateRow($cells);
+            foreach ($cells as $cell)
+                echo $cell;
+        }
     }
+    
 }
 
 require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentialsW.txt");
 
@@ -29,10 +63,11 @@ $connection = new mysqli(
     $credentials['hostname'],
     $credentials['username'],
     $credentials['password'],
-    $credentials['database']); // CONNECT TO DATABASE READ
+    $credentials['database']); // CONNECT TO DATABASE WRITE
 
-$clientName = filter_input(INPUT_GET, "clientName");
-$clientName = sanitizeInput($clientName);
+$query = filter_input(INPUT_GET, "name");
+$replace = filter_input(INPUT_GET, "replace");
+$userId = filter_input(INPUT_GET, "userId");
 
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
@@ -40,41 +75,40 @@ if (mysqli_connect_error()) {
 
     if (isLogged()) {
 
-        $style = file_get_contents("../html/search.html");
+        $charset = mysqli_set_charset($connection, "utf8");
 
-        $style = str_replace("{type}", "client", $style);
-        $style = str_replace("{query}", $clientName, $style);
+        if ($charset === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
 
-        echo $style;
+        $reviewId = $_SESSION['reviewId'];
 
-        if (isAdmin()) {
+        if ($userId === "{userId}") {
 
-            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("../html/admin.html", $adminImage);
-            echo $adminLink;
-        }
+            $username = $_SESSION['author'];
+            $userId = getUserId($username);
+        } else
+            $username = getUsername($userId);
 
-        echo "<h1>Clients trouvés:</h1>";
+        $input = file_get_contents("../html/clientSearch.html");
+        $input = str_replace("{query}", $query, $input);
+        $input = str_replace("{replace}", "false", $input);
+        if ($userId !== "{userId}")
+            $input = str_replace("{userId}", $userId, $input);
+        echo $input;
+
         echo "<table>";
 
-        $cells = array("Nom de l'entreprise","Nom du contact","Numéro de téléphone");
+        if ($replace === "false")
+            $cells = array("Nom de l'entreprise","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
+        else
+            $cells = array("Importer","Nom de l'entreprise","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
-        $charsetR = mysqli_set_charset($connection, "utf8");
-
-        if ($charsetR === FALSE)
-            die("MySQL SET CHARSET error: ". $connection->error);
-
-        findClient($clientName);
-
-        echo "</table><br><br><br>";
-        echo "</html>";
-
+        searchClients($query, $userId, $reviewId, $replace);
     } else
-        displayLogin("Veuillez vous connecter.");
-
+        header("Location: index.php");
     $connection->close();
 }
 

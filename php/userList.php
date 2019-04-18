@@ -34,6 +34,8 @@ function fetchUsers()
 
 require_once "helper.php";
 
+session_start();
+
 $credentialsW = getCredentials("../credentialsW.txt");
 
 $connectionW = new mysqli(

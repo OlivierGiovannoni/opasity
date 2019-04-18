@@ -33,7 +33,9 @@ function userReviews($userId, $published)
     }
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -72,9 +74,11 @@ if (mysqli_connect_error()) {
 
         $username = getUsername($userId);
 
-        $style = file_get_contents("../html/search.html");
-        $style = str_replace("Recherche {type}: {query}", "Revues de $username", $style);
-        echo $style;
+        $input = file_get_contents("../html/reviewSearch.html");
+        $input = str_replace("{query}", "", $input);
+        $input = str_replace("{replace}", "false", $input);
+        $input = str_replace("{userId}", $userId, $input);
+        echo $input;
 
         echo "<h2>Liste des revues de: $username</h2>";
         echo "<table>";

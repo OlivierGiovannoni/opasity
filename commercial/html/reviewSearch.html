@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Rechercher revue</title>
+    <link rel="stylesheet" href="../css/search.css">
+  </head>
+  <body>
+    <a  href="../php/userLogout.php">
+      <img src="../png/logout.png" alt="Se déconnecter" width="32" height="32">
+    </a>
+    <a  href="../php/index.php">
+      <img src="../png/home.png" alt="Retourner au menu" width="32" height="32">
+    </a>
+    <h2>Revues contenant mot-cle: {query}</h2>
+    <form action="../php/reviewSearch.php" method="get">
+      <label for="reviewName">Rechercher revue:</label>
+
+      <input type="text" id="reviewName" name="name">
+      <input type="hidden" id="replace" name="replace" value="{replace}">
+      <input type="hidden" id="userId" name="userId" value="{userId}">
+
+      <input type="submit" value="Chercher">
+    </form>
+    <br>

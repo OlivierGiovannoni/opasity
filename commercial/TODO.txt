@@ -1,19 +1,17 @@
 TODO:
---Be able to import already existing client to another review using reviewImportClient.php page
---Force charset for every connection on all files
---Comments filtered by author
---Search bars myClients.php myReviews.php
 --User can access an other user's panel
---Edit/delete buttons for clients
 --Image link "+" that links to all reviews linked to client
 --Be able to import CSV file, 1st line columns names, next line columns data:
 ----CSV line contains information about the CLIENT and the CONTACT
 ----If SIRET already exists, it means it's another contact. SELECT clientId linked to SIRET and create the contact.
 --User1 can see user2's clients if granted, but one-way, user2 cannot see user1's clients if not granted. -> or <->
---Add edit/delete image links everywhere (client/contact)
 
 DONE:
+--There are now search bars myClients.php myReviews.php userClients.php userReviews.php to search by name.
+--Ability to import already existing client to another review using clientImport.php page
+--Forced charset for every connection on all files
 --Changed COOKIES to SESSION
+--Comments filtered by author
 --Added column to which review is linked specific client on index.php
 --Added "*" to required fields in html/create{Client/Contact}.html
 --Phone number is now required on client creation

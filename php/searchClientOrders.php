@@ -39,6 +39,8 @@ function findClientOrders($clientId)
 
 require_once "helper.php";
 
+session_start();
+
 $credentials = getCredentials("../credentials.txt");
 
 $connectionR = new mysqli(

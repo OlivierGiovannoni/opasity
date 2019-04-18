@@ -41,7 +41,9 @@ function userAccess($query, $reviewId)
     }
 }
 
-require "helper.php";
+require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentials.txt");
 

@@ -1,31 +1,49 @@
 <?php
 
-function findReviews($reviewName, $published)
+function findReviews($userId, $published, $name)
 {
-    $columns = "id,Nom,Annee,DateCreation,Paru";
-    if ($published == 0)
-        $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' AND Paru='0' ORDER BY DateCreation DESC;";
-    else
-        $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE Nom LIKE '%$reviewName%' ORDER BY DateCreation DESC;";
-    $rowsReview = querySQL($sqlReview, $GLOBALS['connectionR']);
+    $columns = "Nom,Paru,Annee,DateCreation";
+    $sqlReviews = "SELECT Revue_id,DateAcces FROM webcommercial_permissions_revue WHERE User_id='$userId' AND Autorisation=1;";
+    $rowsIds  = querySQL($sqlReviews, $GLOBALS['connection']);
 
-    foreach ($rowsReview as $rowReview) {
+    foreach ($rowsIds as $rowId) {
 
-        $reviewId = $rowReview['id'];
-        $reviewName = $rowReview['Nom'] . " " . $rowReview['Annee'];
-        $published = ($rowReview['Paru'] == 1 ? "Oui" : "Non");
-        $created = date("d/m/Y", strtotime($rowReview['DateCreation']));
+        $reviewId = $rowId['Revue_id'];
+        if ($published == 0)
+            $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE id='$reviewId' AND Paru='0' ORDER BY DateCreation DESC;";
+        else
+            $sqlReview = "SELECT $columns FROM webcontrat_revue WHERE id='$reviewId' ORDER BY DateCreation DESC;";
+        $rowReview = querySQL($sqlReview, $GLOBALS['connectionR'], true, true);
 
-        $reviewLink = generateLink("userReviewsAdd.php?reviewId=" . $reviewId, $reviewName);
+        $reviewName = $rowReview['Nom'];
+        $reviewNameChk = skipAccents($reviewName);
 
-        $cells = array($reviewLink, $published, $created);
-        $cells = generateRow($cells);
-        foreach ($cells as $cell)
-            echo $cell;
+        if ($name === "")
+            $cludes = TRUE;
+        else
+            $cludes = stristr($reviewNameChk, $name);
+
+        if ($cludes !== FALSE) {
+
+            $published = ($rowReview['Paru'] == 1 ? "Oui" : "Non");
+            $reviewYear = $rowReview['Annee'];
+            $createdAtYMD = $rowReview['DateCreation'];
+            $createdAt = date("d/m/Y", strtotime($createdAtYMD));
+            $reviewTitle = $reviewName . " " . $reviewYear;
+            
+            $reviewLink = generateLink("reviewClients.php?reviewId=" . $reviewId, $reviewTitle);
+
+            $cells = array($reviewLink, $published, $createdAt);
+            $cells = generateRow($cells);
+            foreach ($cells as $cell)
+                echo $cell;
+        }
     }
 }
 
 require_once "helper.php";
+
+session_start();
 
 $credentials = getCredentials("../credentials.txt");
 
@@ -35,63 +53,66 @@ $connectionR = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNECT TO DATABASE READ
 
-$reviewName = filter_input(INPUT_GET, "reviewName"); // NOM REVUE ex: Ann Mines
-$reviewName = sanitizeInput($reviewName);
+$credentialsW = getCredentials("../credentialsW.txt");
+
+$connection = new mysqli(
+    $credentialsW['hostname'],
+    $credentialsW['username'],
+    $credentialsW['password'],
+    $credentialsW['database']); // CONNECT TO DATABASE WRITE
+
 $pub = filter_input(INPUT_GET, "pub");
+$query = filter_input(INPUT_GET, "name");
+$userId = filter_input(INPUT_GET, "userId");
 
 if (mysqli_connect_error()) {
-    die("Connection error. Code: ". mysqli_connect_errno() ." Reason: " . mysqli_connect_error());
+    die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
     if (isLogged()) {
 
+        $charset = mysqli_set_charset($connection, "utf8");
         $charsetR = mysqli_set_charset($connectionR, "utf8");
 
-        if ($charsetR === FALSE)
+        if ($charset === FALSE)
             die("MySQL SET CHARSET error: ". $connection->error);
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
 
-        $style = file_get_contents("../html/search.html");
 
-        $style = str_replace("{type}", "revue", $style);
-        $style = str_replace("{query}", $reviewName, $style);
+        if ($userId === "{userId}") {
 
-        echo $style;
+            $username = $_SESSION['author'];
+            $userId = getUserId($username);
+        } else
+            $username = getUsername($userId);
 
-        if (isAdmin()) {
+        $input = file_get_contents("../html/reviewSearch.html");
+        $input = str_replace("{query}", $query, $input);
+        $input = str_replace("{replace}", "false", $input);
+        if ($userId !== "{userId}")
+            $input = str_replace("{userId}", $userId, $input);
+        echo $input;
 
-            $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("../admin.html", $adminImage);
-            echo $adminLink;
-        }
-
-        echo "<h1>Revues trouvées:</h1>";
+        echo "<h2>Liste des revues de: $username</h2>";
         echo "<table>";
 
         $published = ($pub == 1 ? 0 : 1);
-        $href = "reviewSearch.php?reviewName=" . $reviewName . "&pub=" . $published;
+        $href = "reviewSearch.php?userId=" . $userId . "&name=" . $query . "&pub=" . $published;
         $text = ($pub == 1 ? "Afficher revues non-parues" : "Afficher toutes les revues");
         $link = generateLink($href, $text, "_self");
         echo $link;
 
-        $cells = array("Revue","Parue","Date création");
+        $cells = array("Nom","Parue","Date création");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
-        $charsetR = mysqli_set_charset($connectionR, "utf8");
-
-        if ($charsetR === FALSE)
-            die("MySQL SET CHARSET error: ". $connectionR->error);
-
-        findReviews($reviewName, $pub);
-
-        echo "</table><br><br><br>";
-        echo "</html>";
-
+        findReviews($userId, $pub, $query);
     } else
-        displayLogin("Veuillez vous connecter.");
-
+        header("Location: index.php");
     $connectionR->close();
+    $connection->close();
 }
 
 ?>

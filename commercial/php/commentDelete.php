@@ -50,6 +50,8 @@ function selectPrevious($commId)
 
 require_once "helper.php";
 
+session_start();
+
 $credentials = getCredentials("../credentialsW.txt");
 
 $connection = new mysqli(
