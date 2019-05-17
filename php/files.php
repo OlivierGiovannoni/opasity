@@ -4,7 +4,8 @@ function getFiles($orderId)
 {
     $orderIdShort = getOrderIdShort($orderId);
     $receipts = glob("\\srv4-adm\AS400\FACTURES\$orderIdShort*.pdf");
-
+    print_r($receipts);
+    die();
     foreach ($receipts as $receipt) {
 
         $receiptName = basename($receipt);
