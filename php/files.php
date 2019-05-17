@@ -3,8 +3,10 @@
 function getFiles($orderId)
 {
     $orderIdShort = getOrderIdShort($orderId);
-    $receipts = glob("\\srv4-adm\AS400\FACTURES\$orderIdShort*.pdf");
-    print_r($receipts);
+    $receipts1 = glob("\\\\srv4-adm\\AS400\\FACTURES\\$orderIdShort*.pdf");
+    $receipts2 = glob("//srv4-adm/AS400/FACTURES/$orderIdShort*.pdf");
+    print_r($receipts1);
+    print_r($receipts2);
     die();
     foreach ($receipts as $receipt) {
 
