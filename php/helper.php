@@ -227,6 +227,20 @@ function skipAccents($str, $charset = "utf-8")
 }
 
 /*
+** Parameters: Integer
+** Return: String
+*/
+function uniqueId($length) {
+
+    $random = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $random .= rand(0, 1) ? rand(0, 9) : chr(rand(ord('a'), ord('z')));
+    }
+    return ($random);
+}
+
+/*
 ** ***************************
 ** ** App-specific function **
 ** ***************************
@@ -240,12 +254,9 @@ function skipAccents($str, $charset = "utf-8")
 */
 function isLogged()
 {
-    //session_start();
     $now = time();
     if (isset($_SESSION['author']) && $_SESSION['expires'] > $now)
         return (true);
-    //session_unset();
-    //session_destroy();
     return (false);
 }
 
@@ -332,7 +343,7 @@ function uploadFile($tmpFile, $fileName, $orderId)
 {
     $fileDirectory = "files/" . $orderId . "/";
 
-    $uniqueId = uniqid();
+    $uniqueId = uniqueId(6);
 	$newFile = $fileDirectory . $uniqueId . "_" . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
@@ -594,6 +605,22 @@ function getUnitPrice($orderId)
 ** Return: Integer
 **
 */
+function getUnpaidUnitPrice($orderId)
+{
+    $sqlPrice = "SELECT PrixHT,Reglement FROM webcontrat_contrat WHERE Commande='$orderId';";
+    $rowPrice = querySQL($sqlPrice, $GLOBALS['connectionR'], true, true);
+    $unitPrice = $rowPrice['PrixHT'];
+    $paid = $rowPrice['Reglement'];
+    if ($paid === "R")
+        return (0);
+    return ($unitPrice);
+}
+
+/*
+** Parameters: String
+** Return: Integer
+**
+*/
 function getTotalPrice($reviewId)
 {
     $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$reviewId';";
@@ -606,6 +633,35 @@ function getTotalPrice($reviewId)
         $totalPrice += getUnitPrice($orderId);
     }
     return ($totalPrice);
+}
+
+/*
+** Parameters: String
+** Return: Integer
+**
+*/
+function getUnpaidPrice($reviewId)
+{
+    $sqlOrder = "SELECT Info_id FROM webcontrat_info_revue WHERE Revue_id='$reviewId';";
+    $rowsOrder = querySQL($sqlOrder, $GLOBALS['connectionR']);
+    sort($rowsOrder);
+    $totalPrice = 0;
+    foreach ($rowsOrder as $order) {
+
+        $orderId = $order['Info_id'];
+        $totalPrice += getUnpaidUnitPrice($orderId);
+    }
+    return ($totalPrice);
+}
+
+function getMails($orderId)
+{
+    $sqlMails = "SELECT MailUser,MailCompta FROM webcontrat_mails WHERE Commande_id='$orderId'";
+    $rowMail = querySQL($sqlMails, $GLOBALS['connectionR'], true, true);
+    $mailUser = $rowMail['MailUser'];
+    $mailCompta = $rowMail['MailCompta'];
+    $mails = array('user' => $mailUser, 'compta' => $mailCompta);
+    return ($mails);
 }
 
 ?>

@@ -16,7 +16,7 @@ function fetchContacts($clientId)
         $phone2 = $rowContact['NumTelephone2'];
         $email2 = $rowContact['AdresseMail2'];
 
-        $cells = array($fname, $lname, $jobTitle, $phone1, $email1, $phone2, $email2);
+        $cells = array($lname, $fname, $jobTitle, $phone1, $email1, $phone2, $email2);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;

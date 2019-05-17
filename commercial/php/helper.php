@@ -216,6 +216,20 @@ function skipAccents($str, $charset = "utf-8")
 }
 
 /*
+** Parameters: Integer
+** Return: String
+*/
+function uniqueId($length) {
+
+    $random = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $random .= rand(0, 1) ? rand(0, 9) : chr(rand(ord('a'), ord('z')));
+    }
+    return ($random);
+}
+
+/*
 ** ***************************
 ** ** App-specific function **
 ** ***************************
@@ -225,16 +239,12 @@ function skipAccents($str, $charset = "utf-8")
 /*
 ** Parameters: Void
 ** Return: Bool
-**
 */
 function isLogged()
 {
-    //session_start();
     $now = time();
     if (isset($_SESSION['author']) && $_SESSION['expires'] > $now)
         return (true);
-    //session_unset();
-    //session_destroy();
     return (false);
 }
 
@@ -246,6 +256,18 @@ function isLogged()
 function isAdmin()
 {
     if (isset($_SESSION['superuser']) && $_SESSION['superuser'] == 1)
+        return (true);
+    return (false);
+}
+
+/*
+** Parameters: Void
+** Return: Bool
+**
+*/
+function isMask()
+{
+    if (isset($_SESSION['realAuthor']))
         return (true);
     return (false);
 }
@@ -265,7 +287,6 @@ function isAuthor($author)
 /*
 ** Parameters: String
 ** Return: Void
-**
 */
 function displayLogin($message)
 {
@@ -291,7 +312,6 @@ function displayRegister($message)
 /*
 ** Parameters: String
 ** Return: String
-**
 */
 function getUserId($username)
 {
@@ -304,7 +324,6 @@ function getUserId($username)
 /*
 ** Parameters: String
 ** Return: String
-**
 */
 function getUsername($userId)
 {
@@ -317,13 +336,12 @@ function getUsername($userId)
 /*
 ** Parameters: String, String, String
 ** Return: String
-**
 */
 function uploadFile($tmpFile, $fileName, $clientId, $reviewId)
 {
     $fileDirectory = "files/" . $reviewId . "_" . $clientId . "/";
 
-    $uniqueId = uniqid();
+    $uniqueId = uniqueId(6);
 	$newFile = $fileDirectory . $uniqueId . "_" . $fileName;
 
     if ($tmpFile === NULL || $fileName === NULL)
@@ -339,7 +357,6 @@ function uploadFile($tmpFile, $fileName, $clientId, $reviewId)
 /*
 ** Parameters: String, String, String
 ** Return: String
-**
 */
 function addCommentForm($htmlFileName, $clientId, $reviewId)
 {
@@ -356,9 +373,23 @@ function addCommentForm($htmlFileName, $clientId, $reviewId)
 }
 
 /*
-**
-**
-**
+** Parameters: String, String
+** Return: Array
+*/
+function selectLastComment($reviewId, $clientId)
+{
+    $sqlComment = "SELECT Commentaire,Prochaine_relance FROM webcommercial_commentaire WHERE Revue_id='$reviewId' AND Client_id='$clientId' ORDER BY Date DESC;";
+    $rowComment = querySQL($sqlComment, $GLOBALS['connection'], true, true);
+    $text = $rowComment['Commentaire'];
+    $nextDue = $rowComment['Prochaine_relance'];
+
+    $comment = array('text' => $text, 'next' => $nextDue);
+    return ($comment);
+}
+
+/*
+** Parameters: String
+** Return: String
 */
 function getAuthor($commId)
 {
@@ -371,7 +402,6 @@ function getAuthor($commId)
 /*
 ** Parameters: String
 ** Return: Bool
-**
 */
 function isDateValid($date)
 {
@@ -387,7 +417,6 @@ function isDateValid($date)
 /*
 ** Parameters: String
 ** Return: String
-**
 */
 function getReviewName($reviewId)
 {
@@ -402,7 +431,6 @@ function getReviewName($reviewId)
 /*
 ** Parameters: String
 ** Return: Integer
-**
 */
 function checkEmpty($orderId)
 {

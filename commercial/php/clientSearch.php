@@ -89,7 +89,8 @@ if (mysqli_connect_error()) {
 
         $input = file_get_contents("../html/clientSearch.html");
         $input = str_replace("{query}", $query, $input);
-        $input = str_replace("{replace}", "false", $input);
+        if ($replace !== "{replace}")
+            $input = str_replace("{replace}", "false", $input);
         if ($userId !== "{userId}")
             $input = str_replace("{userId}", $userId, $input);
         echo $input;

@@ -12,6 +12,11 @@ function userClients($userId)
         $sqlClient = "SELECT $columns FROM webcommercial_client WHERE id='$clientId' ORDER BY DateCreation DESC;";
         $rowClient = querySQL($sqlClient, $GLOBALS['connection'], true, true);
 
+        $column = "Revue_id";
+        $sqlReview = "SELECT $column FROM webcommercial_client_revue WHERE Client_id='$clientId' ORDER BY id DESC;";
+        $rowReview = querySQL($sqlReview, $GLOBALS['connection'], true, true);
+        $reviewId = $rowReview['Revue_id'];
+
         $clientName = $rowClient['NomSociete'];
         $address1 = $rowClient['Addr1'];
         $address2 = $rowClient['Addr2'];
@@ -24,13 +29,22 @@ function userClients($userId)
         $createdAtYMD = $rowClient['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
+        $commentData = selectLastComment($reviewId, $clientId);
+        $comment = $commentData['text'];
+        $dateNextYMD = $commentData['next'];
+
+        if (isDateValid($dateNextYMD)) {
+
+            $dateNext = date("d/m/Y", strtotime($dateNextYMD));
+            $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
+        }
         $reviewsImage = generateImage("../png/review.png", "Revues", 24, 24);
         $reviewsLink = generateLink("clientReviews.php?clientId=" . $clientId, $clientName);
 
         $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
         $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
 
-        $cells = array($reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+        $cells = array($reviewsLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt, $comment, $dateNext);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
@@ -71,7 +85,7 @@ if (mysqli_connect_error()) {
         echo "<h2>Mes clients</h2>";
         echo "<table>";
 
-        $cells = array("Nom de l'entreprise","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
+        $cells = array("Nom de l'entreprise","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Commentaire","Prochaine relance");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

@@ -1,12 +1,16 @@
 TODO:
---User can access an other user's panel
 --Image link "+" that links to all reviews linked to client
 --Be able to import CSV file, 1st line columns names, next line columns data:
 ----CSV line contains information about the CLIENT and the CONTACT
 ----If SIRET already exists, it means it's another contact. SELECT clientId linked to SIRET and create the contact.
---User1 can see user2's clients if granted, but one-way, user2 cannot see user1's clients if not granted. -> or <->
 
 DONE:
+--User can now access an other user's panel
+--Added searchDate.php user can now search by next reminder date
+--Fixed file list quotes bug
+--Changed path on main list because commentList was hard to access, added review icon
+--Fixed import client bug  on clientSearch.php where + disappears after searching twice
+--File script, to display files in directory, displayFiles.php?dir=
 --There are now search bars myClients.php myReviews.php userClients.php userReviews.php to search by name.
 --Ability to import already existing client to another review using clientImport.php page
 --Forced charset for every connection on all files

@@ -1,24 +1,21 @@
 TODO:
---File script, to display files in directory, displayFiles.php?dir= also takes scanned receipts
 --Add "+"  button next to review link if a contract belongs to multiple reviews "searchOrderReviews.php"
 --Add 5 most recent order numbers (links) right next to the phone number	
---Fix file upload to avoid uploading certain extensions such as .php .js .css .html etc..
---Clickable <th> that can be sorted dynamically SORT BY clickedColumn ASC DESC
---File for each ORDER not COMMENT.
---Auto-upload Dropzone
---OCR
---Comment all .php files like php/index.php and describe helper functions in helper.php
 --Modulable search (check paper):
 ----"Paru non-reglé" reviews where the review is "Parue" but has unpaid (compta) orders
 ----Filter EMPTY orders without comments on reviews that are "Paru".
 
 OPTIONAL:
+++Clickable <th> that can be sorted dynamically SORT BY clickedColumn ASC DESC
 ++Checkboxes to enable/disable columns
 ++Draggable elements
 ++Make it generic, JSON config file does everything, JSON describes starting point, headers, titles, tables, SQL requests, SQL columns, Links, Data to be displayed, sorted, etc.. (generic.json)
 ++Inserter to read table name, DESCRIBE table, get columns names and properties, and create form to INSERT DELETE UPDATE automatically, myPhpAdmin
+++Comment all .php files like php/index.php and describe helper functions in helper.php
 
 DONE:
+--Fixed file list quotes bug
+--File script, to display files in directory, displayFiles.php?dir= also takes scanned receipts
 --Changed COOKIES to SESSION.
 --Replaced file name href with attachment icon on commentList.php.
 --Removed all helper scripts.

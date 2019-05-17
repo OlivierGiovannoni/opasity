@@ -21,6 +21,10 @@ function updatePrevious($prevId)
 
 function deleteComment($commId)
 {
+    $sqlFile = "SELECT Fichier FROM webcommercial_commentaire WHERE Commentaire_id='$commId';";
+    $rowFile = querySQL($sqlFile, $GLOBALS['connection'], true, true);
+    $file = $rowFile['Fichier'];
+    unlink($file);
     $sqlComment = "DELETE FROM webcommercial_commentaire WHERE Commentaire_id='$commId';";
     querySQL($sqlComment, $GLOBALS['connection'], false); // DELETE output doesn't need to be fetched.
 }

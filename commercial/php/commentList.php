@@ -24,11 +24,11 @@ function listComments($clientId, $reviewId)
         if (isDateValid($dateNextYMD)) {
 
             $dateNext = date("d/m/Y", strtotime($dateNextYMD));
-            //$dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext); //link not ready
+            $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
         } else
             $dateNext = "Aucune";
 
-        if ($rowComment['Fichier'] == NULL)
+        if ($rowComment['Fichier'] === "NULL")
             $fileLink = "Aucun";
         else {
 

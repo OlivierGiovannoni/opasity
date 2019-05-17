@@ -1,21 +1,36 @@
 <h1>Système de prospection de clients</h1>
 <div id="mainDiv">
   <div>
+    <h2>Mes revues:</h2>
     <form target="_blank" name="searchReview" action="../php/myReviews.php" method="get">
-      <input type="submit" id="submit" value="Mes Revues">
+      <input type="submit" id="submit" value="Mes revues">
     </form>
   </div>
 
   <div>
+    <h2>Mes utilisateurs:</h2>
     <form target="_blank" name="searchUsers" action="../php/myUsers.php" method="get">
-      <input type="submit" id="submit" value="Mes Acces">
+      <input type="submit" id="submit" value="Mes utilisateurs">
     </form>
   </div>
 
   <div>
+    <h2>Mes clients:</h2>
     <form target="_blank" name="searchClient" action="../php/myClients.php" method="get">
-      <input type="submit" id="submit" value="Mes Clients">
+      <input type="submit" id="submit" value="Mes clients">
     </form>
   </div>
+
+  <div>
+    <h2>Recherche par date de relance:</h2>
+    <form target="_blank" name="searchDate" id="formDate" action="../php/searchDate.php" method="get">
+
+      <label for="dueDate">Date de relance:</label><br>
+      <input type="date" name="dueDate" id="dueDate" placeholder="Date de relance (AAAA-MM-JJ)" required><br><br>
+
+      <input type="submit" id="submit" value="Chercher">
+    </form>
+  </div>
+
 </div>
 <br><br>

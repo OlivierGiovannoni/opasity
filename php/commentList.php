@@ -24,7 +24,7 @@ function listComments($orderId)
         else
             $dateNext = "Aucune";
 
-        if ($rowComment['Fichier'] == NULL)
+        if ($rowComment['Fichier'] === "NULL")
             $fileLink = "Aucun";
         else {
 
@@ -111,12 +111,13 @@ if (mysqli_connect_error()) {
         $reviewName = $review['Name'] . " " . $review['Year'];
         $reviewLink = generateLink("searchReviewOrders.php?id=" . $review['Id'], $reviewName);
         $companyLink = generateLink("searchClientOrders.php?id=" . $client['id'], $client['name']);
+        //$mail = getMails($orderId);
 
         echo "<h2 " . $h2style . $colorCompta . "\">" . $textCompta . "</h2>";
         echo "<h2 " . $h2style . $colorBase . "\">" . $textBase . "</h2>";
         echo "<h2>Paru sur: " . $reviewLink . "</h2>";
         echo "<h2>Client: " . $companyLink . "</h2>";
-
+        //echo "MailUser: " . $mail['user'] . " MailCompta: " . $mail['compta'];
         echo "<table>";
 
         $cells = array("Commentaire","Auteur","Date commentaire","Nom de l'entreprise","E-mail","Téléphone","Prochaine relance","Fichier","Interagir");

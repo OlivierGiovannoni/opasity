@@ -25,12 +25,21 @@ function reviewClients($reviewId)
         $createdAtYMD = $rowClient['DateCreation'];
         $createdAt = date("d/m/Y", strtotime($createdAtYMD));
 
+        $commentData = selectLastComment($reviewId, $clientId);
+        $comment = $commentData['text'];
+        $dateNextYMD = $commentData['next'];
+
+        if (isDateValid($dateNextYMD)) {
+
+            $dateNext = date("d/m/Y", strtotime($dateNextYMD));
+            $dateNext = generateLink("searchDate.php?dueDate=" . $dateNextYMD, $dateNext);
+        }
         $clientLink = generateLink("commentList.php?clientId=" . $clientId . "&reviewId=" . $reviewId, $clientName);
 
         $contactsImage = generateImage("../png/client.png", "Contacts", 24, 24);
         $contactsLink = generateLink("clientContacts.php?id=" . $clientId, $contactsImage);
 
-        $cells = array($clientLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt);
+        $cells = array($clientLink, $contactsLink, $address1, $address2, $zipCode, $city, $country, $phone, $siretCode, $apeCode, $createdAt, $comment, $dateNext);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;
@@ -90,7 +99,7 @@ if (mysqli_connect_error()) {
         $importLink = generateLink("../html/clientSearch.html", "Importer client existant");
         echo $importLink;
 
-        $cells = array("Nom du client","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création");
+        $cells = array("Nom du client","Contacts","Adresse 1","Adresse 2","Code postal","Ville","Pays","Téléphone","SIRET","Code APE","Date création","Commentaire","Prochaine relance");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;

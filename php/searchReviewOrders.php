@@ -107,6 +107,7 @@ if (mysqli_connect_error()) {
         echo "<h2 id=\"" . $pubColor . "\">Revue " . $pubText . "</h2>";
         echo "<h3>Nombre de contrats: " . getNbOrders($reviewId) . "</h3>";
         echo "<h3>Chiffre d'affaire total: " . getTotalPrice($reviewId) . "</h3>";
+        echo "<h3>Chiffre d'affaire non-paye: " . getUnpaidPrice($reviewId) . "</h3>";
         echo $paidLink;
         echo "<table>";
 

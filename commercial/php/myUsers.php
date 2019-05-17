@@ -8,12 +8,17 @@ function userAccess($userId)
     foreach ($rowsAccess as $rowAccess) {
 
         $accessId = $rowAccess['Acces_id'];
-        $sqlUser = "SELECT username FROM webcontrat_utilisateurs WHERE id='$accessId' ORDER BY id DESC;";
+        $sqlUser = "SELECT username FROM webcontrat_utilisateurs WHERE id='$accessId';";
         $rowUser = querySQL($sqlUser, $GLOBALS['connection'], true, true);
         $username = $rowUser['username'];
+        $userLink = generateLink("userMaskOn.php?userId=" . $userId. "&accessId=" . $accessId, $username, "_self");
         $accessDateYMD = $rowAccess['DateAcces'];
+        if (isDateValid($accessDateYMD))
+            $accessDate = date("d/m/Y", strtotime($accessDateYMD));
+        else
+            $accessDate = "Aucune";
 
-        $cells = array($accessId, $username, $accessDateYMD);
+        $cells = array($accessId, $userLink, $accessDate);
         $cells = generateRow($cells);
         foreach ($cells as $cell)
             echo $cell;

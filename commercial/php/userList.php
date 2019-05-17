@@ -22,13 +22,15 @@ function fetchUsers()
         $reviewsLink = generateLink("userReviews.php?id=" . $id, $reviewsImage);
         $clientsImage = generateImage("../png/client.png", "Clients", 24, 24);
         $clientsLink = generateLink("userClients.php?id=" . $id, $clientsImage);
+        $usersImage = generateImage("../png/user.png", "Utilisateur", 24, 24);
+        $usersLink = generateLink("userMaskList.php?id=" . $id, $usersImage);
 
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);
         $editLink = generateLink("userEdit.php?id=" . $id, $editImage, "_self");
         $deleteImage = generateImage("../png/delete.png", "Supprimer", 24, 24);
         $deleteLink = generateLink("userDelete.php?id=" . $id, $deleteImage, "_self", "return confirm('Supprimer l\'utilisateur: $username ?')");
 
-        $permLinks = $reviewsLink . " " . $clientsLink;
+        $permLinks = $reviewsLink . " " . $clientsLink . " " . $usersLink;
         $editLinks = $editLink . " " . $deleteLink;
 
         $cells = array($id, $username, $password, $email, $fname, $lname, $created, $lastLogin, $permLinks, $superuser, $editLinks);

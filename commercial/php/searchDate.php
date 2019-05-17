@@ -3,7 +3,7 @@
 function findDates($dueDate)
 {
     $columns = "Commentaire_id,Commentaire,Auteur,Date,Client_id,Revue_id,Contact_id,Prochaine_relance,Acceptee,Fichier";
-    $sqlDate = "SELECT $columns FROM webcommercial_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1 ORDER BY Prochaine_relance ASC;";
+    $sqlDate = "SELECT $columns FROM webcommercial_commentaire WHERE Prochaine_relance<='$dueDate' AND DernierCom=1;";
     $rowsDate = querySQL($sqlDate, $GLOBALS['connection']);
 
     foreach ($rowsDate as $rowDate) {
@@ -38,7 +38,6 @@ function findDates($dueDate)
 
         $mailtoLink = generateLink($contactMail, $contactMail);
         $dateNextYMD = $rowDate['Prochaine_relance'];
-
         if (isDateValid($dateNextYMD)) {
 
             $dateNext = date("d/m/Y", strtotime($dateNextYMD));
@@ -46,17 +45,11 @@ function findDates($dueDate)
         } else
             $dateNext = "Aucune";
 
-        $file = $rowDate['Fichier'];
-        if ($file === "NULL")
+        if ($rowDate['Fichier'] == "NULL")
             $fileLink = "Aucun";
         else {
-
-            $fileShort = basename($file);
-            $attachmentImage = generateImage("../png/attachment.png", $fileShort, 24, 24);
-            $attachmentLink = generateLink($file, $attachmentImage);
-            $comment = $attachmentLink . " " . $comment;
-            $fileImage = generateImage("../png/attachment.png", $fileShort, 24, 24);
-            $fileLink = generateLink($file, $fileImage);
+            $fileImage = generateImage("../png/attachment.png", basename($rowDate['Fichier']), 24, 24);
+            $fileLink = generateLink($rowDate['Fichier'], $fileImage);
         }
 
         $editImage = generateImage("../png/edit.png", "Modifier", 24, 24);
@@ -94,54 +87,52 @@ $connection = new mysqli(
     $credentials['password'],
     $credentials['database']); // CONNECT TO DATABASE WRITE
 
+$dueDate = filter_input(INPUT_GET, "dueDate");
+
 if (mysqli_connect_error()) {
     die('Connection error. Code: '. mysqli_connect_errno() .' Reason: ' . mysqli_connect_error());
 } else {
 
     if (isLogged()) {
 
-        $charset = mysqli_set_charset($connection, "utf8");
-        $charsetR = mysqli_set_charset($connectionR, "utf8");
+        $style = file_get_contents("../html/search.html");
 
-        if ($charset === FALSE)
-            die("MySQL SET CHARSET error: ". $connection->error);
-        if ($charsetR === FALSE)
-            die("MySQL SET CHARSET error: ". $connectionR->error);
+        $style = str_replace("{type}", "date", $style);
+        $style = str_replace("{query}", $dueDate, $style);
 
-        $indexHTML = file_get_contents("../html/index.html");
-        echo $indexHTML;
-        $toolsHTML = file_get_contents("../html/tools.html");
+        $newDate = date("d/m/Y", strtotime($dueDate));
+
+        echo $style;
 
         if (isAdmin()) {
 
             $adminImage = generateImage("../png/admin.png", "Menu administrateur");
-            $adminLink = generateLink("../html/admin.html", $adminImage);
+            $adminLink = generateLink("userList.php", $adminImage);
             echo $adminLink;
         }
 
-        if (isMask()) {
-
-            $unmaskImage = generateImage("../png/user.png", "Revenir sur mon compte", "_self");
-            $unmaskLink = generateLink("./userMaskOff.php", $unmaskImage);
-            echo $unmaskLink;
-        }
-
-        echo $toolsHTML;
-
-        $today = date("Y-m-d");
-        $newDate = date("d/m/Y", strtotime($today));
-
-        echo "<h1>Clients à relancer le " . $newDate . ":</h1>";
+        echo "<h1>Contrats à relancer le " . $newDate . ":</h1>";
         echo "<table>";
 
-        $cells = array("Nom de l'entreprise","Revue","Nom du contact","Fonction","Téléphone","E-mail","Commentaire","Date commentaire","Prochaine relance","Interagir");
+        $cells = array("Contrat","Revue","PrixHT","Payé compta","Nom de l'entreprise","Nom du contact","Payé base","Commentaire","Date commentaire");
         $cells = generateRow($cells, true);
         foreach ($cells as $cell)
             echo $cell;
 
-        findDates($today);
+        $charsetR = mysqli_set_charset($connectionR, "utf8");
+        $charsetW = mysqli_set_charset($connection, "utf8");
+
+        if ($charsetR === FALSE)
+            die("MySQL SET CHARSET error: ". $connectionR->error);
+        else if ($charsetW === FALSE)
+            die("MySQL SET CHARSET error: ". $connection->error);
+
+        findDates($dueDate);
 
         echo "</table><br><br><br>";
+        echo "</html>";
+
+
     } else
         displayLogin("Veuillez vous connecter.");
 
