@@ -12,8 +12,12 @@ function getFiles($orderId)
     /* } */
 
     $fullpath = "./files/" . $orderId . "/";
-    $files = scandir($fullpath);
 
+    $exists = file_exists($fullpath);
+    if ($exists === FALSE)
+        return ;
+
+    $files = scandir($fullpath);
     foreach ($files as $file) {
 
         if ($file === "." || $file === "..")
